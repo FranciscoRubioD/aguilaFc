@@ -1,0 +1,634 @@
+
+html{
+  font-family: sans-serif;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: rgba(188, 208, 217, 0.46);
+}
+
+header{
+  background-color: rgb(86, 155, 238);
+  height: 15vh;
+  display: flex;
+  align-items: center;
+}
+
+header h1{
+  color: white;
+  margin-left: 20px;
+  font-size: 1.5em;
+}
+
+
+/* seccion jugadores */
+.seccion-jugadores{
+  background-color:white;
+  width: 80vw;
+  height: 80vh;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .seccion-jugadores{
+    width: 100vw;
+    height: auto;
+    margin-top: 0px;
+    border-radius: 0px;
+    overflow: auto;
+  }
+
+}
+
+.titulo-seccion-jugadores,.herramientas,.tabla-jugadores ,.etiqueta-filtro-div{
+  margin-left: 30px;
+  margin-top: 5px;
+}
+
+/* estilos para el searchbar, filtros y más */
+.titulo-seccion-jugadores{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  padding-top: 10px;
+  align-items: center;
+  
+}
+
+.titulo-seccion-jugadores p{
+  font-weight: bold;
+}
+
+.herramientas{
+  height: 8%;
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  /* overflow: hidden; */
+  position: relative;
+  /* background-color: red; */
+  /* background-color: blue; */
+}
+
+.add-player-btn{
+  background-color: rgb(97, 130, 248);
+  padding: 6px 14px 6px 14px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size:14px;
+}
+
+.add-player-btn:hover{
+  opacity: 0.8;
+}
+
+.icon-tools{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  /* background-color: red; */
+  height: 100%;
+  width: auto;
+  position: absolute;
+  right: 20px;
+}
+
+.icon-tools input{
+  outline: none;
+  border: 2px solid rgb(77, 197, 237);
+  border-radius: 4px;
+  padding-left: 10px;
+  height: 50%;
+  font-size: 14px;
+}
+
+.icon-tools input::placeholder{
+  color: lightgrey;
+}
+
+.icon-tools i{
+  cursor: pointer;
+  color: grey;
+}
+
+.icon-tools i:hover{
+  opacity: 0.7;
+  color: black;
+}
+
+
+/* search bar styles */
+
+.search-bar-xmark{
+  color: grey;
+  margin: 0;
+  cursor: pointer;
+}
+
+.search-bar-container{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.search-bar-container.show {
+  width: 210px; /* Ancho deseado del search bar */
+}
+
+
+@media screen and (max-width: 768px) {
+  .search-bar-container{
+    width: 100%;
+    height: 100%;
+  }
+
+  #jugadorBuscar{
+    width: 100%;
+    background-color: #ffffff;
+    border-color: rgb(120, 120, 120);
+    height: 80%;
+    border-width: 1px;
+    border-radius: 2px;
+  }
+
+  .icon-tools{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+    width: 60%;
+    right: 50px;
+  }
+}
+
+/* filter styles */
+
+.filter-main-div{
+  position: relative;
+}
+.filter-list-div{
+  position: absolute;
+  right: 0;
+  top: 25px;
+  width: 200px;
+  height: 200px;
+  z-index: 4;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.filter-field{
+  border-bottom: 1px solid rgb(212, 212, 212);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-field:first-child{
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.filter-field:last-child ,.filter-field-secundary:last-child{
+  border-bottom: none;
+}
+
+.filter-field:hover , .filter-field-secundary:hover{
+  background-color: rgb(239, 239, 239);
+}
+
+.filter-field p{
+  margin: 0;
+  margin-left: 10px;
+  font-size: 13px;
+}
+
+
+#filtroPosicion , #filtroEdad, #filtroSalud, #filtroEquipo , #filtroFecha{
+  position: relative;
+}
+
+.filter-field-secundary{
+  border-bottom: 1px solid rgb(212, 212, 212);
+  display: flex;
+  align-items: center;
+  height: 40px; 
+} 
+
+
+.secundary-filter-list , .secundary-filter-list-edad ,.secundary-filter-list-salud,.secundary-filter-list-equipo, .secundary-filter-list-fecha{
+  position: absolute;
+  display: grid;
+  display: none;
+  grid-template-rows: 1fr*8;
+  overflow: auto;
+  left: -260px;
+  top: 0;
+  width: 250px;
+  height: auto;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.etiqueta-filtro-div{
+  /* background-color: red; */
+  height: 80px;
+  display: none;
+
+}
+
+.filtrar-button{
+  background-color: rgb(97, 130, 248);
+  padding: 6px 14px 6px 14px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size:14px;
+}
+
+.filtrar-button:hover{
+  opacity: 0.7;
+}
+
+.inner-etiquetas-div{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.etiquetaFiltro{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  background-color: rgb(202, 202, 202);
+  border: none;
+  border-radius: 10px;
+}
+.etiquetaFiltro p{
+  margin: 0;
+  padding-left: 5px;
+  font-size: 14px;
+}
+
+.etiquetaFiltro i{
+  font-size: 14px;
+  cursor: pointer;
+  padding-right: 5px;
+}
+
+.etiquetaFiltro i:hover{
+  opacity: 0.7;
+}
+
+
+@media screen and (max-width: 768px) {
+  .filter-list-div{
+    width: 100px;
+    height: 200px;
+  }
+
+  .secundary-filter-list , .secundary-filter-list-edad ,.secundary-filter-list-salud,.secundary-filter-list-equipo{
+
+    left: -210px;
+    top: 0;
+    width: 200px;
+  }
+}
+
+/* Estilos para la tabla */
+.tabla-jugadores {
+  border-collapse: collapse;
+  width: 95%; /* Ancho completo */
+  border: none;
+  background-color: white;
+  margin-top: 10px;
+}
+
+/* Estilos para las filas de encabezado */
+.row-encabezado th {
+  padding: 14px; 
+  text-align: center; /* Alineación del texto a la izquierda */
+  /* font-weight: 400; */
+  background-color: #95bbd211;
+  border-top: 1px solid #ddd; 
+  font-size: 12px;
+}
+
+/* Estilos para las filas de datos */
+.row-data td {
+  font-size: 14px;
+  padding: 10px; /* Espaciado interno */
+  text-align: center;
+  color: grey;
+  white-space: nowrap;
+}
+
+.row-data i{
+  padding: 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.row-data i:hover{
+  opacity: 0.7;
+}
+
+.row-data{
+  transition: all 0.15s ease;
+  border-top: 1px solid #ddd; 
+  border-bottom: 1px solid #ddd;
+}
+
+.row-data:hover{
+  background-color: #f4f3f3;
+}
+
+
+.modal, .modal-filtro {
+  display: none; 
+  position: fixed; /* Posición fija para que el modal permanezca en la misma posición en la pantalla */
+  z-index: 1; /* Hace que el modal esté por encima de otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* El modal ocupa toda la pantalla */
+  height: 100%; /* El modal ocupa toda la pantalla */
+  overflow: auto; /* Añade un scroll si el contenido es demasiado grande */
+  background-color: rgba(0,0,0,0.4); /* Fondo semitransparente para el modal */
+}
+
+.modal-content {
+  background-color: #fefefe; /* Fondo blanco para el contenido del modal */
+  border-radius: 10px;
+  margin: 10% auto; /* Centra el modal verticalmente */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%; /* Ancho del contenido del modal */
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-head{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.modal-head i{
+  cursor: pointer;
+  font-size: 20px;
+}
+.modal-head i:hover{
+  opacity: 0.7;
+}
+
+
+.modal-head h2{
+  margin: 0;
+  margin: auto;
+  padding: 0;
+}
+
+
+.modal-body{
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+
+@media screen and (max-width: 768px){
+  .modal-content{
+    width: 70%;
+    height: 40%;
+    margin: 35% auto;
+  }
+
+  /* filtros responsive */
+  .modal-content.filter{
+    height: auto;
+    border-radius: 0px;
+  }
+
+
+  .modal-body.filter{
+    /* background-color: red; */
+    display: flex;
+    justify-content: center;
+  }
+
+  .filtrosResponsive{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filtrosResponsive label{
+    color: rgb(168, 163, 163);
+    font-size: 10px;
+  }
+
+  .filtrosResponsive button{
+    background-color: rgb(97, 130, 248);
+    width: 100px;
+    height: 30px;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size:14px;
+  }
+
+  .containerFilterInput ,.containerfilterSelect{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .containerFilterInput{
+    display: none;
+  }
+
+
+}
+
+/* form editar */
+
+.form-editar{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.boton-div{
+  margin-top: 20px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.boton-div button{
+  background-color: rgb(97, 130, 248);
+  width: 50%;
+  height: 100%;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size:14px;
+}
+
+.form-content-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.form-editar label{
+  display: block; /* Muestra el label como bloque para que ocupe toda la anchura disponible */
+  font-weight: 600;
+  font-size: 12px;
+}
+
+
+.contenedor-numero-jugador{
+ /* background-color: red; */
+}
+
+.form-editar input {
+  width: 100%; /* El input ocupa todo el ancho disponible */
+  padding: 5px; /* Espacio interno del input */
+  border: 1px solid #535252; /* Borde del input */
+  border-radius: 5px; /* Borde redondeado del input */
+  box-sizing: border-box; /* Incluye el borde y el relleno en la anchura del input */
+}
+
+select {
+  width: 100%; /* El select ocupa todo el ancho disponible */
+  padding: 5px; /* Espacio interno del select */
+
+  border-color: black;
+
+  border-bottom-color: grey;
+  border-left-color: grey;
+
+  border-radius: 5px; /* Borde redondeado del select */
+  box-sizing: border-box; /* Incluye el borde y el relleno en la anchura del select */
+  appearance: none; /* Oculta la apariencia por defecto del select */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239e9e9e"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+ 
+  background-repeat: no-repeat; /* Evita la repetición de la imagen de fondo */
+  background-position: right 10px center; /* Alinea la flecha a la derecha y ajusta el espacio entre la flecha y el texto */
+}
+
+.left-edit-div, .right-edit-div{
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+/* Paginacion */
+
+.barra-paginacion{
+  margin: auto;
+  width: auto; 
+  max-width: 50%;
+  margin-top: 20px;
+}
+
+.inner-barra-paginacion{
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner-barra-paginacion i{
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.inner-barra-paginacion p{
+  color: rgb(55, 55, 226);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+.inner-barra-paginacion p:hover{
+  opacity: 0.8;
+}
+
+.numeros-paginacion{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+}
+
+.numeros-paginacion a{
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+a.active,
+a:active {
+  color: inherit; /* Utiliza el color de texto heredado del elemento padre */
+  text-decoration: none; /* Elimina cualquier decoración de texto, como subrayado */
+}
+
+#btnAnterior, #btnSiguiente{
+  background-color:transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+#btnAnterior:hover, 
+#btnSiguiente:hover{
+  color: rgb(55, 55, 226);
+}
+
+

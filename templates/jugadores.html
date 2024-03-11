@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jugadores Tabla</title>
+
+  <!-- Incluir jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- font awesome -->
+  <script src="https://kit.fontawesome.com/7b77090003.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/jugadores.css">
+
+</head>
+<body>
+  
+  <header>
+    <h1>Configuración de Usuarios</h1>
+  </header>
+
+
+  <section class="seccion-jugadores">
+
+    <div class="titulo-seccion-jugadores">
+      <p>Tabla de Jugadores</p>
+    </div>
+    <div class="herramientas">
+      
+      <button class="add-player-btn"><span><i class="fa-solid fa-plus"></i></span> Añadir</button>
+      <div class="icon-tools">
+        <div class="search-bar-container">
+          <input type="text" name="buscar" id="jugadorBuscar" placeholder="Buscar">
+          <i class="fa-solid fa-xmark search-bar-xmark"></i>
+        </div>
+        <i class="fa-solid fa-magnifying-glass" id="lupa-search-bar"></i>
+
+        <!-- filtro -->
+        <div class="filter-main-div">
+          <i class="fa-solid fa-filter" id="filtrarTablaJugadores"></i>
+          <div class="filter-list-div">
+
+            <div class="filter-field" id="filtroPosicion" data-filtro = "posicion">
+              
+              <p>Posicion</p>
+              
+              <div class="secundary-filter-list">
+                <div class="filter-field-secundary" data-opcion ="Portero"><p>Portero</p></div>
+                <div class="filter-field-secundary" data-opcion ="Defensa Central" ><p>Defensa Central</p></div>
+                <div class="filter-field-secundary" data-opcion ="Defensa Lateral Izquierdo"><p>Defensa Lateral Izquierdo</p></div>
+                <div class="filter-field-secundary" data-opcion ="Defensa Lateral Derecho"><p>Defensa Lateral Derecho</p></div>
+                <div class="filter-field-secundary" data-opcion ="Centrocampista"><p>Centrocampista</p></div>
+                <div class="filter-field-secundary" data-opcion ="Delantero Central"><p>Delantero Central</p></div>
+                <div class="filter-field-secundary" data-opcion ="Lateral Derecho"><p>Lateral Derecho</p></div>
+                <div class="filter-field-secundary" data-opcion ="Lateral Izquierdo"><p>Lateral Izquierdo</p></div>
+              </div>
+
+            </div>
+
+
+            <div class="filter-field" id="filtroEdad" data-filtro = "edad">
+              <p>Rango de edad</p>
+            
+              <div class="secundary-filter-list-edad" id="opcionContainerEdad">
+            
+              </div>
+
+            </div>
+
+            <div class="filter-field" id="filtroSalud" data-filtro = "estadoSalud">
+              <p>Estado Salud</p>
+              
+              <div class="secundary-filter-list-salud">
+                <div class="filter-field-secundary" data-opcion ="Sano"><p>Sano</p></div>
+                <div class="filter-field-secundary" data-opcion ="Lesionado"><p>Lesionado</p></div>
+                <div class="filter-field-secundary" data-opcion="No disponible"=""><p>No disponible</p></div>
+              </div>
+            </div>
+            <div class="filter-field" id="filtroFecha" data-filtro = "fecha_creacion">
+              <p>Fecha de creación</p>
+              
+              <div class="secundary-filter-list-fecha" id="opcionContainerFecha">
+
+              </div>
+                
+           
+            </div>
+
+            <div class="filter-field" id="filtroEquipo" data-filtro ="equipo">
+              <p>Equipo</p>
+            
+              <div class="secundary-filter-list-equipo" id="opcionContainer">
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
+        
+        <i class="fa-solid fa-rotate-right"></i>
+      </div>
+      
+    </div>
+
+
+    <!-- filtro responsive -->
+    <div class="modal-filtro">
+      <div class="modal-content">
+        <div class="modal-head">
+          <i class="fa-solid fa-xmark modal-x-mark"></i>
+          <h2 style="font-size: 15px;">Filtros</h2>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="filtrosResponsive">
+            <div class="containerfilterSelect">
+            <label for="filtros" id="filtrosSelectLabel">Filtrando por:</label>
+            <select name="filtros" id="filtrosSelect">
+              <option>Elegir filtro</option>
+              <option value="posicionSelect">Posicion</option>
+              <option value="edadFiltroDiv">Rango de Edad</option>
+              <option value="selectSaludFiltro">Estado de salud</option>
+              <option value="fechaSelectDiv">Fecha de creacion</option>
+              <option value="equipoDivFiltro">Equipo</option>
+            </select>
+            </div>
+            
+            <div class="containerFilterInput filtro"  id="posicionSelect">
+              <label for="posicion">Posicion</label>
+              <select name="posicion">
+                <option value="nulo">Elegir opcion</option>
+                <option value="Portero">Portero</option>
+                <option value="Defensa Central">Defensa Central</option>
+                <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
+                <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
+                <option value="Centrocampista">Centrocampista</option>
+                <option value="Delantero Central">Delantero Central</option>
+                <option value="Lateral Derecho">Lateral Derecho</option>
+                <option value="Lateral Izquierdo">Lateral Izquierdo</option>
+              </select>
+            </div>
+          
+            <div class="containerFilterInput filtro" id="edadFiltroDiv">
+              <label for="edad">Rango de edad</label>
+              <select name="edad" id="selectEdadFiltro" >
+                <option value="nulo">Elegir opcion</option>
+              </select>
+            </div>
+           
+            <div class="containerFilterInput filtro" id="selectSaludFiltro">
+              <label for="estadoSalud">Estado Salud</label>
+              <select name="estadoSalud">
+                <option value="nulo">Elegir opcion</option>
+                <option value="Sano">Sano</option>
+                <option value="Lesionado">Lesionado</option>
+                <option value="No disponible">No disponible</option>
+              </select>
+            </div>
+            
+            <div class="containerFilterInput filtro" id="fechaSelectDiv">
+              <label for="fecha_creacion">Fecha de Creacion</label>
+              <select name="fecha_creacion" id="selectFechaCreacion">
+                <option value="nulo">Elegir opcion</option>
+              </select>
+            </div>
+            
+
+            <div class="containerFilterInput filtro" id="equipoDivFiltro" >
+              <label for="equipo">Equipo</label>
+              <select name="equipo" id="selectEquipo">
+                <option>Elegir opcion</option>
+              </select>
+            </div>
+            
+
+            <button id="addfiltroResponsive">añadir filtro</button>
+          </div>
+          
+        </div>
+
+
+      </div>
+      
+    </div>
+
+
+
+    <!-- etiquetas de filtro -->
+    <div class="etiqueta-filtro-div">
+      <p>Filtros</p>
+      <div class="inner-etiquetas-div">
+        <button class="filtrar-button">
+          Filtrar
+        </button>
+      </div>
+
+    
+      <!-- <div class="etiquetaFiltro">
+        <p id="etiquetaFiltroNombre"></p>
+        <i class="fa-solid fa-xmark eliminarFiltroIcon"></i>
+      </div> -->
+    </div>
+    
+  
+    <table class="tabla-jugadores">
+      <tr class="row-encabezado">
+        <th class="encabezado">Nombre</th>
+        <th class="encabezado">Cedula</th>
+        <th class="encabezado">Teléfono</th>
+        <th class="encabezado">Edad</th>
+        <th class="encabezado">Posición</th>
+        <th class="encabezado">Numero Jugador</th>
+        <th class="encabezado">Estado Salud</th>
+        <th class="encabezado">Fecha de creacion</th>
+        <th class="encabezado">Equipo</th>
+        <th class="encabezado">Acción</th>
+      </tr>
+      
+      
+      <tr class="row-data">
+        
+      </tr>
+      
+    </table>
+
+    <div class="barra-paginacion">
+      <div class="inner-barra-paginacion">
+        <button id="btnAnterior">
+           <span style="margin-right:10px"><i class="fa-solid fa-chevron-left"></i></span>
+           Pagina anterior
+        </button>
+        <div class="numeros-paginacion">
+          
+        </div>
+        <button id="btnSiguiente">
+          Siguiente Página
+          <span  style="margin-left:10px"><i class="fa-solid fa-chevron-right"></i></span>
+        </button>
+        
+      </div>
+    </div>
+
+    
+  </section>
+
+  
+  
+
+
+  <div class="modal">
+
+    <div class="modal-content">
+      <div class="modal-head">
+        <i class="fa-solid fa-xmark modal-x-mark"></i>
+        <h2>Datos Personales</h2>
+      </div>
+  
+      <div class="modal-body">
+        <form method="PUT" class="form-editar" id="formularioEdicion">
+
+          <div class="form-content-div">
+            <div class="left-edit-div">
+              <label for="Nombre">Nombre</label>
+              <input type="text" id="Nombre" name="Nombre" required>
+
+              <label for="cedula">Cedula:</label>
+              <input type="text" id="cedula" name="cedula" required>
+
+              <label for="posicion">Posicion</label>
+              <select name="posicion" id="posicion" required>
+                <option value="">Eliga una opcion</option>
+                <option value="Portero">Portero</option>
+                <option value="Defensa Central">Defensa Central</option>
+                <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
+                <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
+                <option value="Centrocampista">Centrocampista</option>
+                <option value="Delantero Central">Delantero Central</option>
+                <option value="Lateral Derecho">Lateral Derecho</option>
+                <option value="Lateral Izquierdo">Lateral Izquierdo</option>
+        
+              </select>
+              
+              <label for="estado_salud">Estado de salud</label>
+              <select name="estado_salud" id="estado_salud" required>
+                <option value="">Eliga una opcion</option>
+                <option value="Sano">Sano</option>
+                <option value="Lesionado">Lesionado</option>
+                <option value="otro">otro</option>
+              </select>
+            </div>
+            
+
+            <div class="right-edit-div">
+              <label for="telefono">Teléfono</label>
+              <input type="number" id="telefono" name="telefono" required>
+
+              <label for="edad">Edad:</label>
+              <input type="number" id="edad" name="edad" required>
+
+              
+
+            <!-- <div class="contenedor-numero-jugador"> -->
+              <div class="contenedor-numero-jugador">
+                <label for="numero_jugador" id="numeroJugadorLabel">Numero de jugador</label>
+                <input type="number" id="numero_jugador" name="numero_jugador" required>
+                <p id="mensajeDisponible"></p>
+              </div>
+              <!-- <p id="mensajeDisponible"></p> -->
+            <!-- </div> -->
+
+            <label for="id_equipo">Equipo</label>
+            <select name="id_equipo" id="id_equipo" required>
+              <option value="">Eliga una opcion</option>
+              <option value="1">Sub-10</option>
+              <option value="3">Sub-12</option>
+            </select>
+            </div>
+        </div>
+
+        <div class="boton-div">
+          <button id="enviarFormEditar">Enviar</button>
+        </div>
+          
+        </form>
+        
+      </div>
+    
+
+    </div>
+  </div>
+
+
+</body>
+</html>
+
+
+<script src="/js/jugadores.js"></script>

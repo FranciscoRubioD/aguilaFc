@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Jugador</title>
+
+  <!-- Incluir jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <style>
+    form{
+      display: flex;
+      flex-direction: column;
+      width: 20vw;
+      gap: 20px;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+
+  </style>
+</head>
+<body>
+  
+  <header>
+    <h1>Creacion de jugador</h1>
+  </header>
+  <form action="/crear/jugador" method="post" id="formCrearJugador">
+    <label for="Nombre">Nombre:</label>
+    <input type="text" id="Nombre" name="Nombre" required>
+
+    <label for="cedula">Cedula:</label>
+    <input type="text" id="cedula" name="cedula" required>
+    
+    <label for="telefono">Teléfono:</label>
+    <input type="number" id="telefono" name="telefono" required>
+
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" name="edad" required>
+
+    <label for="posicion">Posicion:</label>
+    <select name="posicion" id="posicion" required>
+      <option value="">Eliga una opcion</option>
+      <option value="portero">Portero</option>
+      <option value="defensa">Defensa</option>
+      <option value="medio campo">Medio Campo</option>
+      <option value="delantero">Delantero</option>
+    </select>
+
+    <label for="id_equipo">Equipo:</label>
+    <select name="id_equipo" id="id_equipo" required>
+      <option value="">Eliga una opcion</option>
+      <option value="1">Sub-10</option>
+      <option value="3">Sub-12</option>
+    </select>
+
+
+    <div class="contenedor-numero-jugador">
+      <label for="numero_jugador">Numero de jugador:</label>
+      <input type="number" id="numero_jugador" name="numero_jugador" required>
+      <p id="mensajeDisponible"></p>
+    </div>
+    
+
+    <label for="estado_salud">Estado de salud:</label>
+    <select name="estado_salud" id="estado_salud" required>
+      <option value="">Eliga una opcion</option>
+      <option value="Sano">Sano</option>
+      <option value="Lesionado">Lesionado</option>
+      <option value="otro">otro</option>
+    </select>
+
+    <label for="tarjeta_amarilla">Tarjetas amarillas:</label>
+    <input type="number" id="tarjeta_amarilla" name="tarjeta_amarilla" value="0" required>
+
+    <label for="estado_cuenta">Estado de Cuenta:</label>
+    <select name="estado_cuenta" id="estado_cuenta" required>
+      <option value="">Eliga una opcion</option>
+      <option value="True">Paz y Salvo</option>
+      <option value="False">Moroso</option>
+    </select>
+
+    <label for="goles">Goles:</label>
+    <input type="number" name="goles" id="goles" value="0" required>
+
+    <label for="asistencias">Asistencias:</label>
+    <input type="number" id="asistencias" name="asistencias" value="0" required>
+
+    
+
+    <button type="submit">Enviar datos</button>
+  </form>
+
+  <script>
+    $(document).ready(function() {
+
+            $('.contenedor-numero-jugador').hide();
+
+            // Capturar evento submit del formulario
+            $('#formCrearJugador').submit(function(event) {
+                // Prevenir el comportamiento predeterminado del formulario
+                event.preventDefault();
+                
+                // Obtener los datos del formulario
+                var formData = $(this).serialize();
+
+                // Enviar los datos al backend utilizando AJAX
+              
+                $.ajax({
+                  type: 'POST',
+                  url: '/crear/jugador', // Aquí debes especificar la ruta de tu endpoint en el backend
+                  data: formData,
+                  success: function(response) {
+                      // Manejar la respuesta del servidor si es necesario
+                      console.log('Respuesta del servidor:', response);
+                  },
+                  error: function(xhr, status, error) {
+                      // Manejar errores si es necesario
+                      if (xhr.responseJSON && xhr.responseJSON.error) {
+                        if (xhr.responseJSON.error === 'cedula') {
+                          alert('La cédula ya existe, por favor ingresa una diferente');
+                        } else if (xhr.responseJSON.error === 'numero_jugador') {
+                          alert('El número de jugador ya existe, por favor ingresa uno diferente');
+                        }
+                      } else {
+                        // Si no hay errores específicos, manejar el error genérico
+                        console.error('Error al enviar datos al servidor:', error);
+                      }
+                  }
+                }); // ajax
+                
+            }); // submit 
+
+
+            $('#id_equipo').on('input',()=>{
+
+              const equipo = $('#id_equipo').val();
+              $('.contenedor-numero-jugador').show();
+              $('#numero_jugador').on('input',()=>{
+              const numeroJugador = $('#numero_jugador').val();
+    
+              
+              if(numeroJugador === ''){
+                $('#mensajeDisponible').text('');
+              }
+
+              $.ajax({
+                type: 'GET',
+                url: '/numero-jugador-disponible',
+                data: { numero_jugador: numeroJugador , id_equipo: equipo },
+
+                  success: function(response){
+                    if(numeroJugador !== ''){
+                      if(response.existe){
+                      console.log('disponible');
+                      $('#mensajeDisponible').text('Disponible').css('color','green');
+                      
+                      }else{
+                        console.log('No disponible');
+                        $('#mensajeDisponible').text('No disponible').css('color','red');
+                      }
+                    }
+                  },  
+                  error: function(xhr, status, error) {
+                    console.error('Error al verificar número de jugador:', error);
+                    $('#mensajeNumeroJugador').text('Ha ocurrido un error, por favor intenta nuevamente');
+                  }
+              })
+              })
+            })//aca
+           
+            
+
+
+      }); // termina document ready
+
+
+  </script>
+
+</body>
+</html>

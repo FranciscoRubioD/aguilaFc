@@ -1,0 +1,429 @@
+html{
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  margin: 0;
+}
+
+button[disabled] {
+  background-color: rgba(204, 204, 204, 0.479);
+  cursor:not-allowed;
+  color: rgba(255, 255, 255, 0.446); /* Cambia el color del texto si es necesario */
+}
+
+html p{
+  margin: 0;
+}
+
+header{
+  height: 15vh;
+  width: 100vw;
+  max-height: 90px;
+  background-color: #2873B8;
+  display: flex;
+  flex-direction: row;
+  /* position: fixed; */
+}
+
+.logo-main-div{
+  /* background-color: red; */
+  width: 15%;
+  min-width: 90px;
+  height: 180%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.logo-container{
+  height: 80%;
+  width:50%; 
+}
+
+.logo-container img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+/* div del nombre del team */
+.nombre-equipo-div{
+  /* background-color: black; */
+  width: 20%;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+}
+
+.nombre-equipo-div p{
+  color: white;
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: 5%;
+  margin-bottom: 2%;
+}
+
+
+@media screen and (max-width: 768px) {
+  /* Estilos aquí */
+
+  .logo-container{
+    height: 50%;
+    width:70%; 
+  }
+
+  .nombre-equipo-div{
+    /* background-color: red; */
+    width: 25%;
+  }
+  .nombre-equipo-div p{
+    font-size: 18px;
+  }
+
+}
+
+
+/* seccion formulario contenido */
+
+.main-section{
+  background-color: #F2F2F2;
+  height: 1500px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-div{
+  width: 80%;
+  height: 90%;
+  margin-top: 1%;
+  overflow: hidden;
+}
+
+.section-form{
+  width: 100%;
+  height: 5%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+
+.section-form :first-child{
+
+}
+
+.option-form{
+  /* border-style: solid; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  /* background-color: #f6f6f6; */
+  background-color: rgb(196, 196, 196);
+  clip-path: polygon(10% 10%, 100% 9%, 90% 100%, 0% 100%);
+  text-align: center;
+}
+
+
+.option-form p{
+  font-weight: bold;
+  font-style: italic;
+
+}
+
+.información-personal-form{
+  margin-top: 3%;
+  height: 100%;
+  /* background-color: #1b5387; */
+}
+
+.información-personal-form h1{
+  margin: 0;
+  /* color: white; */
+}
+
+
+.form-jugador input{
+  width: 50%;
+  height:100%;
+  border-radius: 3px;
+  box-shadow: inset 0 0 2px rgb(181, 181, 181);
+  border: none;
+  outline: none;
+  padding-left: 20px;
+}
+
+.form-jugador select{
+  width: 50%;
+  height: 20%;
+  font-size: 20px;
+  color: grey;
+  border-radius: 3px;
+  box-shadow: inset 0 0 2px rgb(181, 181, 181);
+  border: none;
+  outline: none;
+  padding-left: 20px;
+}
+
+
+
+.row{
+  width: 100%;
+  height: 35px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-jugador input::placeholder{
+  color: rgb(59, 59, 59);
+}
+
+
+/*  seccion jugador */
+
+.lottieDiv{
+  width: 100%;
+  height:50vh;
+  margin-top: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: red; */
+}
+#animacion{
+  width: 50%;
+  height: 50%;
+}
+.success-config-jugador{
+  width: 100%;
+  height:50vh;
+  margin-top: 2%;
+  background-color: white;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+}
+
+.inner-success-jugador{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.equipo-div,.jugadornum-div{
+  /* background-color: red; */
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 20px;
+}
+
+.numero-jugador{
+  font-size:120px;
+  font-weight: bold;
+
+  color: rgb(153, 29, 29);
+}
+
+.equipo-div p, .jugadornum-div p:first-child{
+  margin-top: 10%;
+  color: #2873B8;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+
+.equipo-div img{
+  width: 14%;
+  /* height: 20%; */
+}
+
+
+.button-editar{
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-editar button{
+  width: 10%;
+  height: 40%;
+  border: none;
+  font-size: 14px;
+  font-style: italic;
+  background-color: #aeafb0;
+  color: white;
+  cursor: pointer;
+
+}
+
+.info-jugador-div{
+  width: 100%;
+  height:50vh;
+  margin-top: 2%;
+  background-image: url('/imagenes/campo2.jpg');
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+
+.info-jugador-div h1{
+  /* margin-top: 8%; */
+  margin-bottom: 0px;
+  color: white;
+  font-size: 40px;
+}
+
+.config-numero-div,.categoria-div{
+  /* background-color: red; */
+  width: 100%;
+  height: 60%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+.input-shirt-number{
+  width: 10%;
+  height: 50%;
+  background-color: rgb(212, 210, 210);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.input-shirt-number input{
+  /* background-color: red; */
+  width: 100%;
+  font-size: 80px;
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: grey;
+  margin: 0;
+  padding: 0;
+}
+
+.jugadornodisponible{
+  /* font-weight: bold; */
+  font-size: 15px;
+  background-color: #2873B8;
+  color: white;
+  padding: 5px;
+  border-radius: 10px;
+
+}
+
+.config-btn,.guardar-btn{
+  width: 15%;
+  height: 15%;
+  border: none;
+  font-size: 20px;
+  font-style: italic;
+  background-color: #2873B8;
+  color: white;
+  cursor: pointer;
+  clip-path: polygon(10% 10%, 100% 9%, 90% 100%, 0% 100%);
+  /* font-weight: bold; */
+}
+
+
+@media screen and (max-width: 768px) {
+  /* Estilos aquí */
+  .section-form{
+    width: 100%;
+    height: 5%;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .información-personal-form h1{
+    font-size: 16px;
+    margin: 0;
+  }
+
+  
+  .option-form p{
+    font-size: 10px;
+  }
+  .option-form i{
+    font-size: 6px;
+  }
+
+  input::placeholder, option{
+    font-size: 10px;
+  }
+
+  /* seccion de jugador */
+  
+
+  .info-jugador-div{
+    height: 15vh;
+    gap: 10px;
+    margin-top: 8%;
+  }
+  .info-jugador-div h1{
+    margin-top: 10%;
+    margin-bottom: 0px;
+    color: white;
+    font-size: 20px;
+  }
+
+  
+  .input-shirt-number{
+    width: 15%;
+    height: 50%;
+    background-color: rgb(212, 210, 210);
+  }
+  
+  .input-shirt-number input{
+    /* background-color: red; */
+    width: 100%;
+    font-size: 100px;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    color: grey;
+    margin: 0;
+    padding: 0;
+  }
+
+  .form-jugador select{
+    font-size: 8px;
+    height: 15%;
+    padding: 0;
+  }
+  
+  .config-btn{
+    width: 20%;
+    height: 15%;
+    border: none;
+    font-size: 10px;
+    font-style: italic;
+    background-color: #2873B8;
+    color: white;
+    cursor: pointer;
+    clip-path: polygon(10% 10%, 100% 9%, 90% 100%, 0% 100%);
+    /* font-weight: bold; */
+  }
+
+}

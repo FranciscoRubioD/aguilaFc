@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripcion</title>
+
+  <!-- lottie file -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.7/lottie.min.js"></script>
+
+  <!-- Incluir jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- font awesome -->
+  <script src="https://kit.fontawesome.com/7b77090003.js" crossorigin="anonymous"></script>
+
+  
+  <link rel="stylesheet" href="/css/inscripcion.css">
+
+</head>
+<body>
+
+  <header>
+    <div class="logo-main-div"> 
+      <div class="logo-container">
+        <img src="/Aguilas-FC-logo.png" alt="">
+      </div>
+    </div>
+
+    <div class="nombre-equipo-div">
+      <p>Aguila FC</p>
+    </div>
+  </header>
+
+  <section class="main-section">
+
+    
+    <div class="content-div">
+      
+      <nav class="section-form">
+        <div class="option-form">
+          <p>INFORMACIÓN PERSONAL</p>
+        </div>
+        <div class="option-form">
+          <p>CREAR CUENTA</p>
+        </div>
+        <div class="option-form">
+          <p>EDITAR PERFIL</p>
+          </div>
+      </nav>
+
+      <div class="información-personal-form">
+        <h1>Información Personal</h1>
+        <form action="" class="form-jugador">
+          <div class="row">
+            <input type="text" name="nombre" placeholder="NOMBRE" required>
+            <input type="text" name="apellido" placeholder="APELLIDO" required>
+          </div>
+
+          <div class="row">
+            <input type="date" name="nombre" placeholder="FECHA DE NACIMIENTO" required>
+            <input type="text" name="apellido" placeholder="CEDULA DE IDENTIDAD" required>
+          </div>
+
+          <div class="row">
+            <input type="text" name="nombre" placeholder="PAIS" required>
+            <input type="text" name="apellido" placeholder="REGION" required>
+            <input type="text" name="apellido" placeholder="CIUDAD" required>
+          </div>
+          <div class="row">
+            <input type="text" name="nombre" placeholder="TELÉFONO CELULAR" required>
+            <input type="text" name="apellido" placeholder="INSTAGRAM (opcional)">
+          </div>
+
+          <div class="row">
+            <input type="text" name="nombre" placeholder="CORREO ELECTRONICO" required>
+            <!-- <select name="" id="categorias">
+              <option value="">CATEGORIA</option>
+            </select> -->
+          </div>
+
+          <!-- <h1>Información de Jugador</h1> -->
+          <div class="lottieDiv">
+            <div id="animacion"></div>
+          </div>
+          
+
+          <div class="success-config-jugador">
+            <div class="inner-success-jugador">
+              <div class="equipo-div">
+                <p class="division"></p>
+                <img src="/Aguilas-FC-logo.png" alt="" class="logo-equipo-div">
+                
+              </div>
+              <div class="jugadornum-div">
+                <p>Número de Jugador</p>
+                <p class="numero-jugador"></p>
+              </div>
+            </div>
+            
+            <div class="button-editar">
+              <button type="button" >Editar Datos</button>
+            </div>
+          </div>
+
+          <div class="info-jugador-div">
+
+            <div class="categoria-div">
+              <h1 id="categoriah1">CATEGORÍA</h1>
+              <select name="" id="categorias">
+                <option value="">CATEGORIA</option>
+              </select>
+            </div>
+           
+      
+            <div class="config-numero-div">
+              <h1>Número de Jugador</h1>
+              <div class="input-shirt-number">
+                <input type="text" id="inputNumeroJugador">
+              </div>
+            </div>
+            
+            <button type="button" class="config-btn">Siguiente</button>
+            <button type="button" class="guardar-btn">Guardar</button>
+
+
+
+          </div>
+      
+        </form>
+      </div>
+
+
+    </div>
+
+
+  </section>
+
+  
+  <script src="/js/inscripcion.js"></script>
+
+</body>
+</html>
