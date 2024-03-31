@@ -2,12 +2,17 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
 
 // conexion a mysql
 const mysql = require('mysql');
 
 // usar directorio 
 app.use(express.static('static'));
+
+// Configuración de multer para manejar FormData
+const upload = multer();
 
 // limite paginacion
 const limit = 10;
@@ -31,6 +36,7 @@ dbConexion.connect((error)=>{
 
 // Middleware para analizar application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 
 // index
@@ -46,6 +52,101 @@ app.get('/',(req,res)=>{
 app.get('/formulario/inscripcion',(req,res)=>{
   res.sendFile(__dirname + '/templates/inscripcion.html');
 })
+
+
+// crear jugador inscripcion
+
+// funcion que te calcula la edad
+function calcularEdad(fechaNacimiento){
+
+  // Obtener la fecha actual
+  const fechaActual = new Date();
+
+  // Convertir la fecha de nacimiento a un objeto de fecha
+  const partesFecha = fechaNacimiento.split('-');
+  const anioNacimiento = parseInt(partesFecha[0]);
+  const mesNacimiento = parseInt(partesFecha[1]) - 1; // Meses en JavaScript son indexados desde 0
+  const diaNacimiento = parseInt(partesFecha[2]);
+  const fechaNacimientoObj = new Date(anioNacimiento, mesNacimiento, diaNacimiento);
+
+  // Calcular la diferencia en milisegundos entre las dos fechas
+  const diferenciaMilisegundos = fechaActual - fechaNacimientoObj;
+
+  // Convertir la diferencia en milisegundos a años
+  const edad = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60 * 24 * 365));
+
+  return edad;
+}
+
+app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
+  // obtener datos del form
+    const formData = req.body; 
+
+    const fechaActual = new Date();
+
+    const edadJugador = calcularEdad(formData.Fecha_Nacimiento);
+
+    const nombreCompleto = formData.Nombre +" "+ formData.Apellido;
+
+    console.log(`Este es el nombre completo, ${nombreCompleto}`);
+
+    const dataSend = {
+      Nombre : nombreCompleto,
+      cedula: formData.cedula,
+      foto_cedula: req.file.originalname,
+      telefono: formData.telefono,
+      edad: edadJugador,
+      fecha_nacimiento: formData.Fecha_Nacimiento,
+      pais: formData.pais,
+      provincia: formData.provincia,
+      distrito: formData.distrito,
+      numero_jugador: formData.numeroJugador,
+      fecha_creacion: fechaActual,
+      id_equipo: formData.categoria,
+      instagram: formData.instagram,
+      usuario_id: 1
+    }
+
+    const values = [
+      dataSend.Nombre,
+      dataSend.cedula,
+      dataSend.foto_cedula,
+      dataSend.telefono,
+      dataSend.edad,
+      dataSend.fecha_nacimiento,
+      dataSend.pais,
+      dataSend.provincia,
+      dataSend.distrito,
+      dataSend.numero_jugador,
+      dataSend.fecha_creacion,
+      dataSend.id_equipo,
+      dataSend.instagram,
+      dataSend.usuario_id
+    ]
+
+    const query = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    dbConexion.query(query,values,(error,results,fields)=>{
+      if(error){
+        console.error('Error al insertar datos',error);
+        return;
+      }
+      console.log('datos insertados correctamente!');
+    })
+
+    
+
+  // if (req.file) {
+  //   console.log(req.file.originalname);
+  // }
+
+
+  // Responder al cliente
+  res.send('Datos del formulario recibidos correctamente.');
+
+})
+
+
 
 // crear jugador admin
 app.post('/crear/jugador', async(req, res) => {
@@ -79,6 +180,9 @@ app.post('/crear/jugador', async(req, res) => {
     res.status(500).send('Error en el servidor');
   }
 });
+
+
+
 
 
 // Verifica que no hayan numero de jugador duplicado basandose en su division
@@ -305,10 +409,28 @@ app.get('/filtro-jugadores',(req,res) =>{
 })
 
 
+app.delete('/eliminar/jugador/:id', (req, res) => {
+  const idjugador = req.params.id;
+
+  const query = 'DELETE FROM jugadores WHERE id = ?'; 
+
+  // Example with MySQL
+  dbConexion.query(query, [idjugador], (error, results, fields) => {
+    if (error) {
+      console.error('Error deleting player:', error);
+      res.status(500).send('Error deleting player');
+      return;
+    }
+    console.log('Jugador eliminado exitosamente!');
+    res.status(200).send('Jugador eliminado exitosamente!');
+  });
+});
+
+
 app.put('/editar/jugador/:id',(req,res)=>{
   const idJugador = req.params.id;
   const cambios = req.body;
-  console.log(cambios);
+
 
   // Construir la consulta de actualización basada en los campos modificados
   let sql = 'UPDATE jugadores SET ';
@@ -385,6 +507,68 @@ app.get('/rango/edad',(req,res)=>{
 })
 
 
+// USUARIOS
+
+// verificar si el usuario a crear ya existe
+
+app.get('/correo/existente/:correo',(req,res) =>{
+  const correo = req.params.correo;
+
+  const query ='SELECT COUNT(*) AS numUsuarios FROM usuarios WHERE email = ?';
+
+  // ejecutar consulta
+  dbConexion.query(query, [correo] ,(error,results,fields)=>{
+    if(error){
+      console.error('Error al ejecutar la consulta',error);
+      res.status(500).json({ error: 'Error al buscar correos existentes' });
+      return;
+    }
+
+    // obtener numero de usuarios encontrados
+    const numUsuarios = results[0].numUsuarios;
+
+    if (numUsuarios > 0) {
+      // Si hay usuarios encontrados, el usuario ya existe
+      res.json({ existe: true });
+    } else {
+        // Si no hay usuarios encontrados, el usuario no existe
+        res.json({ existe: false });
+    }
+
+  })
+
+})
+
+
+app.get('/usuario/existente/:user',(req,res) => {
+  const usuario = req.params.user;
+
+  const query ='SELECT COUNT(*) AS numUsuarios FROM usuarios WHERE nombre_usuario = ?';
+
+  // ejecutar consulta
+  dbConexion.query(query, [usuario] ,(error,results,fields)=>{
+    if(error){
+      console.error('Error al ejecutar la consulta',error);
+      res.status(500).json({ error: 'Error al buscar usuarios existentes' });
+      return;
+    }
+
+    // obtener numero de usuarios encontrados
+    const numUsuarios = results[0].numUsuarios;
+
+    if (numUsuarios > 0) {
+      // Si hay usuarios encontrados, el usuario ya existe
+      res.json({ existe: true });
+    } else {
+        // Si no hay usuarios encontrados, el usuario no existe
+        res.json({ existe: false });
+    }
+
+  })
+})
+
+
+
 
 
 
@@ -432,5 +616,6 @@ const verificarNumeroJugador = (numeroJugador, division)=>{
     });
   })
 } 
+
 
 

@@ -1,10 +1,14 @@
 $(document).ready(function() {
+  
+
+
   // lotties
   // lottie guardado
   // Ruta al archivo JSON de la animación
   const rutaArchivoJSON = '/lottie/saved.json';
 
   // contenedor de la animacion
+  let animacion;
   const mainlottiediv =$('.lottieDiv');
   const contenedorLottie = $('#animacion');
 
@@ -20,10 +24,364 @@ $(document).ready(function() {
     path: rutaArchivoJSON // Ruta al archivo JSON de la animación
   };
   //lotties
+
+
+// manejar orden de la inscripcion
+
+let completado = 0;
+
+
+// opciones del header del formulario
+const infoPersonalOpcion = $('#opcionInfoPersonal');
+
+const CrearCuentaOpcion = $('#opcionCrearCuenta');
+
+const editarPerfilOpcion = $('#opcionEditarPerfil');
+
+
+infoPersonalOpcion.removeClass('option-form');
+infoPersonalOpcion.addClass('active');
+
+
+editarPerfilOpcion.on('click',function(){
+  divFormInfo.hide();
+  crearCuentaSection.hide();
+  seccionEditarPerfil.fadeIn(500);
+
+  editarPerfilOpcion.removeClass('option-form');
+  editarPerfilOpcion.addClass('active');
+
+  infoPersonalOpcion.removeClass('active');
+  infoPersonalOpcion.addClass('option-form');
+
+  CrearCuentaOpcion.removeClass('active');
+  CrearCuentaOpcion.addClass('option-form');
+
+ 
+})
+
+
+CrearCuentaOpcion.on('click',function(){
+  divFormInfo.hide();
+  seccionEditarPerfil.hide();
+  crearCuentaSection.fadeIn(500);
+
+  // quitar clase active y añadir el default
+  infoPersonalOpcion.removeClass('active');
+  infoPersonalOpcion.addClass('option-form');
+
+  // agregar clase active y elimianr el default
+  CrearCuentaOpcion.removeClass('option-form');
+  CrearCuentaOpcion.addClass('active');
+
+  editarPerfilOpcion.removeClass('active');
+  editarPerfilOpcion.addClass('option-form');
+
+});
+
+infoPersonalOpcion.on('click',function(){
+  divFormInfo.fadeIn(500);
+  seccionEditarPerfil.hide();
+  crearCuentaSection.fadeOut();
+
+  CrearCuentaOpcion.removeClass('active');
+  CrearCuentaOpcion.addClass('option-form');
+
+  infoPersonalOpcion.removeClass('option-form');
+  infoPersonalOpcion.addClass('active');
+
+  editarPerfilOpcion.removeClass('active');
+  editarPerfilOpcion.addClass('option-form');
+
+})
+
+
+// editar perfil
+//seccion
+const seccionEditarPerfil = $('#sectionEditarPerfil');
+
+// subir imagen
+const subirImagenContainer =$('.subir-imagen');
+const subirImagenBtn = $('.subir-imagen-btn');
+const inputFotoPerfil = $('#fotoPerfil');
+
+// boton siguiente, omitir y guardar info
+const siguienteBtn = $('#siguienteEdit');
+const omitirBtn  =$('#omitir');
+const guardarEditBtn = $('#guardarEdit');
+
+
+subirImagenBtn.on('click',function(){
+  inputFotoPerfil.click();
+})
+
+// cuando se detecte un cambio que la agregue al contenedor de imagen
+inputFotoPerfil.on('change',function(event){
+  const archivoSeleccionado = event.target.files[0];
+  if(archivoSeleccionado){
+    const urlImagen = URL.createObjectURL(archivoSeleccionado);
+    
+    $('#perfil').attr({
+      src:`${urlImagen}`
+    })
+    siguienteBtn.show();
+  }
+})
+
+// se controla que viene la otra seccion de editar
+siguienteBtn.on('click',function(){
+  subirImagenContainer.hide();
+  piernaSection.fadeIn(1000);
+  omitirBtn.hide();
+  siguienteBtn.hide();
+})
+
+omitirBtn.on('click',function(){
+  subirImagenContainer.hide();
+  piernaSection.fadeIn(1000);
+  omitirBtn.hide();
+  siguienteBtn.hide();
+})
+
+function opcionView(opcion,opanterior){
+  opcion.removeClass('option-form');
+  opcion.addClass('active');
+
+  opanterior.removeClass('active');
+  opanterior.addClass('option-form');
   
 
+}
 
-// manejar info de jugador
+guardarEditBtn.on('click',function(){
+  seccionEditarPerfil.hide();
+  crearCuentaSection.fadeIn(500);
+  opcionView(CrearCuentaOpcion,editarPerfilOpcion);
+  
+})
+
+
+// SECCION PIERNA HABIL
+
+// eleccion
+let eleccion;
+// main div
+const piernaSection = $('.pierna-habil');
+// pierna habil
+const izquierda = $('.izquierda');
+const derecha = $('.derecha');
+
+//contendor al elegir una decision
+const eleccionPierna = $('.decision-pierna');
+
+// boton de cambiar eleccion y siguiente 
+const cambiarPierna = $('#cambiarPiernaHabil');
+
+
+// al hacer click a cambiar elecion de pierna
+cambiarPierna.on('click',function(){
+
+  //esconder botones 
+  cambiarPierna.hide();
+  guardarEditBtn.hide();
+
+  // mostrar opciones
+  izquierda.show();
+  derecha.show();
+
+  // esconder decision anterior div
+  eleccionPierna.hide();
+
+  // quitar clase para agregar la anterior
+  $('.div-pregunta-pierna').removeClass('nogrid');
+
+})
+
+izquierda.on('click',function(){
+  eleccion = "";
+  elegirPiernaHabil('IZQUIERDA');
+  eleccion = izquierda.data('pierna');
+  console.log(eleccion);
+})
+
+derecha.on('click',function(){
+  eleccion = "";
+  elegirPiernaHabil('DERECHA');
+  eleccion = derecha.data('pierna');
+  console.log(eleccion);
+})
+
+
+function elegirPiernaHabil(pierna){
+  
+
+  // agregar pierna habil al texto
+  $('#piernaHabil').text(pierna);
+
+  // elimianr elecciones
+  izquierda.fadeOut(400);
+  derecha.fadeOut(400);
+
+
+  setTimeout(function(){
+    $('.div-pregunta-pierna').addClass('nogrid');
+    // entra el success div 
+    eleccionPierna.fadeIn();
+    // se muestran los botones
+    cambiarPierna.show();
+    $('#guardarEdit').show();
+  },400)
+}
+
+
+
+// creacion de cuenta
+
+// main div
+const crearCuentaSection = $('#crearCuentaSection');
+crearCuentaSection.hide();
+
+// parametros para crear usuario inputs
+const usuarioInput = $('#usuario');
+const correoInput  =$('#correo');
+
+const crearUsuariobtn = $('#crearUsuarioBtn');
+
+// usuarioInput.on('input',function(){
+//   console.log(usuarioInput.val());
+// })
+
+
+
+usuarioInput.on('input',function(){
+  if(usuarioInput.val() !== ''){
+    usuarioExiste(usuarioInput.val());
+  }
+  
+});
+
+correoInput.on('input',function(){
+  if(correoInput.val() !== ''){
+    correoExistente(correoInput.val());
+  }
+
+});
+ 
+
+function usuarioExiste(usuario){
+
+  $.ajax({
+    type:'GET',
+    url:'/usuario/existente/'+usuario,
+    success: function(response){
+      console.log(response);
+      if(response.existe === true){
+        $('.error-user').show();
+      }else{
+        $('.error-user').hide();
+      }
+    },error:function(error){
+      console.error('Error al traer usuario',error);
+    }
+  });
+
+}
+
+function correoExistente(correo){
+  $.ajax({
+    type:'GET',
+    url:'/correo/existente/'+correo,
+    success: function(response){
+      console.log(response);
+      if(response.existe === true){
+        $('.error-correo').show();
+      }else{
+        $('.error-correo').hide();
+      }
+    },error:function(error){
+      console.error('Error al traer correo',error);
+    }
+  });
+}
+
+// manejar form inicial 
+
+// main div
+const divFormInfo = $('.información-personal-form');
+
+// debug
+// divFormInfo.hide();
+crearCuentaSection.hide();
+
+// form
+const formJugador = $('.form-jugador'); 
+
+// input foto de cedula
+const fotoCedulaDiv = $('.cedula-adjuntar');
+const inputFotoCedula = $('#subirCedula');
+
+// boton Enviar formulario
+const enviarFormJugadores = $('#enviarFormulario');
+// enviarFormJugadores.prop('disabled',true);
+
+
+// traer el usuario ID
+const userId = $('#usuarioid');
+
+// pierna habil
+const jugadorPiernaHabil = $('#piernaJugador');
+
+function asignarCampos(){
+  if(eleccion){
+    jugadorPiernaHabil.val(eleccion);
+    console.log(`Se agrego, ${eleccion} como valor a pierna habil`);
+  }
+}
+
+
+
+formJugador.on('submit', function(event) {
+  event.preventDefault(); // Evitar que el formulario se envíe de manera tradicional
+  
+  asignarCampos();
+
+  const formData = new FormData(formJugador [0]);
+  
+  $.ajax({
+    type:'POST',
+    url: '/inscripcion',
+    processData: false, // No procesar los datos (FormData se encarga de ello)
+    contentType: false, // No especificar el tipo de contenido (FormData lo maneja)
+    data: formData, // Pasar directamente el objeto FormData
+    success: function(response){
+      console.log(response);
+      alert('Se han enviado correctamente los datos!')
+    },error:function(error){
+      console.log('Error al enviar datos del jugador',error);
+    }
+  })
+  
+});
+
+
+fotoCedulaDiv.off('click').on('click',function(){
+
+  inputFotoCedula.click();
+  
+  // nombre del archivo seleccionado
+  inputFotoCedula.on('change',function(){
+    const archivos = inputFotoCedula[0].files;
+
+    if (archivos.length > 0) {
+      // Obtener el nombre del primer archivo seleccionado
+      var nombreArchivo = archivos[0].name;   
+      $('.cedula-adjuntar p').empty().text(nombreArchivo);
+
+    }
+  })
+});
+
+
 
 function infoJugador(){
 
@@ -36,6 +394,18 @@ function infoJugador(){
         
         console.log(response.results);
         $('#categorias').empty();
+
+        var opcionPlaceholder = $('<option>', {
+          text: 'Seleccionar una opción',
+          value: '', // Valor vacío
+          disabled: true, // Deshabilitada
+          selected: true, // Seleccionada por defecto
+          hidden: true // Oculta para que no sea seleccionable
+        });
+
+        // Agregar la opción de placeholder al elemento select con id 'miSelect'
+        $('#categorias').prepend(opcionPlaceholder);
+
         response.results.forEach(function(equipo) {
           console.log(equipo.nombre);
 
@@ -66,8 +436,7 @@ function infoJugador(){
   let numero_jugador = null;
   let nombre_equipo = null;
   
-  
-   
+
   // crear botones
   const guardarbtn =$('.guardar-btn');
   const configJugadorbtn = $('.config-btn');
@@ -119,6 +488,28 @@ function infoJugador(){
     configJugadorbtn.prop('disabled',true);
   });
 
+
+  // reglas 1. que solo permita teclear numeros
+  inputnumeroJugador.on('keypress', function(event) {
+    // Obtener el código de la tecla presionada
+    var keyCode = event.which ? event.which : event.keyCode;
+
+    // Permitir solo números (códigos de teclas del 48 al 57)
+    if (keyCode < 48 || keyCode > 57) {
+        // Prevenir la acción predeterminada si la tecla no es un número
+        event.preventDefault();
+    }
+
+    
+  // reglas 2 Limite de digitos (3)
+    if(this.value.length >= 2){
+      event.preventDefault();
+    }
+  });
+
+
+
+
   // accion al hacer input
   inputnumeroJugador.on('input',function(){
 
@@ -128,6 +519,8 @@ function infoJugador(){
   
     numero_jugador = inputnumeroJugador.val();
     guardarbtn.prop('disabled',false);
+
+    if(inputnumeroJugador)
   
     validarNumero(numero_jugador,id_equipo);
   
@@ -147,7 +540,7 @@ function infoJugador(){
               console.log('disponible');
               $('.jugadornodisponible').remove();
   
-              $('.guardar-btn').on('click',function(){
+              $('.guardar-btn').off('click').on('click',function(){
                 $('.division').text(nombre_equipo);
                 $('.numero-jugador').text(numero_jugador);
 
@@ -157,7 +550,10 @@ function infoJugador(){
                 
                 setTimeout(function(){
                   mainlottiediv.show();
-                  const animacion = lottie.loadAnimation(opciones);
+                  if (animacion) {
+                    animacion.destroy();
+                  }
+                  animacion = lottie.loadAnimation(opciones);
                 },500);
   
                 setTimeout(function(){
@@ -186,56 +582,6 @@ function infoJugador(){
 }
 
 infoJugador();
-// // Cargar la animación
-
-// resultado de manejo de info
-// const successInfo = $('.success-config-jugador');
-// successInfo.hide();
-
-// // boton de seguir con la otra opcion 
-// const configJugadorbtn = $('.config-btn');
-
-
-
-// // seccion asignar numero a jugadro
-// const numeroJugadorConfig = $('.config-numero-div');
-// const inputnumeroJugador =$('#inputNumeroJugador');
-
-// numeroJugadorConfig.hide();
-
-
-// configJugadorbtn.prop('disabled',true);
-
-// configJugadorbtn.on('click',function(){
-//   $('.categoria-div').fadeOut(500);
-  
-
-//   configJugadorbtn.fadeOut(500);
-
-  
-
-//   setTimeout(function(){
-//     numeroJugadorConfig.fadeIn(500);
-//     $('.guardar-btn').fadeIn(500);
-//   },500)
-  
-//   configJugadorbtn.prop('disabled',true);
-//   $('.guardar-btn').prop('disabled',true);
-// })
-
-
-// inputnumeroJugador.on('input',function(){
-
-//   if(inputnumeroJugador.val()===''){
-//     $('.guardar-btn').prop('disabled',true);
-//   }
-
-//   numero_jugador = inputnumeroJugador.val();
-//   $('.guardar-btn').prop('disabled',false);
-
-//   validarNumero(numero_jugador,id_equipo);
-
-// });
 
 
 // boton para editar cambios
@@ -244,8 +590,6 @@ const editarJugador = $('.button-editar');
 editarJugador.on('click',function(){
   infoJugador();
 })
-
-
 
 
 })

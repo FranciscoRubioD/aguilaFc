@@ -422,6 +422,24 @@ rangoEdad();
       eliminarJugadorIcon.data('id-jugador',elemento.id);
 
 
+      eliminarJugadorIcon.on('click',function(){
+
+        const idJugador = $(this).data('id-jugador');
+
+        $.ajax({
+          type:'DELETE',
+          url:'/eliminar/jugador/'+idJugador,
+          success:function(response){
+            console.log(response);
+            getJugadores();
+          },error: function(xhr, status, error) {
+            console.error('Error al eliminar jugador:', error);
+          }
+          
+        })
+
+      })
+
       configurarJugadorIcon.on('click',function(){
         const idJugador = $(this).data('id-jugador');
         console.log('mando',idJugador);

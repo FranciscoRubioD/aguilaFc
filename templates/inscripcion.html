@@ -30,54 +30,66 @@
     <div class="nombre-equipo-div">
       <p>Aguila FC</p>
     </div>
+
+
   </header>
 
   <section class="main-section">
 
     
     <div class="content-div">
-      
       <nav class="section-form">
-        <div class="option-form">
+        <div class="option-form" id="opcionInfoPersonal">
           <p>INFORMACIÓN PERSONAL</p>
         </div>
-        <div class="option-form">
-          <p>CREAR CUENTA</p>
-        </div>
-        <div class="option-form">
+        
+        <div class="option-form" id="opcionEditarPerfil">
           <p>EDITAR PERFIL</p>
-          </div>
+        </div>
+
+        <div class="option-form" id="opcionCrearCuenta">
+          <p>CREAR CUENTA</p>
+        </div>  
       </nav>
 
       <div class="información-personal-form">
         <h1>Información Personal</h1>
-        <form action="" class="form-jugador">
+        <form action="/inscripcion" class="form-jugador" method="post" enctype="multipart/form-data">
           <div class="row">
-            <input type="text" name="nombre" placeholder="NOMBRE" required>
-            <input type="text" name="apellido" placeholder="APELLIDO" required>
+            <input type="text" name="Nombre" placeholder="NOMBRE" required>
+            <input type="text" name="Apellido" placeholder="APELLIDO" required>
           </div>
 
           <div class="row">
-            <input type="date" name="nombre" placeholder="FECHA DE NACIMIENTO" required>
-            <input type="text" name="apellido" placeholder="CEDULA DE IDENTIDAD" required>
+            <input type="date" name="Fecha_Nacimiento" placeholder="FECHA DE NACIMIENTO" required>
+            <input type="text" name="cedula" placeholder="CEDULA DE IDENTIDAD" required>
           </div>
 
           <div class="row">
-            <input type="text" name="nombre" placeholder="PAIS" required>
-            <input type="text" name="apellido" placeholder="REGION" required>
-            <input type="text" name="apellido" placeholder="CIUDAD" required>
+            <input type="text" name="pais" placeholder="PAIS" required>
+            <input type="text" name="provincia" placeholder="PROVINCIA" required>
+            <input type="text" name="distrito" placeholder="DISTRITO" required>
           </div>
           <div class="row">
-            <input type="text" name="nombre" placeholder="TELÉFONO CELULAR" required>
-            <input type="text" name="apellido" placeholder="INSTAGRAM (opcional)">
+            <input type="text" name="telefono" placeholder="TELÉFONO CELULAR" required>
+            <input type="text" name="instagram" placeholder="INSTAGRAM (opcional)">
           </div>
 
           <div class="row">
-            <input type="text" name="nombre" placeholder="CORREO ELECTRONICO" required>
-            <!-- <select name="" id="categorias">
-              <option value="">CATEGORIA</option>
-            </select> -->
+            <input type="text" name="correo"  placeholder="CORREO ELECTRONICO" required>
+
+            <div class="cedula-adjuntar">
+              <p>FOTO DE CÉDULA</p>
+              <div class="image-container-icon"><i class="fa-regular fa-image"></i></div>
+            </div>
+            <input name="cedulaFoto" type="file" style="display: none;" id="subirCedula" accept=".png, .jpg, .pdf, .docx" required>
           </div>
+
+          <!-- nombre de usuario agregar -->
+          <input type="text" id="usuarioid" style="display: none;">
+
+          <input type="text" id="piernaJugador" style="display: none;">
+
 
           <!-- <h1>Información de Jugador</h1> -->
           <div class="lottieDiv">
@@ -85,12 +97,11 @@
           </div>
           
 
-          <div class="success-config-jugador">
+          <div class="success-config-jugador" style="display: none;">
             <div class="inner-success-jugador">
               <div class="equipo-div">
                 <p class="division"></p>
                 <img src="/Aguilas-FC-logo.png" alt="" class="logo-equipo-div">
-                
               </div>
               <div class="jugadornum-div">
                 <p>Número de Jugador</p>
@@ -107,37 +118,139 @@
 
             <div class="categoria-div">
               <h1 id="categoriah1">CATEGORÍA</h1>
-              <select name="" id="categorias">
-                <option value="">CATEGORIA</option>
-              </select>
+              <div class="select-categoria-div">
+                <select name="categoria" id="categorias" required>
+                  <option value="">CATEGORIA</option>
+                </select>
+              </div>
             </div>
            
-      
             <div class="config-numero-div">
               <h1>Número de Jugador</h1>
               <div class="input-shirt-number">
-                <input type="text" id="inputNumeroJugador">
+                <input name="numeroJugador" type="text" id="inputNumeroJugador" required>
               </div>
             </div>
             
             <button type="button" class="config-btn">Siguiente</button>
             <button type="button" class="guardar-btn">Guardar</button>
 
-
-
           </div>
-      
+
+          <div style="display:flex; justify-content:center;">
+            <button id="enviarFormulario" type="submit">Enviar</button>
+          </div>
         </form>
       </div>
 
+      <section id="crearCuentaSection">
+
+        <div class="div-crear-cuenta">
+
+          <div class="inner-crear-cuenta">
+            <div class="form-div-registro">
+              <form action="" class="form-registro">
+                <h1>Crear Cuenta</h1>
+
+                <div class="data-registro">
+                  <div class="row-2">
+                    <input type="text" name="" id="usuario" placeholder="Usuario">
+                    <span class="error-user">Nombre de usuario ya existe</span>
+                  </div>
+
+                  <div class="row-2">
+                  <input type="text" name="" id="correo" placeholder="Correo Electrónico">
+                  <span class="error-correo">Correo ya existe</span>
+                  </div>
+
+                  <div class="row-2">
+                    <input type="password" placeholder="Contraseña">
+                  </div>
+
+                  <div class="row-2">
+                    <p class="inicioSesion">Ya tienes una cuenta? Inicia sesión <span><a class="inicioSesionLink" href="">aquí</a></span></p>
+                  </div>
+                  
+                 
+                  <button type="button" id="crearUsuarioBtn">Crear Cuenta</button>
+                </div>
+                
+              </form>
+              
+            </div>
+
+            <div class="imagen-div-registro">
+              <img src="/Aguilas-FC-logo.png" alt="">
+            </div>
+
+          </div>
+          
+
+        </div>
+
+
+      </section>
+
+
+      <section class="section-editar-perfil" id="sectionEditarPerfil" style="display: none;">
+
+          <div class="edit-row2">
+            <div class="subir-imagen">
+              <p>Sube una imagen</p>
+              <div class="contenedor-circular">
+                <img src="" alt="" id="perfil">
+              </div>
+  
+              <div class="div-input-img">
+                <input type="file" style="display:none" id="fotoPerfil" accept="image/jpeg, image/png">
+                <div class="subir-imagen-btn">Subir Imagen <span><i class="fa-regular fa-image"></i></span></div>
+                <p>Formatos válidos (JPG, PNG)</p>
+              </div>
+              
+            </div>
+            
+            <!-- <h2 style="margin: 0;">SELECCIONA TU PIERNA HÁBIL</h2> -->
+            <div class="pierna-habil" style="display: none;">
+              <div class="div-pregunta-pierna">
+                <div class="izquierda" data-pierna="Izquierda">
+                  <h1>IZQUIERDA</h1>
+                </div>
+                <div class="derecha" data-pierna="Derecha">
+                  <h1>DERECHA</h1>
+                </div>
+
+                <div class="decision-pierna" style="display: none;">
+                  <h1 id="piernaHabil"></h1>
+                  <img src="/imagenes/imagen-jugando.svg" alt="">
+                </div>
+              </div>
+            </div>
+
+            <div class="div-botones-edit"> 
+              <button id="omitir">Omitir</button>
+              <button id="cambiarPiernaHabil" style="display: none;">Cambiar</button>
+              <button style="display: none;" id="siguienteEdit">Siguiente</button>
+              <button style="display: none;" id="guardarEdit">Guardar</button>
+            </div>
+            
+          </div>
+
+
+        
+       
+
+
+      </section>
+
+      
 
     </div>
-
 
   </section>
 
   
   <script src="/js/inscripcion.js"></script>
+  <script src="/js/formInscripcion.js"></script>
 
 </body>
 </html>
