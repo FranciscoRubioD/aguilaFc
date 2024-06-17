@@ -68,6 +68,37 @@ header{
 }
 
 
+/* Iconos redes sociales */
+.div-redes{
+  /* background-color: red; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.inner-div-redes{
+  /* background-color: blue; */
+  height: 80%;
+  width: 90%;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  gap: 3%;
+}
+
+.div-redes i{
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.div-redes i:hover{
+  opacity: 0.8;
+}
+
+
+
 @media screen and (max-width: 768px) {
   /* Estilos aquí */
 

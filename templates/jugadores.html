@@ -11,243 +11,575 @@
   <!-- font awesome -->
   <script src="https://kit.fontawesome.com/7b77090003.js" crossorigin="anonymous"></script>
 
+  <!-- LOTTIE -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.7/lottie.min.js"></script>
+  <!-- css -->
   <link rel="stylesheet" href="css/jugadores.css">
-
+  <link rel="stylesheet" href="css/modal-jugador.css">
+  <link rel="stylesheet" href="css/complementos.css">
 </head>
 <body>
   
-  <header>
-    <h1>Configuración de Usuarios</h1>
-  </header>
+  <!-- <header>
 
+  </header> -->
 
-  <section class="seccion-jugadores">
+  <section class="main">
 
-    <div class="titulo-seccion-jugadores">
-      <p>Tabla de Jugadores</p>
-    </div>
-    <div class="herramientas">
-      
-      <button class="add-player-btn"><span><i class="fa-solid fa-plus"></i></span> Añadir</button>
-      <div class="icon-tools">
-        <div class="search-bar-container">
-          <input type="text" name="buscar" id="jugadorBuscar" placeholder="Buscar">
-          <i class="fa-solid fa-xmark search-bar-xmark"></i>
-        </div>
-        <i class="fa-solid fa-magnifying-glass" id="lupa-search-bar"></i>
-
-        <!-- filtro -->
-        <div class="filter-main-div">
-          <i class="fa-solid fa-filter" id="filtrarTablaJugadores"></i>
-          <div class="filter-list-div">
-
-            <div class="filter-field" id="filtroPosicion" data-filtro = "posicion">
-              
-              <p>Posicion</p>
-              
-              <div class="secundary-filter-list">
-                <div class="filter-field-secundary" data-opcion ="Portero"><p>Portero</p></div>
-                <div class="filter-field-secundary" data-opcion ="Defensa Central" ><p>Defensa Central</p></div>
-                <div class="filter-field-secundary" data-opcion ="Defensa Lateral Izquierdo"><p>Defensa Lateral Izquierdo</p></div>
-                <div class="filter-field-secundary" data-opcion ="Defensa Lateral Derecho"><p>Defensa Lateral Derecho</p></div>
-                <div class="filter-field-secundary" data-opcion ="Centrocampista"><p>Centrocampista</p></div>
-                <div class="filter-field-secundary" data-opcion ="Delantero Central"><p>Delantero Central</p></div>
-                <div class="filter-field-secundary" data-opcion ="Lateral Derecho"><p>Lateral Derecho</p></div>
-                <div class="filter-field-secundary" data-opcion ="Lateral Izquierdo"><p>Lateral Izquierdo</p></div>
-              </div>
-
-            </div>
-
-
-            <div class="filter-field" id="filtroEdad" data-filtro = "edad">
-              <p>Rango de edad</p>
-            
-              <div class="secundary-filter-list-edad" id="opcionContainerEdad">
-            
-              </div>
-
-            </div>
-
-            <div class="filter-field" id="filtroSalud" data-filtro = "estadoSalud">
-              <p>Estado Salud</p>
-              
-              <div class="secundary-filter-list-salud">
-                <div class="filter-field-secundary" data-opcion ="Sano"><p>Sano</p></div>
-                <div class="filter-field-secundary" data-opcion ="Lesionado"><p>Lesionado</p></div>
-                <div class="filter-field-secundary" data-opcion="No disponible"=""><p>No disponible</p></div>
-              </div>
-            </div>
-            <div class="filter-field" id="filtroFecha" data-filtro = "fecha_creacion">
-              <p>Fecha de creación</p>
-              
-              <div class="secundary-filter-list-fecha" id="opcionContainerFecha">
-
-              </div>
-                
-           
-            </div>
-
-            <div class="filter-field" id="filtroEquipo" data-filtro ="equipo">
-              <p>Equipo</p>
-            
-              <div class="secundary-filter-list-equipo" id="opcionContainer">
-                
-              </div>
-
-            </div>
-          </div>
-        </div>
-        
-        <i class="fa-solid fa-rotate-right"></i>
-      </div>
-      
-    </div>
-
-
-    <!-- filtro responsive -->
-    <div class="modal-filtro">
-      <div class="modal-content">
-        <div class="modal-head">
-          <i class="fa-solid fa-xmark modal-x-mark"></i>
-          <h2 style="font-size: 15px;">Filtros</h2>
-        </div>
-
-        <div class="modal-body">
-
-          <div class="filtrosResponsive">
-            <div class="containerfilterSelect">
-            <label for="filtros" id="filtrosSelectLabel">Filtrando por:</label>
-            <select name="filtros" id="filtrosSelect">
-              <option>Elegir filtro</option>
-              <option value="posicionSelect">Posicion</option>
-              <option value="edadFiltroDiv">Rango de Edad</option>
-              <option value="selectSaludFiltro">Estado de salud</option>
-              <option value="fechaSelectDiv">Fecha de creacion</option>
-              <option value="equipoDivFiltro">Equipo</option>
-            </select>
-            </div>
-            
-            <div class="containerFilterInput filtro"  id="posicionSelect">
-              <label for="posicion">Posicion</label>
-              <select name="posicion">
-                <option value="nulo">Elegir opcion</option>
-                <option value="Portero">Portero</option>
-                <option value="Defensa Central">Defensa Central</option>
-                <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
-                <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
-                <option value="Centrocampista">Centrocampista</option>
-                <option value="Delantero Central">Delantero Central</option>
-                <option value="Lateral Derecho">Lateral Derecho</option>
-                <option value="Lateral Izquierdo">Lateral Izquierdo</option>
-              </select>
-            </div>
-          
-            <div class="containerFilterInput filtro" id="edadFiltroDiv">
-              <label for="edad">Rango de edad</label>
-              <select name="edad" id="selectEdadFiltro" >
-                <option value="nulo">Elegir opcion</option>
-              </select>
-            </div>
-           
-            <div class="containerFilterInput filtro" id="selectSaludFiltro">
-              <label for="estadoSalud">Estado Salud</label>
-              <select name="estadoSalud">
-                <option value="nulo">Elegir opcion</option>
-                <option value="Sano">Sano</option>
-                <option value="Lesionado">Lesionado</option>
-                <option value="No disponible">No disponible</option>
-              </select>
-            </div>
-            
-            <div class="containerFilterInput filtro" id="fechaSelectDiv">
-              <label for="fecha_creacion">Fecha de Creacion</label>
-              <select name="fecha_creacion" id="selectFechaCreacion">
-                <option value="nulo">Elegir opcion</option>
-              </select>
-            </div>
-            
-
-            <div class="containerFilterInput filtro" id="equipoDivFiltro" >
-              <label for="equipo">Equipo</label>
-              <select name="equipo" id="selectEquipo">
-                <option>Elegir opcion</option>
-              </select>
-            </div>
-            
-
-            <button id="addfiltroResponsive">añadir filtro</button>
-          </div>
-          
-        </div>
-
-
-      </div>
-      
-    </div>
-
-
-
-    <!-- etiquetas de filtro -->
-    <div class="etiqueta-filtro-div">
-      <p>Filtros</p>
-      <div class="inner-etiquetas-div">
-        <button class="filtrar-button">
-          Filtrar
-        </button>
-      </div>
-
-    
-      <!-- <div class="etiquetaFiltro">
-        <p id="etiquetaFiltroNombre"></p>
-        <i class="fa-solid fa-xmark eliminarFiltroIcon"></i>
-      </div> -->
-    </div>
-    
   
-    <table class="tabla-jugadores">
-      <tr class="row-encabezado">
-        <th class="encabezado">Nombre</th>
-        <th class="encabezado">Cedula</th>
-        <th class="encabezado">Teléfono</th>
-        <th class="encabezado">Edad</th>
-        <th class="encabezado">Posición</th>
-        <th class="encabezado">Numero Jugador</th>
-        <th class="encabezado">Estado Salud</th>
-        <th class="encabezado">Fecha de creacion</th>
-        <th class="encabezado">Equipo</th>
-        <th class="encabezado">Acción</th>
-      </tr>
-      
-      
-      <tr class="row-data">
-        
-      </tr>
-      
-    </table>
+    <section class="tool-bar">
 
-    <div class="barra-paginacion">
-      <div class="inner-barra-paginacion">
-        <button id="btnAnterior">
-           <span style="margin-right:10px"><i class="fa-solid fa-chevron-left"></i></span>
-           Pagina anterior
-        </button>
-        <div class="numeros-paginacion">
+      <div class="academy-name">
+        <div class="title-name">
+          <div class="logo-aguila-container">
+            <img src="Aguilas-FC-logo.png" alt="" class="logo-aguila">
+          </div>
+          <p class="tool-bar-name">Aguila FC</p>
+        </div>
+        
+        <div class="burger">
+          <i class="fa-solid fa-bars" id="burger-icon"></i>
+        </div>
+      </div>
+
+      <div class="option-bar">
+        <div class="option">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="name-option">
+            <p>Dashboard</p>
+          </div>
           
         </div>
-        <button id="btnSiguiente">
-          Siguiente Página
-          <span  style="margin-left:10px"><i class="fa-solid fa-chevron-right"></i></span>
-        </button>
+
+        <div class="option">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="name-option">
+            <p>Jugadores</p>
+          </div>
+          
+        </div>
+        
+        <div class="option">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="name-option">
+            <p>Usuarios</p>
+          </div>
+      
+        </div>
+
+        <div class="option">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="name-option">
+            <p>Entrenamientos</p>
+          </div>
+   
+        </div>
+        
+        <div class="option">
+          <i class="fa-solid fa-chart-line"></i>
+          <div class="name-option">
+            <p>Partidos</p>
+          </div>
+       
+        </div>
+        
+        
+       
+      </div>
+     
+    </section>
+  
+    <section class="seccion-jugadores">
+      
+      <div class="titulo-seccion-jugadores">
+        <p>Tabla de Jugadores</p>
+      </div>
+
+      <div class="dashboard-jugadores">
+        <div class="jugadores-totales">
+         <div class="icon-dashboard">
+          
+         </div>
+         
+         <div>
+          <div class="dato-dashboard">
+            <p id="totalJugadores" style="margin: 0;"></p>
+          </div>
+          <div class="descripcion-dato">jugadores</div>
+         </div>
+
+        </div>
+
+        <div class="jugadores-totales">
+          <div class="icon-dashboard">
+           
+          </div>
+          
+          <div>
+           <div class="dato-dashboard">
+            <p id="jugadoresDisponibles" style="margin: 0;"></p>   
+           </div>
+           <div class="descripcion-dato">jugadores disponibles</div>
+          </div>
+ 
+         </div>
+
+         <div class="jugadores-totales">
+          <div class="icon-dashboard">
+           
+          </div>
+          
+          <div>
+           <div class="dato-dashboard">532</div>
+           <div class="descripcion-dato">jugadores</div>
+          </div>
+ 
+         </div>
+         <div class="jugadores-totales">
+          <div class="icon-dashboard">
+           
+          </div>
+          
+          <div>
+           <div class="dato-dashboard">532</div>
+           <div class="descripcion-dato">jugadores</div>
+          </div>
+ 
+         </div>
+      </div>
+
+      <div class="herramientas">
+        
+        <button class="add-player-btn"><span><i class="fa-solid fa-plus"></i></span> Añadir</button>
+  
+  
+        <div class="icon-tools">
+          <div class="search-bar-container">
+            <input type="text" name="buscar" id="jugadorBuscar" placeholder="Buscar">
+            <i class="fa-solid fa-xmark search-bar-xmark"></i>
+          </div>
+          <i class="fa-solid fa-magnifying-glass" id="lupa-search-bar"></i>
+  
+          <!-- filtro -->
+          <div class="filter-main-div">
+            <i class="fa-solid fa-filter" id="filtrarTablaJugadores"></i>
+            <div class="filter-list-div">
+  
+              <div class="filter-field" id="filtroPosicion" data-filtro = "posicion">
+                
+                <p>Posicion</p>
+                
+                <div class="secundary-filter-list">
+                  <div class="filter-field-secundary" data-opcion ="Portero"><p>Portero</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Defensa Central" ><p>Defensa Central</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Defensa Lateral Izquierdo"><p>Defensa Lateral Izquierdo</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Defensa Lateral Derecho"><p>Defensa Lateral Derecho</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Centrocampista"><p>Centrocampista</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Delantero Central"><p>Delantero Central</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Lateral Derecho"><p>Lateral Derecho</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Lateral Izquierdo"><p>Lateral Izquierdo</p></div>
+                </div>
+  
+              </div>
+  
+  
+              <div class="filter-field" id="filtroEdad" data-filtro = "edad">
+                <p>Rango de edad</p>
+              
+                <div class="secundary-filter-list-edad" id="opcionContainerEdad">
+              
+                </div>
+  
+              </div>
+  
+              <div class="filter-field" id="filtroSalud" data-filtro = "estadoSalud">
+                <p>Estado Salud</p>
+                
+                <div class="secundary-filter-list-salud">
+                  <div class="filter-field-secundary" data-opcion ="Sano"><p>Sano</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Lesionado"><p>Lesionado</p></div>
+                  <div class="filter-field-secundary" data-opcion="No disponible"=""><p>No disponible</p></div>
+                </div>
+              </div>
+              <div class="filter-field" id="filtroFecha" data-filtro = "fecha_creacion">
+                <p>Fecha de creación</p>
+                
+                <div class="secundary-filter-list-fecha" id="opcionContainerFecha">
+  
+                </div>
+                  
+             
+              </div>
+  
+              <div class="filter-field" id="filtroEquipo" data-filtro ="equipo">
+                <p>Equipo</p>
+              
+                <div class="secundary-filter-list-equipo" id="opcionContainer">
+                  
+                </div>
+  
+              </div>
+            </div>
+          </div>
+          
+          <i class="fa-solid fa-rotate-right"></i>
+        </div>
         
       </div>
-    </div>
-
+  
+  
+      <div class="seccion-agregar-jugador" style="display: none;">
+        <div class="sub-link">
+          <div style="display: flex; align-items: center;
+          gap: 1%;">
+            <p>Enlace de Invitación</p>
+            <i class="fa-solid fa-rotate-right refrescar" style="color: grey; cursor: pointer;"></i>
+          </div>
+         
+  
+          <div id="copy-link">
+            <div class="link-registro">
+              <p id="enlace-form"></p>
+            </div>
+            <button id="copy-link-btn">Copiar</button>
+            
+          </div>
+        </div>
+  
+        <div class="crear-jugador"> 
+          <p>Crear Jugador</p>
+          <button>Crear</button>
+        </div>
+        
+      </div>
+     
+  
+  
+      <!-- filtro responsive -->
+      <div class="modal-filtro">
+        <div class="modal-content">
+          <div class="modal-head">
+            <i class="fa-solid fa-xmark modal-x-mark"></i>
+            <h2 style="font-size: 15px;">Filtros</h2>
+          </div>
+  
+          <div class="modal-body">
+  
+            <div class="filtrosResponsive">
+              <div class="containerfilterSelect">
+              <label for="filtros" id="filtrosSelectLabel">Filtrando por:</label>
+              <select name="filtros" id="filtrosSelect">
+                <option>Elegir filtro</option>
+                <option value="posicionSelect">Posicion</option>
+                <option value="edadFiltroDiv">Rango de Edad</option>
+                <option value="selectSaludFiltro">Estado de salud</option>
+                <option value="fechaSelectDiv">Fecha de creacion</option>
+                <option value="equipoDivFiltro">Equipo</option>
+              </select>
+              </div>
+              
+              <div class="containerFilterInput filtro"  id="posicionSelect">
+                <label for="posicion">Posicion</label>
+                <select name="posicion">
+                  <option value="nulo">Elegir opcion</option>
+                  <option value="Portero">Portero</option>
+                  <option value="Defensa Central">Defensa Central</option>
+                  <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
+                  <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
+                  <option value="Centrocampista">Centrocampista</option>
+                  <option value="Delantero Central">Delantero Central</option>
+                  <option value="Lateral Derecho">Lateral Derecho</option>
+                  <option value="Lateral Izquierdo">Lateral Izquierdo</option>
+                </select>
+              </div>
+            
+              <div class="containerFilterInput filtro" id="edadFiltroDiv">
+                <label for="edad">Rango de edad</label>
+                <select name="edad" id="selectEdadFiltro" >
+                  <option value="nulo">Elegir opcion</option>
+                </select>
+              </div>
+             
+              <div class="containerFilterInput filtro" id="selectSaludFiltro">
+                <label for="estadoSalud">Estado Salud</label>
+                <select name="estadoSalud">
+                  <option value="nulo">Elegir opcion</option>
+                  <option value="Sano">Sano</option>
+                  <option value="Lesionado">Lesionado</option>
+                  <option value="No disponible">No disponible</option>
+                </select>
+              </div>
+              
+              <div class="containerFilterInput filtro" id="fechaSelectDiv">
+                <label for="fecha_creacion">Fecha de Creacion</label>
+                <select name="fecha_creacion" id="selectFechaCreacion">
+                  <option value="nulo">Elegir opcion</option>
+                </select>
+              </div>
+              
+  
+              <div class="containerFilterInput filtro" id="equipoDivFiltro" >
+                <label for="equipo">Equipo</label>
+                <select name="equipo" id="selectEquipo">
+                  <option>Elegir opcion</option>
+                </select>
+              </div>
+              
+  
+              <button id="addfiltroResponsive">añadir filtro</button>
+            </div>
+            
+          </div>
+  
+  
+        </div>
+        
+      </div>
+  
+  
+  
+      <!-- etiquetas de filtro -->
+      <div class="etiqueta-filtro-div">
+        <p>Filtros</p>
+        <div class="inner-etiquetas-div">
+          <button class="filtrar-button">
+            Filtrar
+          </button>
+        </div>
+  
+      
+        <!-- <div class="etiquetaFiltro">
+          <p id="etiquetaFiltroNombre"></p>
+          <i class="fa-solid fa-xmark eliminarFiltroIcon"></i>
+        </div> -->
+      </div>
+      
     
+      <table class="tabla-jugadores">
+        <tr class="row-encabezado">
+          <th class="encabezado">Nombre</th>
+          <th class="encabezado">Cedula</th>
+          <th class="encabezado">Teléfono</th>
+          <th class="encabezado">Edad</th>
+          <th class="encabezado">Posición</th>
+          <th class="encabezado">Numero Jugador</th>
+          <th class="encabezado">Estado Salud</th>
+          <th class="encabezado">Fecha de creacion</th>
+          <th class="encabezado">Equipo</th>
+          <th class="encabezado">Acción</th>
+        </tr>
+        
+        
+        <tr class="row-data">
+          
+        </tr>
+        
+      </table>
+  
+      <div class="barra-paginacion">
+        <div class="inner-barra-paginacion">
+          <button id="btnAnterior">
+             <span style="margin-right:10px"><i class="fa-solid fa-chevron-left"></i></span>
+             Pagina anterior
+          </button>
+          <div class="numeros-paginacion">
+            
+          </div>
+          <button id="btnSiguiente">
+            Siguiente Página
+            <span  style="margin-left:10px"><i class="fa-solid fa-chevron-right"></i></span>
+          </button>
+          
+        </div>
+      </div>
+  
+      
+    </section>
   </section>
 
   
-  
+  <!-- seccion imporante informacion total del jugador -->
 
+  <div class="modal-jugador" style="display: none;">
+    <div class="modal-content-jugador">
+
+      <div class="modal-jugador-header">
+        <i class="fa-solid fa-xmark closePlayer"></i>
+      </div>
+      
+      <div class="modal-jugador-profile">
+        <div class="section-1-profile">
+          <div class="foto-perfil">
+            <div class="foto-perfil-container">
+
+            </div>
+          </div>
+
+          <div class="info-perfil">
+            <div class="info-perfil-nombre">
+              <p id="nombre-m">Francisco Rubio</p>
+            </div>
+
+            <div class="info-perfil-1">
+              <div class="info-perfil-2">
+                <div class="info-perfil-col-1">
+                  <div class="info-perfil-data">
+                    <div>
+                      <i class="fa-regular fa-address-card"></i>
+                    </div>
+                    <div>
+                      <p id="cedula-m"></p>
+                    </div>
+                  </div>
+  
+                  <div class="info-perfil-data">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                    <p id="telefono-m"></p>
+                  </div>
+            
+                  <div class="info-perfil-data">
+                    <i class="fa-solid fa-weight-scale"></i>
+                    <p>130lbs</p>
+                  </div>
+  
+                  
+                </div>
+  
+                <div class="info-perfil-col-2">
+                  
+  
+                  <div class="info-perfil-data">
+                    <p style="color: rgb(21, 21, 21);">Edad:</p>
+                    <p id="edad-m"></p>
+                  </div>
+  
+                  <div class="info-perfil-data">
+                    <i class="fa-solid fa-baby-carriage"></i>
+                    <p id="fechaNacimiento-m">2003/03/22</p>
+                  </div>
+                  
+                  <div class="info-perfil-data">
+                    <i class="fa-solid fa-ruler-vertical"></i>
+                    <p>170m</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="aditional-info">
+                <div class="socials-info">
+                  <i class="fa-regular fa-envelope"></i>
+                  <p id="email-m"></p>
+                </div>
+                <div class="socials-info">
+                  <i class="fa-brands fa-instagram"></i>
+                  <p id="instagram-m"></p>
+                </div>
+                
+              </div>
+            </div>
+            
+
+            
+
+
+          </div>
+        </div>
+
+        <div class="section-2-info">
+
+          <div class="section-2-info-header">
+            <div class="section-2-option" id="info-section">
+              <p>Informacion</p>
+            </div>
+
+            <div class="section-2-option" id="document-section">
+              <p>Documentos</p>
+            </div>
+
+            <div class="section-2-option">
+              <p>Estado</p>
+            </div>
+          </div>
+
+          <section class="stats-player">
+
+           <table class="stats-table">
+            
+            <tr>
+              <th>Equipo</th>
+              <td id="equipo-m"></td>
+            </tr>
+            <tr>
+              <th>Posicion</th>
+              <td id="posicion-m"></td>
+            </tr>
+
+            <tr>
+              <th>Numero de Jugador</th>
+              <td id="numero-camiseta-m"></td>
+            </tr>
+
+            <tr>
+              <th>Pierna Hábil</th>
+              <td id="pierna-m"></td>
+            </tr>
+
+            <tr>
+              <th>Tarjetas Amarillas</th>
+              <td id="tarjeta-amarilla-m"></td>
+            </tr>
+            <tr>
+              <th>Tarjetas Rojas</th>
+              <td></td>
+            </tr>
+
+            <tr>
+              <th>País</th>
+              <td id="pais-m"></td>
+            </tr>
+
+            <tr>
+              <th>Provincia</th>
+              <td id="provincia-m"></td>
+            </tr>
+
+            <tr>
+              <th>Distrito</th>
+              <td id="distrito-m"></td>
+            </tr>
+            
+           </table>
+          </section>
+
+          <section class="documentos">
+            <div class="doc-gallery">
+              <div class="doc-p">
+                <div class="doc-obj">
+                  <i class="fa-regular fa-address-card id-big"></i>
+                  <p>Cedula</p>
+                </div>
+                <div class="doc-obj">
+                  <i class="fa-solid fa-stamp id-big"></i>
+                  <p>Certificado</p>
+                </div>
+              </div>
+              <div class="doc-p">
+                <div class="doc-obj">
+                  <i class="fa-solid fa-receipt id-big"></i>
+                  <p>Comprobante</p>
+                </div>
+                <div class="doc-obj">Otro</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- seccion imporante informacion total del jugador -->
 
   <div class="modal">
 
@@ -332,8 +664,58 @@
   </div>
 
 
+  <!-- complementos y pop ups -->
+
+  <!-- confirmar borrar -->
+   <div class="pop-up-delete" style="display: none;">
+    <div class="content-delete">
+
+      
+      <div class="delete-mssg">
+        <div class="delete-content">
+          <div class="closeDelete">
+            <i class="fa-solid fa-xmark"></i>
+          </div>  
+          
+          <div class="delete-msg-div">
+            <div class="exclamacion-cont">
+              <img src="/logos/signo-de-exclamacion.png" alt="">
+            </div>
+            <p class="delete-title">Este jugador será eliminado</p>
+            <p class="delete-info">Este jugador y usuario será eliminado del sistema</p>
+          </div>
+
+          <div class="delete-button">
+            <button class="cancel-del">Cancelar</button>
+            <button class="delete-btn">Eliminar</button>
+          </div>
+          
+          
+        </div>
+
+      
+      </div>
+
+      <div class="deleted" style="display: none;">
+
+            <div class="closeDelete">
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div class="lottie-delete">
+              <div id="lottie-trash"></div>
+            </div>
+            <div class="delete-succesful">
+              <p>Registro Eliminado</p>
+            </div>
+      </div>
+      
+
+    </div>
+   </div>
+  
 </body>
 </html>
 
-
+<script src="/js/infoJugador.js"></script>
 <script src="/js/jugadores.js"></script>

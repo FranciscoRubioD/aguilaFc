@@ -1,8 +1,37 @@
 const express = require('express');
-const app = express();
-const port = 3000;
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const uuid = require('uuid'); // Para generar identificadores únicos
+const crypto = require('crypto');
+
+
+
+// Generar un identificador único para el enlace temporal
+let uniqueLinkId = uuid.v4();
+let linkExpiration = Date.now() + 2 * 60 * 60 * 1000; // El enlace es válido por 2 horas
+
+
+
+// funcion para Generar identificador único 
+function regenerateLink(){
+  uniqueLinkId = uuid.v4();
+  let linkExpiration = Date.now() + 2 * 60 * 60 * 1000; // El enlace es válido por 2 horas
+  console.log(`Nuevo enlace generado: ${uniqueLinkId}`);
+}
+
+// Configurar un intervalo para regenerar el enlace cada 2 horas
+setInterval(regenerateLink, 2 * 60 * 60 * 1000);
+
+// llave secreta
+const secretKey = crypto.randomBytes(32).toString('hex');
+console.log(secretKey);
+
+const app = express();
+const port = 3000;
+app.use(cookieParser());
+
 
 
 // conexion a mysql
@@ -44,15 +73,168 @@ app.get('/',(req,res)=>{
   res.sendFile(__dirname + '/templates/index.html');
 })
 
-
 // esta ruta se usar para crear un jugador
 
 // formulario para crear jugador end user
+app.get('/registro', (req, res) => {
+  // Renderiza el HTML con el enlace único y lo envía al cliente
+  res.json({ uniqueLinkId: `localhost:3000/formulario/inscripcion/${uniqueLinkId}`});
+});
 
-app.get('/formulario/inscripcion',(req,res)=>{
-  res.sendFile(__dirname + '/templates/inscripcion.html');
+app.post('/regenerar/link/inscripcion',(req,res)=>{
+  regenerateLink();
+  res.json({ uniqueLinkId: uniqueLinkId });
 })
 
+app.get(`/formulario/inscripcion/:uniqueLinkId`,(req,res)=>{
+  
+  const enlaceTemporal = req.params.uniqueLinkId;
+  console.log(enlaceTemporal);
+  if(enlaceTemporal === uniqueLinkId && Date.now() < linkExpiration)  {
+    res.sendFile(__dirname + '/templates/inscripcion.html');
+  }else{
+     // Si no coincide o no es válido, devolver un error o una página de error
+     res.status(404).send('Enlace temporal no válido o ha expirado');
+  }
+
+ 
+})
+
+
+// majeo de sesiones
+app.use(session({
+  secret: secretKey, // Cambia esto por una clave secreta segura
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Debe ser true si usas HTTPS
+}))
+
+
+app.post('/save-personal-info',upload.single('cedulaFoto'),(req,res) =>{
+  // Guarda la información personal en la sesión
+  req.session.personalInfo = req.body;
+  req.session.cedulaFoto = req.file.originalname;
+   // Imprime la información recibida en el servidor
+   console.log(req.file.originalname)
+   console.log('Información personal recibida:', req.body);
+
+  res.send({ message: 'Información personal guardada' });
+});
+
+app.post('/save-photo',upload.single('fotoPerfil'),(req,res) =>{
+
+  req.session.fotoPerfil = req.file.originalname;
+  // Puedes acceder al nombre original de la foto así
+  console.log('Nombre original de la foto:', req.file.originalname);
+
+  // No necesitas acceder a req.body porque multer ya procesa la foto y la coloca en req.file
+  console.log('Foto recibida:', req.file);
+
+  res.send({ message: 'Cuenta de usuario guardada' });
+});
+
+app.post('/save-user-account', (req, res) => {
+  // Guarda el nombre de usuario y contraseña en la sesión
+  req.session.userAccount = req.body;
+  console.log(req.body);
+  res.send({ message: 'Cuenta de usuario guardada' });
+});
+
+
+app.post('/finalize-signup',(req,res) =>{
+
+    const { personalInfo, fotoPerfil, userAccount } = req.session;
+    const cedulaPic = req.session.cedulaFoto;
+
+    if (!req.session.personalInfo || !req.session.fotoPerfil || !req.session.userAccount) {
+      res.status(400).send({ message: 'Faltan datos en la sesión' });
+      return; 
+    }
+
+    dbConexion.beginTransaction((err)=>{
+      if(err){
+        console.error('Error starting transaction', err);
+        res.status(500).send({ message: 'Error en la transacción' });
+        return;
+      }
+
+      const queryUsuarios = 'INSERT INTO usuarios (nombre_usuario, email, contraseña, rol, foto_perfil) VALUES (?, ?, ?, ?,?)';
+      const valuesUsuarios = [userAccount.username, userAccount.email, userAccount.contraseña, "jugador",fotoPerfil];
+      
+      dbConexion.query(queryUsuarios, valuesUsuarios, (error,results)=>{
+        if (error) {
+          return dbConexion.rollback(() => {
+            console.error('Error al insertar datos en usuarios', error);
+            res.status(500).send({ message: 'Error al guardar la cuenta de usuario' });
+          });
+        }
+        
+        const userId = results.insertId;
+
+        const fechaActual = new Date();
+        const edadJugador = calcularEdad(personalInfo.Fecha_Nacimiento);
+        const nombreCompleto = personalInfo.Nombre +" "+ personalInfo.Apellido;
+
+        const dataSend = {
+          Nombre: nombreCompleto,
+          cedula: personalInfo.cedula,
+          foto_cedula: cedulaPic,
+          telefono: personalInfo.telefono,
+          edad: edadJugador,
+          fecha_nacimiento: personalInfo.Fecha_Nacimiento,
+          pais: personalInfo.pais,
+          provincia: personalInfo.provincia,
+          distrito: personalInfo.distrito,
+          numero_jugador: personalInfo.numeroJugador,
+          fecha_creacion: fechaActual,
+          id_equipo: personalInfo.categoria,
+          instagram: personalInfo.instagram,
+          usuario_id: userId
+        };
+  
+        const valuesJugadores = [
+          dataSend.Nombre,
+          dataSend.cedula,
+          dataSend.foto_cedula,
+          dataSend.telefono,
+          dataSend.edad,
+          dataSend.fecha_nacimiento,
+          dataSend.pais,
+          dataSend.provincia,
+          dataSend.distrito,
+          'Sano',
+          dataSend.numero_jugador,
+          dataSend.fecha_creacion,
+          dataSend.id_equipo,
+          dataSend.instagram,
+          dataSend.usuario_id
+        ];
+
+        const queryJugadores = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,estado_salud,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?,?, ?, ?, ?, ?, ?)";
+
+        dbConexion.query(queryJugadores,valuesJugadores,(error,results) =>{
+          if (error) {
+            return dbConexion.rollback(() => {
+              console.error('Error al insertar datos en jugadores', error);
+              res.status(500).send({ message: 'Error al guardar la información personal' });
+            });
+          }
+
+          dbConexion.commit((err) => {
+            if(err){
+              return dbConexion.rollback(() => {
+                console.error('Error al hacer commit de la transacción', err);
+                res.status(500).send({ message: 'Error al finalizar la transacción' });
+              });
+            }
+            console.log('Datos insertados correctamente en ambas tablas');
+            res.send({ message: 'Registro completado exitosamente' });
+          })
+        })
+
+      })
+    })
+})
 
 // crear jugador inscripcion
 
@@ -78,18 +260,19 @@ function calcularEdad(fechaNacimiento){
   return edad;
 }
 
+
+// manda datos personales a la base de datos
 app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
   // obtener datos del form
     const formData = req.body; 
 
+    console.log(formData);
     const fechaActual = new Date();
 
     const edadJugador = calcularEdad(formData.Fecha_Nacimiento);
 
     const nombreCompleto = formData.Nombre +" "+ formData.Apellido;
-
-    console.log(`Este es el nombre completo, ${nombreCompleto}`);
-
+ 
     const dataSend = {
       Nombre : nombreCompleto,
       cedula: formData.cedula,
@@ -117,6 +300,7 @@ app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
       dataSend.pais,
       dataSend.provincia,
       dataSend.distrito,
+      'Sano',
       dataSend.numero_jugador,
       dataSend.fecha_creacion,
       dataSend.id_equipo,
@@ -124,7 +308,7 @@ app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
       dataSend.usuario_id
     ]
 
-    const query = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const query = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,estado_salud,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
 
     dbConexion.query(query,values,(error,results,fields)=>{
       if(error){
@@ -134,13 +318,9 @@ app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
       console.log('datos insertados correctamente!');
     })
 
-    
-
   // if (req.file) {
   //   console.log(req.file.originalname);
   // }
-
-
   // Responder al cliente
   res.send('Datos del formulario recibidos correctamente.');
 
@@ -182,9 +362,6 @@ app.post('/crear/jugador', async(req, res) => {
 });
 
 
-
-
-
 // Verifica que no hayan numero de jugador duplicado basandose en su division
 app.get('/numero-jugador-disponible',(req,res)=>{
 
@@ -208,6 +385,26 @@ app.get('/jugadores',(req,res)=>{
   res.sendFile(__dirname + '/templates/jugadores.html');
 })
 
+// trae informacion de jugadores
+app.get('/info/jugadores/:id',(req,res)=>{
+  const playerId = req.params.id;
+  const query = 'SELECT * FROM jugadores WHERE id = ?';
+
+  dbConexion.query(query, [playerId], (error, results) => {
+    if (error) {
+        console.error('Error al traer jugadores:', error);
+        return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+    }
+    
+    if (results.length === 0) {
+        return res.status(404).json({ error: 'Jugador no encontrado' });
+    }
+
+    res.status(200).json(results[0]); // Devuelve solo el primer jugador encontrado (asumiendo que el ID es único)
+  });
+})
+
+
 // trae el total de jugadores 
 app.get('/get-total-jugadores',(req,res) =>{
   const query = 'SELECT COUNT(*) AS total FROM jugadores'; // Consulta SQL para contar el número total de jugadores
@@ -222,7 +419,6 @@ app.get('/get-total-jugadores',(req,res) =>{
     }
   });
 })
-
 
 // trae los jugadores a la tabla
 app.get('/get-jugadores',(req,res)=>{
@@ -409,21 +605,59 @@ app.get('/filtro-jugadores',(req,res) =>{
 })
 
 
-app.delete('/eliminar/jugador/:id', (req, res) => {
+app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
   const idjugador = req.params.id;
+  const userid = req.params.userid;
 
-  const query = 'DELETE FROM jugadores WHERE id = ?'; 
 
-  // Example with MySQL
-  dbConexion.query(query, [idjugador], (error, results, fields) => {
-    if (error) {
-      console.error('Error deleting player:', error);
-      res.status(500).send('Error deleting player');
+  dbConexion.beginTransaction((err)=>{
+    if (err) {
+      console.error('Error starting transaction', err);
+      res.status(500).send({ message: 'Error en la transacción' });
       return;
     }
-    console.log('Jugador eliminado exitosamente!');
-    res.status(200).send('Jugador eliminado exitosamente!');
-  });
+
+    const queryJugador = 'DELETE FROM jugadores WHERE id = ?'; 
+    
+
+
+    dbConexion.query(queryJugador, [idjugador], (error, results, fields) => {
+      if (error) {
+        return dbConexion.rollback(() => {
+          console.error('Error al borrar jugador', error);
+          res.status(500).send({ message: 'Error al borrar jugador' });
+        });
+      }
+
+      const queryUsuario = 'DELETE FROM usuarios WHERE id= ?';
+
+      dbConexion.query(queryUsuario,[userid],(error,results)=>{
+        if (error) {
+          return dbConexion.rollback(() => {
+            console.error('Error al borrar usuario', error);
+            res.status(500).send({ message: 'Error al borrar usuario' });
+          });
+        }
+
+        dbConexion.commit((err)=>{
+          if (err) {
+            return dbConexion.rollback(() => {
+              console.error('Error al hacer commit de la transacción', err);
+              res.status(500).send({ message: 'Error al finalizar la transacción' });
+            });
+          }
+
+          console.log('Datos eliminados correctamente en ambas tablas');
+          res.send({ message: 'Usuario eliminado' });
+        })
+      })
+
+
+    });
+
+  })
+  // Example with MySQL
+  
 });
 
 
@@ -509,7 +743,78 @@ app.get('/rango/edad',(req,res)=>{
 
 // USUARIOS
 
-// verificar si el usuario a crear ya existe
+
+// RUTA BASE TRAE USUARIO E INFO
+app.get('/user/:id',(req,res)=>{
+
+  const userId = req.params.id;
+
+
+  const query = "SELECT nombre_usuario, email, rol, foto_perfil FROM usuarios WHERE id = ?";
+
+  dbConexion.query(query,userId,(error,results)=>{
+    if (error) {
+      console.error('Error al ejecutar la consulta:', error);
+      res.status(500).json({ error: 'Error al obtener los datos del usuario' });
+      return;
+    }
+
+    // Verificar si se encontraron resultados
+    if (results.length === 0) {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+      return;
+    }
+
+    // Obtener el primer resultado (debería ser único por el ID)
+    const usuario = results[0];
+    
+    // Enviar los datos del usuario como respuesta
+    res.json(usuario);
+  })
+})
+
+
+// const middleware de autorizacion
+const authorize = (req,res,next)=>{
+  if(req.cookies && req.cookies.username){
+    next();
+  }else{
+    res.status(401).send('No autorizado');
+  }
+}
+
+app.get('/ruta-protegida',authorize,(req,res)=>{
+  res.send('Bievenido a la ruta protegida')
+});
+
+
+// creacion de usuario jugador
+app.post('/signup',(req,res)=>{
+  const { username, email, contraseña } = req.body;
+
+  const values = [
+    username,
+    contraseña,
+    email,
+    'jugador'
+  ]
+
+  console.log(values);
+  const query = "INSERT INTO usuarios(nombre_usuario,contraseña,email,rol) VALUES(?,?,?,?)";
+
+  dbConexion.query(query,values,(error,results) =>{
+    if(error){
+      console.log('Error al crear usuario dentro de la base de datos',error);
+    }
+    
+    const lastInsertId = results.insertId;
+
+    console.log('Se ha creado el usuario con ID:', lastInsertId);
+
+    res.json({ message: 'Se ha creado el usuario con ID: ' + lastInsertId, userId: lastInsertId });
+  })
+})
+
 
 app.get('/correo/existente/:correo',(req,res) =>{
   const correo = req.params.correo;
@@ -568,11 +873,47 @@ app.get('/usuario/existente/:user',(req,res) => {
 })
 
 
+// Dashboard
+
+  // total de jugadores
+  app.get('/jugadores/total',(req,res)=>{
+    // query
+    const query = 'SELECT COUNT(*) AS totalJugadores FROM jugadores';
+    dbConexion.query(query,(error,results)=>{
+      if(error){
+        console.error('Error al ejecutar la consulta',error);
+        res.status(500).json({ error: 'Error al buscar jugadores existentes' });
+        return;
+      }
+
+      const totalJugadores = results[0].totalJugadores;
+      res.json({ jugadores: totalJugadores });
+      
+    })
+  })
+
+  // jugdores disponibles
+  app.get('/jugadores/disponibles',(req,res)=>{
+    // query
+    const query = "SELECT COUNT(*) AS jugadoresDisponibles FROM jugadores WHERE estado_salud = 'Sano'";
+
+    dbConexion.query(query,(error,results)=>{
+      if(error){
+        console.error('Error al ejecutar la consulta',error);
+        res.status(500).json({ error: 'Error al buscar jugadores existentes' });
+        return;
+      }
+
+      const jugadoresDisponibles = results[0].jugadoresDisponibles;
+      res.json({ jugadores: jugadoresDisponibles });
+    
+    })
+
+  })
 
 
 
-
-
+// Dashboard
 app.listen(port, () => {
   console.log(`Servidor Express escuchando en el puerto http://localhost:${port}`);
 });

@@ -1,0 +1,226 @@
+
+/* borrar confirmacion */
+
+.pop-up-delete{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+ 
+}
+
+/* famark */
+.closeDelete{
+  width: 100%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  /* background-color: rgb(220, 220, 220); */
+}
+
+.closeDelete i{
+  font-size: 1.5em;
+  margin-right: 5%;
+  color: rgb(10, 10, 10);
+  cursor: pointer;
+}
+.closeDelete i:hover{
+  opacity: 0.7;
+}
+
+/* fa mark */
+.content-delete{
+  width: 35%;
+  height:50%;
+  border-radius: 20px;
+  margin-top: 10%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  /* background-color: white; */
+}
+
+.delete-mssg{
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: end;
+  overflow: hidden;
+}
+
+.deleted{
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.delete-content{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* justify-content: center; */
+}
+
+.exclamacion-cont{
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+.exclamacion-cont img{
+  height: 100%;
+  width: 100%;
+}
+
+.delete-msg-div{
+  width: 100%;
+  height: 60%;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ;
+  align-items: center;
+}
+
+.delete-title{
+  font-weight: bold;
+  margin: 0;
+  font-size: 1.3em;
+  margin-top: 3%;
+}
+
+.delete-info{
+  color: grey;
+  margin-top: 1%;
+}
+
+.delete-button{
+  width: 100%;
+  height: 30%;
+  display: flex;
+  gap: 2%;
+  align-items: center;
+  justify-content: right;
+}
+
+.delete-button button{
+  width: 25%;
+  height: 40%;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.delete-button button:hover{
+  opacity: 0.8;
+}
+
+.delete-btn{
+  background-color: rgb(248, 50, 50);
+  color: white;
+  margin-right: 3%;
+}
+
+.cancel-del{
+  background-color: rgb(235, 234, 234);
+}
+
+
+/* deleted */
+.lottie-delete{
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: red; */
+}
+
+#lottie-trash{
+  width:80%;
+  height: 80%;
+}
+
+.delete-succesful{
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  /* background-color: red; */
+}
+
+.delete-succesful p{
+  font-size: 1.3em;
+  /* font-weight: bold; */
+  margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .content-delete{
+    width: 80%;
+    height: 40%;
+  }
+
+  .delete-mssg{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .delete-msg-div{
+    gap: 5%;
+    height: 80%;
+  }
+
+  .closeDelete{
+    height: 40%;
+  }
+  
+  .delete-button{
+    justify-content: center;
+    align-items: start;
+    
+  }
+
+  
+
+  .delete-info{
+    text-align: center;
+    font-size: 0.8em;
+  }
+
+  .delete-content{
+    height: 80%;
+  }
+
+  .delete-title{
+    font-size: 1.2em;
+  }
+
+
+ 
+  .delete-btn{
+    margin: 0;
+  }
+
+  .delete-button button{
+    width: 40%;
+    height: 80%;
+  }
+}

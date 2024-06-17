@@ -1,6 +1,7 @@
 $(document).ready(function() {
   
-
+  // informacion que se guardara 
+  var formData;
 
   // lotties
   // lottie guardado
@@ -28,9 +29,6 @@ $(document).ready(function() {
 
 // manejar orden de la inscripcion
 
-let completado = 0;
-
-
 // opciones del header del formulario
 const infoPersonalOpcion = $('#opcionInfoPersonal');
 
@@ -41,7 +39,6 @@ const editarPerfilOpcion = $('#opcionEditarPerfil');
 
 infoPersonalOpcion.removeClass('option-form');
 infoPersonalOpcion.addClass('active');
-
 
 editarPerfilOpcion.on('click',function(){
   divFormInfo.hide();
@@ -56,9 +53,41 @@ editarPerfilOpcion.on('click',function(){
 
   CrearCuentaOpcion.removeClass('active');
   CrearCuentaOpcion.addClass('option-form');
-
- 
 })
+
+function opcionEditarPerfil (){
+  divFormInfo.hide();
+  crearCuentaSection.hide();
+  seccionEditarPerfil.fadeIn(500);
+
+  editarPerfilOpcion.removeClass('option-form');
+  editarPerfilOpcion.addClass('active');
+
+  infoPersonalOpcion.removeClass('active');
+  infoPersonalOpcion.addClass('option-form');
+
+  CrearCuentaOpcion.removeClass('active');
+  CrearCuentaOpcion.addClass('option-form');
+}
+
+
+function OpcionCrearCuenta (){
+  divFormInfo.hide();
+  seccionEditarPerfil.hide();
+  crearCuentaSection.fadeIn(500);
+
+  // quitar clase active y añadir el default
+  infoPersonalOpcion.removeClass('active');
+  infoPersonalOpcion.addClass('option-form');
+
+  // agregar clase active y elimianr el default
+  CrearCuentaOpcion.removeClass('option-form');
+  CrearCuentaOpcion.addClass('active');
+
+  editarPerfilOpcion.removeClass('active');
+  editarPerfilOpcion.addClass('option-form');
+}
+
 
 
 CrearCuentaOpcion.on('click',function(){
@@ -76,8 +105,8 @@ CrearCuentaOpcion.on('click',function(){
 
   editarPerfilOpcion.removeClass('active');
   editarPerfilOpcion.addClass('option-form');
-
 });
+
 
 infoPersonalOpcion.on('click',function(){
   divFormInfo.fadeIn(500);
@@ -101,6 +130,9 @@ infoPersonalOpcion.on('click',function(){
 const seccionEditarPerfil = $('#sectionEditarPerfil');
 
 // subir imagen
+let formDataFotoPerfil = new FormData();
+
+
 const subirImagenContainer =$('.subir-imagen');
 const subirImagenBtn = $('.subir-imagen-btn');
 const inputFotoPerfil = $('#fotoPerfil');
@@ -124,17 +156,47 @@ inputFotoPerfil.on('change',function(event){
     $('#perfil').attr({
       src:`${urlImagen}`
     })
+
+    formDataFotoPerfil.append('fotoPerfil',archivoSeleccionado);
+
     siguienteBtn.show();
   }
 })
 
 // se controla que viene la otra seccion de editar
 siguienteBtn.on('click',function(){
+
+  // console.log("Contenido de formData:");
+  //   formDataFotoPerfil.forEach((value, key) => {
+  //     if (value instanceof File) {
+  //       console.log(`${key}: ${value.name} (${value.type}, ${value.size} bytes)`);
+  //     } else {
+  //       console.log(`${key}: ${value}`);
+  //     }
+  //   });
+  $.ajax({
+    type: 'POST',
+    url: '/save-photo',
+    data: formDataFotoPerfil,
+    processData: false,
+    contentType: false,
+    success: function(response) {
+      console.log('Perfil guardado:', response);
+      // Puedes mostrar un mensaje de éxito o realizar otras acciones aquí
+    },
+    error: function(error) {
+      console.error('Error al guardar perfil:', error);
+      // Puedes mostrar un mensaje de error o realizar otras acciones aquí
+    }
+  });
+    
   subirImagenContainer.hide();
   piernaSection.fadeIn(1000);
   omitirBtn.hide();
   siguienteBtn.hide();
-})
+
+
+});
 
 omitirBtn.on('click',function(){
   subirImagenContainer.hide();
@@ -149,7 +211,6 @@ function opcionView(opcion,opanterior){
 
   opanterior.removeClass('active');
   opanterior.addClass('option-form');
-  
 
 }
 
@@ -157,7 +218,6 @@ guardarEditBtn.on('click',function(){
   seccionEditarPerfil.hide();
   crearCuentaSection.fadeIn(500);
   opcionView(CrearCuentaOpcion,editarPerfilOpcion);
-  
 })
 
 
@@ -213,14 +273,16 @@ derecha.on('click',function(){
 
 
 function elegirPiernaHabil(pierna){
-  
-
   // agregar pierna habil al texto
   $('#piernaHabil').text(pierna);
 
   // elimianr elecciones
   izquierda.fadeOut(400);
   derecha.fadeOut(400);
+
+  // if(formData.has('pierna_habil')){
+  //   formData.set('pierna_habil',pierna);
+  // }
 
 
   setTimeout(function(){
@@ -231,45 +293,103 @@ function elegirPiernaHabil(pierna){
     cambiarPierna.show();
     $('#guardarEdit').show();
   },400)
+
+
+
 }
 
-
-
 // creacion de cuenta
-
 // main div
 const crearCuentaSection = $('#crearCuentaSection');
 crearCuentaSection.hide();
 
+// form registro
+const formRegistro = $('.form-registro');
+
 // parametros para crear usuario inputs
 const usuarioInput = $('#usuario');
 const correoInput  =$('#correo');
+const passwordInput = $('#password');
+
+// lastrowId
+let lastrowId;
 
 const crearUsuariobtn = $('#crearUsuarioBtn');
-
-// usuarioInput.on('input',function(){
-//   console.log(usuarioInput.val());
-// })
-
 
 
 usuarioInput.on('input',function(){
   if(usuarioInput.val() !== ''){
     usuarioExiste(usuarioInput.val());
   }
-  
 });
 
 correoInput.on('input',function(){
   if(correoInput.val() !== ''){
     correoExistente(correoInput.val());
   }
+});
+
+
+formRegistro.on('submit', function(event) {
+  event.preventDefault(); // Evitar que el formulario se envíe de manera tradicional
+
+  if(isPasswordSecure(passwordInput.val())){
+     // Obtener los datos del formulario como un array de objetos clave-valor
+    var formDataArray = $(this).serializeArray();
+
+    $.ajax({
+      type:'POST',
+      url:'/save-user-account',  
+      data: formDataArray,
+      success: function(response){
+        $.ajax({
+          type:'POST',
+          url:'/finalize-signup',
+          success:function(response){
+            console.log(response);
+            alert('informacion guardada');
+          },error:function(error){
+            alert('error');
+          }
+        })
+
+      
+      },error:function(error){
+        console.error('Error al crear usuario',error);
+      }
+    })
+  }else{
+    alert('La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula y una letra minúscula, al menos un número, y al menos un carácter especial')
+  }
 
 });
  
 
-function usuarioExiste(usuario){
+function isPasswordSecure(password) {
+  // Mínimo 8 caracteres
+  if (password.length < 8) {
+    return false;
+  }
 
+  // Al menos una letra mayúscula y una letra minúscula
+  if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+    return false;
+  }
+
+  // Al menos un número
+  if (!/\d/.test(password)) {
+    return false;
+  }
+
+  // Al menos un carácter especial
+  if (!/[!@#$%^&*()-_=+{};:,<.>]/.test(password)) {
+    return false;
+  }
+
+  return true;
+}
+
+function usuarioExiste(usuario){
   $.ajax({
     type:'GET',
     url:'/usuario/existente/'+usuario,
@@ -331,6 +451,7 @@ const userId = $('#usuarioid');
 // pierna habil
 const jugadorPiernaHabil = $('#piernaJugador');
 
+
 function asignarCampos(){
   if(eleccion){
     jugadorPiernaHabil.val(eleccion);
@@ -339,35 +460,47 @@ function asignarCampos(){
 }
 
 
-
-formJugador.on('submit', function(event) {
-  event.preventDefault(); // Evitar que el formulario se envíe de manera tradicional
-  
-  asignarCampos();
-
-  const formData = new FormData(formJugador [0]);
-  
+function EnviarInfoPersonal(data){
   $.ajax({
     type:'POST',
-    url: '/inscripcion',
+    url: '/save-personal-info',
     processData: false, // No procesar los datos (FormData se encarga de ello)
     contentType: false, // No especificar el tipo de contenido (FormData lo maneja)
-    data: formData, // Pasar directamente el objeto FormData
+    data: data, // Pasar directamente el objeto FormData
     success: function(response){
       console.log(response);
-      alert('Se han enviado correctamente los datos!')
+      
+
     },error:function(error){
       console.log('Error al enviar datos del jugador',error);
     }
   })
+}
+
+
+
+formJugador.on('submit', function(event) {
+  event.preventDefault(); // Evitar que el formulario se envíe de manera tradicional
+  formData = new FormData(formJugador [0]);
   
+  EnviarInfoPersonal(formData);
+
+  // if(!formData.has('pierna_habil')){
+  //   formData.append('pierna_habil',pierna)
+  // }
+ 
+ 
+  // PASAR A SIGUIENTE PAGINA
+  opcionEditarPerfil();
+
 });
+
+
 
 
 fotoCedulaDiv.off('click').on('click',function(){
 
   inputFotoCedula.click();
-  
   // nombre del archivo seleccionado
   inputFotoCedula.on('change',function(){
     const archivos = inputFotoCedula[0].files;
@@ -380,7 +513,6 @@ fotoCedulaDiv.off('click').on('click',function(){
     }
   })
 });
-
 
 
 function infoJugador(){
@@ -478,7 +610,7 @@ function infoJugador(){
     // desaparecer boton de siguiente
     configJugadorbtn.fadeOut(500);
   
-    // aparecer seccion de numero de jugador y boton guardar
+    // aparecer seccion de numero de jugador yus boton guardar
     setTimeout(function(){
       numeroJugadorConfig.fadeIn(500);
       guardarbtn.fadeIn(500);
@@ -506,8 +638,6 @@ function infoJugador(){
       event.preventDefault();
     }
   });
-
-
 
 
   // accion al hacer input
@@ -582,6 +712,7 @@ function infoJugador(){
 }
 
 infoJugador();
+
 
 
 // boton para editar cambios

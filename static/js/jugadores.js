@@ -1,4 +1,83 @@
 $(document).ready(function() {
+
+
+
+  // tool bar 
+  function twist(objeto, grados){
+    $(objeto).css({
+      'transform': 'rotate(' + grados + 'deg)',
+      'transition': 'transform 0.5s ease' // Añadir una transición para una rotación suave
+  });
+  }
+
+  var isCollapsed = false; // Estado de la barra de herramientas
+  $('#burger-icon').on('click', function() {
+      // twist($('#burger-icon'), isCollapsed ? 0 : 180); // Rota el ícono
+
+      if (isCollapsed) {
+          $('.tool-bar').removeClass('collapsed');
+       
+      } else {
+          $('.tool-bar').addClass('collapsed');
+         
+      }
+
+      setTimeout(function() { // Agregamos un retraso para la animación de cierre
+        isCollapsed = !isCollapsed; // Alterna el estado
+      }, 500); // Retraso de 0.5 segundos para que coincida con la duración de la animación
+  });
+
+  // añadir un usuario, copiar enlace 
+
+  // iniciar con link de inicio
+  linkInscripcion();
+
+ 
+
+  $('.add-player-btn').on('click',function(){
+
+    $('.seccion-agregar-jugador').toggle();
+  
+  });
+
+  // refrescar link
+  $('.refrescar').on('click',()=>{
+    $.ajax({
+      type: 'POST',
+      url: '/regenerar/link/inscripcion',
+      success: function(response){
+        console.log(response.uniqueLinkId);
+        linkInscripcion();
+        $('#copy-link-btn').text('Copiar');
+      }
+    })
+  });
+
+  function linkInscripcion(){
+    $.ajax({
+      type: 'GET',
+      url: '/registro',
+      success: function(response){
+        const linkIncripcion = response.uniqueLinkId;
+        $('#enlace-form').text(linkIncripcion);
+  
+        function copyToClipBoard(){
+          const copyText = $('#enlace-form').text();
+          navigator.clipboard.writeText(copyText);
+          console.log(copyText);
+          $('#copy-link-btn').text('Copiado');
+          
+        }
+      
+        $('#copy-link').on('click',()=>{
+          copyToClipBoard();
+        });
+      }
+    })
+  }
+ 
+
+
   $('#mensajeDisponible').hide();
 
   // controlamos la paginacion
@@ -12,8 +91,7 @@ $(document).ready(function() {
   function generarPaginacion(totalPages, funcion){
     $('.numeros-paginacion').empty();
    
-    
-
+  
     const btnAnterior = $('#btnAnterior');
 
     btnAnterior.off('click');
@@ -76,7 +154,6 @@ $(document).ready(function() {
       type: 'GET',
       url: `/get-jugadores?page=${currentPage}`,
       success: function(response){
-      
         $('.tabla-jugadores .row-data').remove();
         // vamos a controlar la barra de busqueda
         $('#jugadorBuscar').on('input',()=>{
@@ -408,6 +485,7 @@ rangoEdad();
 
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
+      fila.data('id-jugador',elemento.id);
 
       const toolDiv = $('<div>');
       toolDiv.addClass('tool-div');
@@ -422,22 +500,87 @@ rangoEdad();
       eliminarJugadorIcon.data('id-jugador',elemento.id);
 
 
-      eliminarJugadorIcon.on('click',function(){
-
+      // abrir modal
+      fila.on('click',function(){
         const idJugador = $(this).data('id-jugador');
+        console.log('click en fila',idJugador);
 
+        $('.modal-jugador').fadeIn();
+        $('#nombre-m').text(elemento.Nombre);
+        $('#cedula-m').text(elemento.cedula);
+        $('#telefono-m').text(elemento.telefono);
+
+        $('#edad-m').text(elemento.edad);
+        
+        // fecha
+        const fechaISO = elemento.fecha_nacimiento;
+        const fecha = new Date(fechaISO);
+
+        const fechaFormateada = formatDate(fecha);
+
+        $('#fechaNacimiento-m').text(fechaFormateada);
+
+        $('#instagram-m').text(elemento.instagram);
+        // info equipo
+        $('#equipo-m').text(elemento.nombre_division);
+        $('#posicion-m').text(elemento.posicion);
+        $('#numero-camiseta-m').text(elemento.numero_jugador);
+        $('#pierna-m').text(elemento.pierna_habil);
+        $('#tarjeta-amarilla-m').text(elemento.tarjeta_amarilla);
+        $('#pais-m').text(elemento.pais);
+        $('#provincia-m').text(elemento.provincia);
+        $('#distrito-m').text(elemento.distrito);
+        
+        // email del jugador
         $.ajax({
-          type:'DELETE',
-          url:'/eliminar/jugador/'+idJugador,
+          type:'GET',
+          url:'/user/'+ elemento.usuario_id,
           success:function(response){
-            console.log(response);
-            getJugadores();
-          },error: function(xhr, status, error) {
-            console.error('Error al eliminar jugador:', error);
+            $('#email-m').text(response.email);
+          },error(err){
+            console.log(err);
           }
-          
+        })
+        // email del jugador
+
+        
+        $('.closePlayer').on('click',function(){
+          $('.modal-jugador').hide();
         })
 
+      });
+
+
+      eliminarJugadorIcon.on('click',function(){
+
+        // abre modal confirmar
+        $('.pop-up-delete').show();
+        $('.delete-btn').on('click',function(){
+          const idJugador = eliminarJugadorIcon.data('id-jugador');
+          const idUsuario = elemento.usuario_id;
+
+          $.ajax({
+            type:'DELETE',
+            url:`/eliminar/jugador/${idJugador}/${idUsuario}`,
+            success:function(response){
+              $('.delete-mssg').hide();
+              
+              $('.deleted').show();
+              activarLottie();
+              borrarLottie.destroy();
+              getJugadores();
+            },error: function(xhr, status, error) {
+              console.error('Error al eliminar jugador:', error);
+            }
+            
+          })
+        })
+
+        $('.cancel-del').on('click',function(){
+          $('.pop-up-delete').hide();
+        })
+
+      
       })
 
       configurarJugadorIcon.on('click',function(){
@@ -447,28 +590,34 @@ rangoEdad();
       });
       toolDiv.append(configurarJugadorIcon,eliminarJugadorIcon)
 
+
       const propiedadesMostradas = ['Nombre', 'cedula', 'telefono','edad','posicion','numero_jugador','estado_salud','fecha_creacion','nombre_division'];
 
       for (const key in elemento) {
         if (Object.hasOwnProperty.call(elemento, key)) {
           if (propiedadesMostradas.includes(key)) {
+
             // Si está en la lista, crear elementos dt y dd
+            if(key !=="estado_cuenta"){
+
+              if(elemento[key] === ""){
+                const td = $('<td>').text('Por asignar');
+                td.css({
+                  'color':'lightgreen'
+                });
+                fila.append(td);
+              }else if(key ==="Nombre"){
+                const td = $('<td>').text(elemento[key]);
+                fila.append(td);
+              }else{
+                  const td = $('<td>').text(elemento[key]);
+                  // Agregar los elementos al contenedor donde deseas mostrarlos
+                  fila.append(td);
+              }
+
             
-            if(key === "estado_cuenta" && elemento[key] === 1){
-              const td = $('<td>').text('Paz y salvo');
-              // Agregar los elementos al contenedor donde deseas mostrarlos
-              fila.append(td);
-            }else if(key === "estado_cuenta" && elemento[key] === 0){
-              const td = $('<td>').text('Moroso');
-              // Agregar los elementos al contenedor donde deseas mostrarlos
-              fila.append(td);
             }
 
-            if(key !=="estado_cuenta"){
-              const td = $('<td>').text(elemento[key]);
-              // Agregar los elementos al contenedor donde deseas mostrarlos
-              fila.append(td);
-            }
             fila.append(toolDiv);
             $('.tabla-jugadores').append(fila);
           }
@@ -477,6 +626,21 @@ rangoEdad();
     })
   }
 
+
+  // funciones para usuario
+  
+  // esta funcion trae info de usuario con id 
+  function userInfo(id){
+    $.ajax({
+      type:'GET',
+      url:'/user/'+ id,
+      success:function(response){
+        console.log(response);
+      },error(err){
+        console.log(err);
+      }
+    })
+  }
 
 
   // esta funcion edita un jugador
@@ -696,7 +860,7 @@ rangoEdad();
     $('.filtro').hide();
   }
 
-
+  // ojo es responsive
   filtroResponsive();
   function filtroResponsive(){
 
@@ -787,10 +951,68 @@ rangoEdad();
         })
 
     });
-
   }
 
- })
+
+  // DASHBOARD
+  // trae total de jugadores 
+  function traerTotalJugadores(){
+    $.ajax({
+      type:'GET',
+      url:'/jugadores/total',
+      success: function(response){
+        $('#totalJugadores').text('');
+        console.log(response.jugadores);
+        $('#totalJugadores').text(response.jugadores);
+      }
+    })
+  };
+
+  // traer jugadores disponibles
+  function traerJugadoresDisponibles(){
+    $.ajax({
+      type:'GET',
+      url:'/jugadores/disponibles',
+      success: function(response){
+        $('#jugadoresDisponibles').text('');
+        console.log(response.jugadores);
+        $('#jugadoresDisponibles').text(response.jugadores);
+      }
+    })
+  };
+
+  traerJugadoresDisponibles();
+  traerTotalJugadores();
+  // setInterval(traerTotalJugadores,1000);
+
+
+  // formatear fecha
+  function formatDate(fecha) {
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear();
+    return `${dia}/${mes}/${anio}`;
+  }
+  
+
+
+
+
+  const trashlottie = $('#lottie-trash')[0];
+  const JSONtrash = "/lottie/delete.json";
+
+  function activarLottie(){
+    const borrarLottie = lottie.loadAnimation({
+      container: trashlottie, // Elemento donde se mostrará la animación
+      renderer: 'svg',
+      loop: false, // Opcional: Repetir la animación
+      autoplay: true, // Opcional: Reproducir automáticamente la animación
+      path: JSONtrash // Ruta al archivo JSON de la animación Lottie
+    });
+  }
+  
+
+ });
 
 
  

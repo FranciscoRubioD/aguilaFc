@@ -1,0 +1,377 @@
+
+/* modal */
+.modal-jugador p{
+  margin: 0;
+}
+
+.modal-jugador{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+.modal-content-jugador{
+  width: 90%;
+  height: 90%;
+  border-radius: 10px;
+  margin-top:2%;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.modal-jugador-header{
+  /* background-color: red; */
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.modal-jugador-header i{
+  font-size: 2em;
+  margin-right: 1em;
+  cursor: pointer;
+}
+
+.modal-jugador-header i:hover{
+  opacity: 0.6;
+}
+
+.modal-jugador-profile{
+  width: 100%;
+  height: 80%;
+  background-color: rgb(235, 235, 235);
+  display: flex;
+  gap: 5%;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-1-profile{
+  width: 30%;
+  height: 90%;
+  /* margin-left: 10%; */
+  border-radius: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.foto-perfil{
+  width: 100%;
+  height: 70%;
+  background-color: rgb(232, 229, 229);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foto-perfil-container{
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.info-perfil{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* background-color: red; */
+}
+
+.info-perfil-nombre{
+  width: 100%;
+  height: 10%;
+  margin-top: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  /* background-color: red; */
+}
+
+.info-perfil-1{
+  /* background-color: green; */
+  height: 100%;
+  width: 80%;
+  margin-top: 5%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  overflow: auto;
+  gap: 10%;
+  
+}
+
+.info-perfil-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* background-color: red; */
+}
+
+.info-perfil-col-1, .info-perfil-col-2{
+  height: auto;
+  /* background-color: green; */
+  display: flex;
+  flex-direction: column;
+  gap: 20%;
+  
+}
+
+.info-perfil-data{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  font-size: 14px;
+  color: rgb(79, 79, 79);
+  /* margin-left: 5%; */
+  gap: 10%;
+}
+
+.aditional-info{
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  /* align-items: center; */
+  /* background-color: black; */
+  gap: 15%;
+}
+
+.socials-info{
+  /* background-color: red; */
+  font-size: 14px;
+  display: flex;
+  flex-direction: columns;
+  gap: 5%;
+  color: rgb(79, 79, 79);
+}
+
+/* seccion 2  */
+.section-2-info{
+  width: 60%;
+  height: 90%;
+  /* border-radius: 20px; */
+  background-color: none;
+  overflow: auto;
+}
+
+.section-2-info-header{
+  width: 100%;
+  height: 10%;
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.section-2-option{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: rgb(182, 176, 176);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.section-2-option:hover{
+  opacity: 0.9;
+}
+
+/* .section-2-option:first-child{
+  background-color: rgb(95, 95, 182);
+} */
+
+
+.section-2-option.select{
+  background-color: rgb(95, 95, 182);
+}
+
+/* section jugador estadisticas */
+.stats-player{
+  width: 100%;
+  height: 100%;
+  overflow:auto;
+  background-color: white;
+  /* justify-content: center; */
+}
+
+.stats-table{
+  width: 100%;
+  height: 100%;
+  /* height: 100%; */
+  border-collapse: collapse;
+  font-size: 0.7em;
+  font-family: sans-serif;
+  color: rgb(131, 131, 131);
+  border-top: 1px solid #dddddd;
+}
+
+.stats-player th, .stats-player td{
+  border-bottom: 1px solid #d2d2d2cf;
+  padding: 15px 15px
+}
+
+.stats-table th{
+  /* background-color: red; */
+  border-right: 1px solid #d2d2d2cf;
+  text-align: center;
+  text-align: center;
+  ;
+  font-weight: 100;
+
+}
+.stats-table td{
+  text-align: center;
+  
+}
+
+
+/* documentos */
+.documentos{
+  width: 100%;
+  height: 90%;
+  background-color: white;
+  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.doc-gallery{
+  width: 90%;
+  height: 90%;
+  /* background-color: rgb(37, 63, 97); */
+  display: flex;
+  flex-direction: row;
+  gap: 2%; 
+}
+
+.doc-p{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+}
+
+.doc-obj{
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-color: rgb(37, 63, 97);
+  border: 1px solid white;
+  display: flex;
+  flex-direction:column;
+  gap: 5%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.doc-obj p{
+  font-size: 12px;
+}
+.id-big{
+  font-size: 5em;
+}
+
+.doc-obj:hover{
+  opacity: 0.8;
+}
+
+
+@media screen and (max-width: 768px){
+  .modal-content-jugador{
+    width: 90%;
+    height: 40%;
+    border-radius: 10px;
+  }
+
+  .section-1-profile{
+    height: 90%;
+    width: 40%;
+  }
+
+  .foto-perfil{
+    width: 100%;
+    height: 60%;
+  }
+
+  .foto-perfil-container{
+    width: 60px;
+    height: 60px;
+  }
+
+  .section-2-info{
+    height: 90%;
+    width: 50%;
+  }
+
+  .info-perfil-nombre{
+    font-size: 12px;
+  }
+  .info-perfil-data{
+    font-size: 10px;
+  }
+
+  .info-perfil-1{
+    width: 80%;
+    gap: 1px;
+    margin-top:10%;
+    
+  }
+  
+
+  .aditional-info{
+    gap: 5%;
+    margin-top: 5%;
+  }
+  .socials-info{
+    font-size: 12px;
+  }
+
+  /*  section 2 */
+  .section-2-info-header{
+    font-size: 8px;
+  }
+
+  .stats-table{
+    font-size: 0.3em;
+  }
+  
+  .stats-player th, .stats-player td{
+    border-bottom: 1px solid #d2d2d2cf;
+    padding: 5px 5px
+  }
+
+  .doc-gallery{
+    height: 80%;
+    width: 80%;
+  }
+  .doc-obj p{
+    font-size: 6px;
+  }
+  .id-big{
+    font-size: 15px;
+  }
+
+}

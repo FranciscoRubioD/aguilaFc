@@ -32,6 +32,18 @@
     </div>
 
 
+    <div class="div-redes">
+
+      <div class="inner-div-redes">
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-square-x-twitter"></i>
+        <i class="fa-brands fa-facebook"></i>
+      </div>
+     
+    </div>
+
+
+
   </header>
 
   <section class="main-section">
@@ -154,17 +166,19 @@
 
                 <div class="data-registro">
                   <div class="row-2">
-                    <input type="text" name="" id="usuario" placeholder="Usuario">
+                    <input type="text" name="username" id="usuario" placeholder="Usuario">
                     <span class="error-user">Nombre de usuario ya existe</span>
                   </div>
 
                   <div class="row-2">
-                  <input type="text" name="" id="correo" placeholder="Correo Electrónico">
+                  <input type="email" name="email" id="correo" placeholder="Correo Electrónico">
                   <span class="error-correo">Correo ya existe</span>
                   </div>
 
                   <div class="row-2">
-                    <input type="password" placeholder="Contraseña">
+                    <!-- <p style="font-size: 10px; color: red; margin: 0; margin-bottom: 5px;">La contraseña debe tener al menos 8 caracteres, contener al menos una letra mayúscula y una letra minúscula, al menos un número, y al menos un carácter especial</p> -->
+                    
+                    <input type="password" name="contraseña" placeholder="Contraseña" id="password">
                   </div>
 
                   <div class="row-2">
@@ -172,7 +186,7 @@
                   </div>
                   
                  
-                  <button type="button" id="crearUsuarioBtn">Crear Cuenta</button>
+                  <button id="crearUsuarioBtn">Crear Cuenta</button>
                 </div>
                 
               </form>
@@ -190,19 +204,19 @@
 
 
       </section>
-
+      
 
       <section class="section-editar-perfil" id="sectionEditarPerfil" style="display: none;">
-
+          
           <div class="edit-row2">
             <div class="subir-imagen">
               <p>Sube una imagen</p>
               <div class="contenedor-circular">
                 <img src="" alt="" id="perfil">
               </div>
-  
+              
               <div class="div-input-img">
-                <input type="file" style="display:none" id="fotoPerfil" accept="image/jpeg, image/png">
+                <input type="file" style="display:none" id="fotoPerfil" accept="image/jpeg, image/png" name="fotoPerfil">
                 <div class="subir-imagen-btn">Subir Imagen <span><i class="fa-regular fa-image"></i></span></div>
                 <p>Formatos válidos (JPG, PNG)</p>
               </div>

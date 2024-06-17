@@ -10,7 +10,7 @@ body{
 }
 
 header{
-  background-color: rgb(86, 155, 238);
+  background-color: white;
   height: 15vh;
   display: flex;
   align-items: center;
@@ -23,15 +23,259 @@ header h1{
 }
 
 
+.main{
+  display: flex;
+  flex-direction: row;
+  
+}
+
+/* barra de herramientas */
+.tool-bar{
+  width: 15%;
+  height: 100vh;
+  /* margin-top: 10px; */
+  border:none;
+  background-color:rgb(86, 155, 238);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: width 0.5s ease;
+}
+
+.tool-bar.collapsed {
+  width: 4%;
+}
+
+.tool-bar p{
+  margin: 0;
+}
+
+/* NOMBRE ACADEMIA */
+.academy-name{
+  width:90%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  /* background-color: white; */
+}
+
+.tool-bar.collapsed .academy-name{
+  display:flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.tool-bar.collapsed .title-name{
+  display: none;
+}
+
+.title-name{
+  width: 70%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 5%;
+  /* background-color: black; */
+}
+.title-name p{
+  font-size: 15px;
+  color: white;
+  font-weight: bold;
+}
+
+.logo-aguila-container{
+  /* width: 50%; */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-aguila{
+  width: 100%;
+  height: 40%;
+}
+
+.burger{
+  /* background-color: green; */
+  width: 50%;
+  display: flex;
+  justify-content: end;
+}
+.burger i{
+  padding-right: 10px;
+  cursor: pointer;
+  color: white;
+  
+}
+
+
+.option-bar{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-top: 10%;
+  transition: opacity 0.5s ease, visibility 0.5s ease; /* Añadimos una transición para la opacidad y visibilidad */
+  opacity: 1; /* Aseguramos que la opacidad sea 1 por defecto */
+  visibility: visible; /* Aseguramos que la visibilidad sea visible por defecto */
+}
+
+.tool-bar.collapsed .option-bar {
+  opacity: 0; /* Oculta las opciones */
+  visibility: hidden; /* Oculta las opciones */
+}
+
+
+.option-bar p{
+  color:rgb(233, 233, 233);
+}
+
+.option{
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+  gap: 5%;
+  color: white;
+  cursor: pointer;
+}
+
+.option:hover{
+  background-color: rgb(226, 226, 226);
+  /* color: rgb(86, 155, 238); */
+}
+
+.name-option{
+  width: 50%;
+  font-size: 13px;
+  /* background-color: green; */
+}
+
+
+
+/* caja enlace */
+.seccion-agregar-jugador{
+  width: 90%;
+  height: 15%;
+  display:none;
+  /* background-color: black; */
+  /* border-style: solid; */
+  display: flex;
+  animation-name: desplegar;
+  animation-duration: 0.5s;
+  flex-direction:row;
+}
+
+@keyframes desplegar {
+  0%{
+    height: 0%;
+    opacity: 0;
+  }100%{
+    height: 15%;
+  }
+}
+
+@keyframes cerrar {
+  0%{
+    height: 20%;
+ 
+  }100%{
+    height: 0%;
+    opacity: 0;
+  }
+}
+
+
+
+.sub-link, .crear-jugador{
+  width: 50%;
+  /* background-color: red; */
+  margin-left: 3%;
+}
+
+.crear-jugador button{
+  width: 40%;
+  height: 40px;
+  background-color: rgb(86, 155, 238);
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.crear-jugador button:hover{
+  opacity: 0.9;
+}
+
+.refrescar:hover{
+  opacity: 0.8;
+}
+.refrescar:active{
+  opacity: 0.9;
+}
+
+.sub-link p, .crear-jugador p{
+  color: grey;
+  margin: 0;
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+
+
+#copy-link{
+  /* background-color: black; */
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  border-radius: 4px;
+  width: 80%;
+  height: 40px;
+  display: flex;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+
+
+#copy-link p{
+  margin-left: 5%;
+  color: lightgray;
+  white-space: nowrap;
+}
+
+#copy-link:active{
+  opacity: 0.4;
+}
+
+
+#copy-link button{
+  width: 30%;
+  border-style: none;
+  cursor: pointer;
+  background-color:rgb(86, 155, 238);
+  color: white;
+}
+
+.link-registro{
+  width: 70%;
+  display: flex;
+  align-items: center;
+}
+
+
+
 /* seccion jugadores */
 .seccion-jugadores{
   background-color:white;
-  width: 80vw;
-  height: 80vh;
-  border-radius: 10px;
+  width: 100%;
+  height: 100vh;
+  /* border-radius: 10px; */
   margin: auto;
-  margin-top: 20px;
-  overflow: hidden;
+  padding: 0;
+  /* margin-top: 20px; */
+  overflow: auto;
 }
 
 @media screen and (max-width: 768px) {
@@ -55,17 +299,55 @@ header h1{
   width: 100%;
   height: 10%;
   display: flex;
-  padding-top: 10px;
-  align-items: center;
-  
+  /* padding-top: 10px; */
+  /* align-items: center; */
 }
 
 .titulo-seccion-jugadores p{
   font-weight: bold;
 }
 
+/* dashboard */
+.dashboard-jugadores{
+  width: 100%;
+  height: 20%;
+  background-color: rgb(243, 243, 243);
+  display: flex;
+  flex-direction: row;
+  gap: 5%;
+  align-items: center;
+  justify-content: center;
+}
+
+.jugadores-totales{
+  width: 20%;
+  height: 70%;
+  background-color: white;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 5%;
+}
+
+.icon-dashboard{
+  width: 40px;
+  height: 40px;
+  margin-left: 10%;
+  border-radius: 50%;
+  background-color: rgb(84, 157, 201);
+}
+
+.dato-dashboard{
+  font-weight: bold;
+}
+.descripcion-dato{
+  color: grey;
+}
+
 .herramientas{
-  height: 8%;
+  height:8%;
+  width: 95%;
+  margin-top: 2%;
   /* background-color: red; */
   display: flex;
   align-items: center;
@@ -126,7 +408,6 @@ header h1{
 
 
 /* search bar styles */
-
 .search-bar-xmark{
   color: grey;
   margin: 0;
@@ -329,7 +610,8 @@ header h1{
   padding: 14px; 
   text-align: center; /* Alineación del texto a la izquierda */
   /* font-weight: 400; */
-  background-color: #95bbd211;
+  background-color: white;
+  color: grey;
   border-top: 1px solid #ddd; 
   font-size: 12px;
 }
@@ -341,6 +623,7 @@ header h1{
   text-align: center;
   color: grey;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .row-data i{
