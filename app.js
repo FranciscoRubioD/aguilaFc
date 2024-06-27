@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const path = require('path');
+const fs = require('fs');
 const uuid = require('uuid'); // Para generar identificadores únicos
 const crypto = require('crypto');
 
@@ -36,12 +38,57 @@ app.use(cookieParser());
 
 // conexion a mysql
 const mysql = require('mysql');
+const { reset } = require('nodemon');
 
 // usar directorio 
 app.use(express.static('static'));
+app.use('/archivos', express.static('uploads'));
 
-// Configuración de multer para manejar FormData
-const upload = multer();
+// Configuración de multer para almacenar en memoria
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage:storage });
+
+const uploadFinalPath = path.join(__dirname, 'uploads');  
+
+
+const finalizarSubida = (fileName, fileBuffer, callback) => {
+  // Verificar si el fileBuffer es un Buffer válido
+  if (!Buffer.isBuffer(fileBuffer)) {
+    callback(new Error('fileBuffer is not a Buffer'));
+    return;
+  }
+
+  // Función para verificar si el archivo ya existe en el servidor y guardarlo
+  const verificarExistenciaYGuardar = (rutaCompleta, intentos = 1) => {
+    // Verificar si el archivo ya existe
+    if (fs.existsSync(rutaCompleta)) {
+      const nombreArchivoSinExtension = path.basename(fileName, path.extname(fileName)); // Nombre del archivo sin extensión
+      const extension = path.extname(fileName); // Extensión del archivo
+
+      // Generar un nuevo nombre único agregando un timestamp antes de la extensión
+      const nuevoNombre = `${nombreArchivoSinExtension}_${Date.now()}${extension}`;
+      rutaCompleta = path.join(uploadFinalPath, nuevoNombre);
+
+      // Verificar nuevamente si el archivo con el nuevo nombre ya existe
+      return verificarExistenciaYGuardar(rutaCompleta, intentos + 1);
+    }
+
+    // Guardar el archivo en el sistema de archivos
+    fs.writeFile(rutaCompleta, fileBuffer, (err) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, rutaCompleta); // Llamar al callback con la ruta completa donde se guardó el archivo
+      }
+    });
+  };
+
+  let rutaCompleta = path.join(uploadFinalPath, fileName); // Ruta completa inicial
+
+  // Verificar y guardar el archivo con la función auxiliar
+  verificarExistenciaYGuardar(rutaCompleta);
+};
+
 
 // limite paginacion
 const limit = 10;
@@ -97,7 +144,6 @@ app.get(`/formulario/inscripcion/:uniqueLinkId`,(req,res)=>{
      res.status(404).send('Enlace temporal no válido o ha expirado');
   }
 
- 
 })
 
 
@@ -111,24 +157,35 @@ app.use(session({
 
 
 app.post('/save-personal-info',upload.single('cedulaFoto'),(req,res) =>{
+
+  if (!req.file || !Buffer.isBuffer(req.file.buffer)) {
+    res.status(400).send({ message: 'No se ha proporcionado ninguna foto de cédula o el archivo no es válido' });
+    return;
+  }
+
   // Guarda la información personal en la sesión
   req.session.personalInfo = req.body;
-  req.session.cedulaFoto = req.file.originalname;
-   // Imprime la información recibida en el servidor
-   console.log(req.file.originalname)
-   console.log('Información personal recibida:', req.body);
+  req.session.cedulaFotoBuffer = req.file.buffer;
+  req.session.cedulaFotoName = req.file.originalname;
 
+  cedulabuff = req.file.buffer;
+
+  console.log(typeof cedulabuff);
+   // Imprime la información recibida en el servidor
+  //  console.log(req.file.originalname);
+  //  console.log('Información personal recibida:', req.body);
   res.send({ message: 'Información personal guardada' });
 });
 
 app.post('/save-photo',upload.single('fotoPerfil'),(req,res) =>{
 
   req.session.fotoPerfil = req.file.originalname;
+  req.session.fotoPerfilBuffer = req.file.buffer;
   // Puedes acceder al nombre original de la foto así
   console.log('Nombre original de la foto:', req.file.originalname);
 
   // No necesitas acceder a req.body porque multer ya procesa la foto y la coloca en req.file
-  console.log('Foto recibida:', req.file);
+  // console.log('Foto recibida:', req.file);
 
   res.send({ message: 'Cuenta de usuario guardada' });
 });
@@ -136,18 +193,23 @@ app.post('/save-photo',upload.single('fotoPerfil'),(req,res) =>{
 app.post('/save-user-account', (req, res) => {
   // Guarda el nombre de usuario y contraseña en la sesión
   req.session.userAccount = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   res.send({ message: 'Cuenta de usuario guardada' });
 });
 
 
 app.post('/finalize-signup',(req,res) =>{
 
-    const { personalInfo, fotoPerfil, userAccount } = req.session;
-    const cedulaPic = req.session.cedulaFoto;
+    const { personalInfo, fotoPerfil, userAccount, cedulaFotoBuffer, fotoPerfilBuffer } = req.session;
+    const cedulaPic = req.session.cedulaFotoName;
 
-    if (!req.session.personalInfo || !req.session.fotoPerfil || !req.session.userAccount) {
+    // Función para verificar si un archivo ya existe en el servid
+    const bufferData = Buffer.from(req.session.cedulaFotoBuffer.data);
+    const bufferDataPic = Buffer.from(req.session.fotoPerfilBuffer.data);
+
+    if (!req.session.personalInfo || !req.session.cedulaFotoBuffer ||!req.session.userAccount || !cedulaPic) {
       res.status(400).send({ message: 'Faltan datos en la sesión' });
+
       return; 
     }
 
@@ -158,10 +220,22 @@ app.post('/finalize-signup',(req,res) =>{
         return;
       }
 
-      const queryUsuarios = 'INSERT INTO usuarios (nombre_usuario, email, contraseña, rol, foto_perfil) VALUES (?, ?, ?, ?,?)';
-      const valuesUsuarios = [userAccount.username, userAccount.email, userAccount.contraseña, "jugador",fotoPerfil];
-      
-      dbConexion.query(queryUsuarios, valuesUsuarios, (error,results)=>{
+      finalizarSubida(fotoPerfil,bufferDataPic,(err,rutaCompleta)=>{
+        if (err) {
+          return dbConexion.rollback(() => {
+            console.error('Error al guardar la foto de Perfil', err);
+            res.status(500).send({ message: 'Error al guardar la foto de perfil' });
+          });
+        }
+
+        const rutaFotoPerfil = path.basename(rutaCompleta);
+        
+        
+        const queryUsuarios = 'INSERT INTO usuarios (nombre_usuario, email, contraseña, rol, foto_perfil) VALUES (?, ?, ?, ?,?)';
+        const valuesUsuarios = [userAccount.username, userAccount.email, userAccount.contraseña, "jugador",rutaFotoPerfil];
+        
+
+        dbConexion.query(queryUsuarios, valuesUsuarios, (error,results)=>{
         if (error) {
           return dbConexion.rollback(() => {
             console.error('Error al insertar datos en usuarios', error);
@@ -192,49 +266,79 @@ app.post('/finalize-signup',(req,res) =>{
           usuario_id: userId
         };
   
-        const valuesJugadores = [
-          dataSend.Nombre,
-          dataSend.cedula,
-          dataSend.foto_cedula,
-          dataSend.telefono,
-          dataSend.edad,
-          dataSend.fecha_nacimiento,
-          dataSend.pais,
-          dataSend.provincia,
-          dataSend.distrito,
-          'Sano',
-          dataSend.numero_jugador,
-          dataSend.fecha_creacion,
-          dataSend.id_equipo,
-          dataSend.instagram,
-          dataSend.usuario_id
-        ];
-
         const queryJugadores = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,estado_salud,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?,?, ?, ?, ?, ?, ?)";
 
-        dbConexion.query(queryJugadores,valuesJugadores,(error,results) =>{
-          if (error) {
-            return dbConexion.rollback(() => {
-              console.error('Error al insertar datos en jugadores', error);
-              res.status(500).send({ message: 'Error al guardar la información personal' });
-            });
-          }
-
-          dbConexion.commit((err) => {
-            if(err){
+          finalizarSubida(cedulaPic, bufferData,(err,rutaCompleta)=>{
+            if (err) {
               return dbConexion.rollback(() => {
-                console.error('Error al hacer commit de la transacción', err);
-                res.status(500).send({ message: 'Error al finalizar la transacción' });
+                console.error('Error al guardar la foto de cédula', err);
+                res.status(500).send({ message: 'Error al guardar la foto de cédula' });
               });
             }
-            console.log('Datos insertados correctamente en ambas tablas');
-            res.send({ message: 'Registro completado exitosamente' });
-          })
+
+     
+            dataSend.foto_cedula = path.basename(rutaCompleta); // O utiliza la lógica adecuada para obtener el nombre de archivo.
+
+            const valuesJugadores = [
+              dataSend.Nombre,
+              dataSend.cedula,
+              dataSend.foto_cedula,
+              dataSend.telefono,
+              dataSend.edad,
+              dataSend.fecha_nacimiento,
+              dataSend.pais,
+              dataSend.provincia,
+              dataSend.distrito,
+              'Sano',
+              dataSend.numero_jugador,
+              dataSend.fecha_creacion,
+              dataSend.id_equipo,
+              dataSend.instagram,
+              dataSend.usuario_id
+            ];
+
+
+            dbConexion.query(queryJugadores,valuesJugadores,(error,results) =>{
+              if (error) {
+                return dbConexion.rollback(() => {
+                  console.error('Error al insertar datos en jugadores', error);
+                  res.status(500).send({ message: 'Error al guardar la información personal' });
+                });
+              }
+            })
+
+            dbConexion.commit((err) => {
+              if(err){
+                return dbConexion.rollback(() => {
+                  console.error('Error al hacer commit de la transacción', err);
+                  res.status(500).send({ message: 'Error al finalizar la transacción' });
+                });
+              }
+              console.log('Datos insertados correctamente en ambas tablas');
+              res.send({ message: 'Registro completado exitosamente' });
+            })
+
+          
+
+
+
+          
         })
 
       })
+
+      })
+
+      
     })
 })
+
+
+// jugador 
+
+
+
+// jugador
 
 // crear jugador inscripcion
 
@@ -262,71 +366,6 @@ function calcularEdad(fechaNacimiento){
 
 
 // manda datos personales a la base de datos
-app.post('/inscripcion',upload.single('cedulaFoto'),(req,res) =>{
-  // obtener datos del form
-    const formData = req.body; 
-
-    console.log(formData);
-    const fechaActual = new Date();
-
-    const edadJugador = calcularEdad(formData.Fecha_Nacimiento);
-
-    const nombreCompleto = formData.Nombre +" "+ formData.Apellido;
- 
-    const dataSend = {
-      Nombre : nombreCompleto,
-      cedula: formData.cedula,
-      foto_cedula: req.file.originalname,
-      telefono: formData.telefono,
-      edad: edadJugador,
-      fecha_nacimiento: formData.Fecha_Nacimiento,
-      pais: formData.pais,
-      provincia: formData.provincia,
-      distrito: formData.distrito,
-      numero_jugador: formData.numeroJugador,
-      fecha_creacion: fechaActual,
-      id_equipo: formData.categoria,
-      instagram: formData.instagram,
-      usuario_id: 1
-    }
-
-    const values = [
-      dataSend.Nombre,
-      dataSend.cedula,
-      dataSend.foto_cedula,
-      dataSend.telefono,
-      dataSend.edad,
-      dataSend.fecha_nacimiento,
-      dataSend.pais,
-      dataSend.provincia,
-      dataSend.distrito,
-      'Sano',
-      dataSend.numero_jugador,
-      dataSend.fecha_creacion,
-      dataSend.id_equipo,
-      dataSend.instagram,
-      dataSend.usuario_id
-    ]
-
-    const query = "INSERT INTO jugadores(Nombre,cedula,foto_cedula,telefono,edad,fecha_nacimiento,pais,provincia,distrito,estado_salud,numero_jugador,fecha_creacion,id_equipo,instagram,usuario_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
-
-    dbConexion.query(query,values,(error,results,fields)=>{
-      if(error){
-        console.error('Error al insertar datos',error);
-        return;
-      }
-      console.log('datos insertados correctamente!');
-    })
-
-  // if (req.file) {
-  //   console.log(req.file.originalname);
-  // }
-  // Responder al cliente
-  res.send('Datos del formulario recibidos correctamente.');
-
-})
-
-
 
 // crear jugador admin
 app.post('/crear/jugador', async(req, res) => {
@@ -405,6 +444,25 @@ app.get('/info/jugadores/:id',(req,res)=>{
 })
 
 
+// trae archivo del servidor 
+app.get('/archivo/:file',(req,res)=>{
+  const fileName = req.params.file;
+  const filePath  = path.join(__dirname, 'uploads', fileName);
+
+  
+  // Verificar si el archivo existe en el servidor
+  if (fs.existsSync(filePath)) {
+    // Si existe, enviar el archivo como respuesta
+    
+    res.sendFile(filePath);
+  } else {
+    // Si no existe, enviar respuesta de archivo no encontrado
+    res.status(404).send({ message: 'Archivo no encontrado' });
+  }
+
+})
+
+
 // trae el total de jugadores 
 app.get('/get-total-jugadores',(req,res) =>{
   const query = 'SELECT COUNT(*) AS total FROM jugadores'; // Consulta SQL para contar el número total de jugadores
@@ -443,6 +501,39 @@ app.get('/get-jugadores',(req,res)=>{
   })
 })
 
+
+// TRAE JUGADORES EN BASE ASISTENCIA
+app.get('/get/jugador/asistencia', (req, res) => {
+  const equipo = req.query.equipo;
+  const estado = req.query.estado;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT *
+    FROM jugadores
+    WHERE id_equipo = ?
+  `;
+
+  console.log(estado);
+  if (estado !== "todos") {
+    query += " AND estado_salud = ?";
+  }
+
+  query += " LIMIT ? OFFSET ?";
+
+  const params = estado === "todos" ? [equipo, limit, offset] : [equipo, estado, limit, offset];
+
+  dbConexion.query(query, params, (error, results) => {
+    if (error) {
+      console.error('Error al ejecutar la consulta para traer jugadores:', error);
+      res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
 
 // Define la nueva ruta para manejar las solicitudes de búsqueda
 app.get('/buscar-jugadores', (req, res) => {
@@ -604,11 +695,10 @@ app.get('/filtro-jugadores',(req,res) =>{
   })
 })
 
-
+// borrar usuario y jugador
 app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
   const idjugador = req.params.id;
   const userid = req.params.userid;
-
 
   dbConexion.beginTransaction((err)=>{
     if (err) {
@@ -617,47 +707,109 @@ app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
       return;
     }
 
-    const queryJugador = 'DELETE FROM jugadores WHERE id = ?'; 
-    
-
-
-    dbConexion.query(queryJugador, [idjugador], (error, results, fields) => {
+    // Consulta para obtener la ruta del archivo desde la base de datos
+    const queryJugadorCedula = 'SELECT foto_cedula FROM jugadores WHERE id = ?';
+    dbConexion.query(queryJugadorCedula,[idjugador],(error,results)=>{
       if (error) {
         return dbConexion.rollback(() => {
-          console.error('Error al borrar jugador', error);
-          res.status(500).send({ message: 'Error al borrar jugador' });
+          console.error('Error al obtener la ruta del archivo desde la base de datos', error);
+          res.status(500).send({ message: 'Error al obtener la ruta del archivo desde la base de datos' });
         });
       }
 
-      const queryUsuario = 'DELETE FROM usuarios WHERE id= ?';
+      if (results.length === 0) {
+        return dbConexion.rollback(() => {
+          console.error('No se encontró el jugador con el ID especificado');
+          res.status(404).send({ message: 'No se encontró el jugador con el ID especificado' });
+        });
+      }
 
-      dbConexion.query(queryUsuario,[userid],(error,results)=>{
-        if (error) {
+      // Obtener la ruta del archivo desde los resultados de la consulta
+      const fotoCedula = results[0].foto_cedula;
+      const filePath = path.join(uploadFinalPath, fotoCedula);
+      
+      // Eliminar el archivo del servidor
+      fs.unlink(filePath, (err) => {
+        if (err) {
           return dbConexion.rollback(() => {
-            console.error('Error al borrar usuario', error);
-            res.status(500).send({ message: 'Error al borrar usuario' });
+            console.error('Error al eliminar archivo del servidor', err);
+            res.status(500).send({ message: 'Error al eliminar archivo del servidor' });
           });
         }
 
-        dbConexion.commit((err)=>{
-          if (err) {
-            return dbConexion.rollback(() => {
-              console.error('Error al hacer commit de la transacción', err);
-              res.status(500).send({ message: 'Error al finalizar la transacción' });
+        // Eliminar el usuario después de eliminar el jugador
+        const queryEliminarJugador = 'DELETE FROM jugadores WHERE id = ?';
+        dbConexion.query(queryEliminarJugador, [idjugador], (error, results, fields) => {
+          if (error) {
+              return dbConexion.rollback(() => {
+              console.error('Error al borrar jugador', error);
+              res.status(500).send({ message: 'Error al borrar jugador' });
             });
           }
+          
+          const queryUsuarioFoto = 'SELECT foto_perfil FROM usuarios WHERE id = ?';
+          dbConexion.query(queryUsuarioFoto,[userid],(error,results)=>{
+            if (error) {
+              return dbConexion.rollback(() => {
+                console.error('Error al obtener la ruta del archivo desde la base de datos', error);
+                res.status(500).send({ message: 'Error al obtener la ruta del archivo desde la base de datos' });
+              });
+            }
+      
+            if (results.length === 0) {
+              return dbConexion.rollback(() => {
+                console.error('No se encontró el usuario con el ID especificado');
+                res.status(404).send({ message: 'No se encontró el jugador con el ID especificado' });
+              });
+            }
 
-          console.log('Datos eliminados correctamente en ambas tablas');
-          res.send({ message: 'Usuario eliminado' });
-        })
-      })
+            // Obtener la ruta del archivo desde los resultados de la consulta
+            const fotoUsuario = results[0].foto_perfil;
+            const filePath = path.join(uploadFinalPath, fotoUsuario);
 
+            fs.unlink(filePath, (err) => {
+              if (err) {
+                return dbConexion.rollback(() => {
+                  console.error('Error al eliminar archivo del servidor', err);
+                  res.status(500).send({ message: 'Error al eliminar archivo del servidor' });
+                });
+              }
+              
+              const queryUsuario = 'DELETE FROM usuarios WHERE id= ?';
+              dbConexion.query(queryUsuario,[userid],(error,results)=>{
+                if (error) {
+                  return dbConexion.rollback(() => {
+                    console.error('Error al borrar usuario', error);
+                    res.status(500).send({ message: 'Error al borrar usuario' });
+                  });
+                }
+    
+                dbConexion.commit((err)=>{
+                if (err) {
+                  return dbConexion.rollback(() => {
+                    console.error('Error al hacer commit de la transacción', err);
+                    res.status(500).send({ message: 'Error al finalizar la transacción' });
+                  });
+                }
+    
+                console.log('Datos eliminados correctamente en ambas tablas');
+                res.send({ message: 'Usuario eliminado' });
+            });
+          });
+
+            }); 
+
+          });
+
+          
+    
+    
+        });
+      });
 
     });
-
-  })
+  });
   // Example with MySQL
-  
 });
 
 
@@ -665,7 +817,7 @@ app.put('/editar/jugador/:id',(req,res)=>{
   const idJugador = req.params.id;
   const cambios = req.body;
 
-
+  console.log(cambios);
   // Construir la consulta de actualización basada en los campos modificados
   let sql = 'UPDATE jugadores SET ';
   const params = [];
@@ -733,6 +885,7 @@ app.get('/rango/edad',(req,res)=>{
             console.error('Error al obtener el rango de edad:', err);
             res.status(500).json({ error: 'Error al obtener el rango de edad' });
         } else {
+            
             const minEdad = result[0].min_edad;
             const maxEdad = result[0].max_edad;
             res.status(200).json({ minEdad: minEdad, maxEdad: maxEdad });
@@ -742,7 +895,6 @@ app.get('/rango/edad',(req,res)=>{
 
 
 // USUARIOS
-
 
 // RUTA BASE TRAE USUARIO E INFO
 app.get('/user/:id',(req,res)=>{
@@ -815,7 +967,7 @@ app.post('/signup',(req,res)=>{
   })
 })
 
-
+// revisa si el correo ya existe
 app.get('/correo/existente/:correo',(req,res) =>{
   const correo = req.params.correo;
 
@@ -844,7 +996,7 @@ app.get('/correo/existente/:correo',(req,res) =>{
 
 })
 
-
+// checkea username existente
 app.get('/usuario/existente/:user',(req,res) => {
   const usuario = req.params.user;
 

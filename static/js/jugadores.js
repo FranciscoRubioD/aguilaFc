@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-
+  $('.seccion-jugadores').hide();
 
   // tool bar 
   function twist(objeto, grados){
@@ -259,7 +259,6 @@ $(document).ready(function() {
 
       console.log(response.results);
 
-
       response.results.forEach(function(equipo) {
      
         const opcion = $('<div>').addClass('filter-field-secundary').attr('data-opcion', equipo.id);
@@ -268,8 +267,6 @@ $(document).ready(function() {
 
         const opcionP = $('<p>').text(equipo.nombre);
         
-
-
         opcion.append(opcionP);
         $('#opcionContainer').append(opcion);
         filtrar();
@@ -323,7 +320,7 @@ function rangoEdad(){
     type:'GET',
     url:'/rango/edad',
     success: function(response){
-    
+      
       const edadMinima = response.minEdad;
       const edadMaxima = response.maxEdad;
       
@@ -490,27 +487,35 @@ rangoEdad();
       const toolDiv = $('<div>');
       toolDiv.addClass('tool-div');
 
+      // icono editar
       const configurarJugadorIcon = $('<i>');
       configurarJugadorIcon.addClass('fa-solid fa-gear');
       configurarJugadorIcon.data('id-jugador',elemento.id);
 
 
+      // icono eliminar 
       const eliminarJugadorIcon = $('<i>');
       eliminarJugadorIcon.addClass('fa-solid fa-trash');
       eliminarJugadorIcon.data('id-jugador',elemento.id);
 
+      // icono ver
+      const verJugadorIcon = $('<i>');
+      verJugadorIcon.addClass('fa-solid fa-eye');
+      verJugadorIcon.data('id-jugador',elemento.id);
 
       // abrir modal
-      fila.on('click',function(){
+
+      verJugadorIcon.on('click',function(){
         const idJugador = $(this).data('id-jugador');
         console.log('click en fila',idJugador);
+
+        const edad = calcularEdad(elemento.fecha_nacimiento);
 
         $('.modal-jugador').fadeIn();
         $('#nombre-m').text(elemento.Nombre);
         $('#cedula-m').text(elemento.cedula);
         $('#telefono-m').text(elemento.telefono);
-
-        $('#edad-m').text(elemento.edad);
+        $('#edad-m').text(edad);
         
         // fecha
         const fechaISO = elemento.fecha_nacimiento;
@@ -523,29 +528,86 @@ rangoEdad();
         $('#instagram-m').text(elemento.instagram);
         // info equipo
         $('#equipo-m').text(elemento.nombre_division);
-        $('#posicion-m').text(elemento.posicion);
+        if(elemento.posicion){
+          $('#posicion-m').text(elemento.posicion);
+        }else{
+          $('#posicion-m').text('POR ASIGNAR');
+          $('#posicion-m').addClass('asignar');
+        }
+        
         $('#numero-camiseta-m').text(elemento.numero_jugador);
         $('#pierna-m').text(elemento.pierna_habil);
         $('#tarjeta-amarilla-m').text(elemento.tarjeta_amarilla);
         $('#pais-m').text(elemento.pais);
         $('#provincia-m').text(elemento.provincia);
         $('#distrito-m').text(elemento.distrito);
+
+        console.log(elemento.foto_cedula);
+
+        // descargar cedula
+        $('#doc-download').one('click',function(){
+          // URL del archivo que quieres descargar desde el servidor
+          var urlArchivo = '/archivos/' + elemento.foto_cedula;
+
+          var linkDescarga = $('<a>')
+          .attr('href', urlArchivo)
+          .attr('download', elemento.foto_cedula)
+          .hide();
+
+          // Agregar el enlace al documento y simular un clic
+          $('body').append(linkDescarga);
+          linkDescarga[0].click();
+
+          // Remover el enlace temporal del documento
+          linkDescarga.remove();
+        });
         
+
+        // descargar cedula
+
+
         // email del jugador
         $.ajax({
           type:'GET',
           url:'/user/'+ elemento.usuario_id,
           success:function(response){
             $('#email-m').text(response.email);
+            
+            const fotoPerfil = response.foto_perfil;
+              $.ajax({
+                type:'GET',
+                url:'/archivo/'+ fotoPerfil,
+                success:function(response){
+                  console.log(response);
+                  $('#fotoPerfilJugador').attr('src', '/archivos/' + fotoPerfil);
+
+                },
+                error: function(xhr, status, error) {
+                  console.error('Error al obtener la imagen de perfil:', error);
+                  $('#fotoPerfilJugador').attr('src', '/archivos/' + 'default_profile.png');
+                  // Manejar errores si es necesario
+                }
+              })
+
           },error(err){
             console.log(err);
           }
         })
         // email del jugador
 
-        
-        $('.closePlayer').on('click',function(){
+        $('.closePlayer').one('click',function(){
           $('.modal-jugador').hide();
+          $('#fotoPerfilJugador').attr('src', '');
+          $('#email-m').text('');
+          $('#equipo-m').text('');
+          $('#posicion-m').text('');
+          $('#numero-camiseta-m').text('');
+          $('#pierna-m').text('');
+          $('#tarjeta-amarilla-m').text('');
+          $('#pais-m').text('');
+          $('#provincia-m').text('');
+          $('#distrito-m').text('');
+
         })
 
       });
@@ -588,7 +650,15 @@ rangoEdad();
         console.log('mando',idJugador);
         editarJugador(idJugador,response);
       });
-      toolDiv.append(configurarJugadorIcon,eliminarJugadorIcon)
+      toolDiv.append(configurarJugadorIcon,eliminarJugadorIcon,verJugadorIcon);
+
+      // fecha
+      const edad = calcularEdad(elemento.fecha_nacimiento);
+      
+      // formatear fechaCreacion
+      const fechaISO = elemento.fecha_creacion;
+      const fechaCreacion = new Date(fechaISO);
+      const fechaFormateadaCreacion = formatDate(fechaCreacion);
 
 
       const propiedadesMostradas = ['Nombre', 'cedula', 'telefono','edad','posicion','numero_jugador','estado_salud','fecha_creacion','nombre_division'];
@@ -596,7 +666,6 @@ rangoEdad();
       for (const key in elemento) {
         if (Object.hasOwnProperty.call(elemento, key)) {
           if (propiedadesMostradas.includes(key)) {
-
             // Si está en la lista, crear elementos dt y dd
             if(key !=="estado_cuenta"){
 
@@ -609,7 +678,14 @@ rangoEdad();
               }else if(key ==="Nombre"){
                 const td = $('<td>').text(elemento[key]);
                 fila.append(td);
-              }else{
+              }else if(key === "edad"){
+                const td = $('<td>').text(edad);
+                fila.append(td);
+              }else if(key === "fecha_creacion"){
+                const td = $('<td>').text(fechaFormateadaCreacion);
+                fila.append(td);
+              }
+              else{
                   const td = $('<td>').text(elemento[key]);
                   // Agregar los elementos al contenedor donde deseas mostrarlos
                   fila.append(td);
@@ -668,26 +744,39 @@ rangoEdad();
 
 
     // ponemos valores de cada jugador
+ 
+    
+    if (jugador.posicion) {
+      $('#posicion').val(jugador.posicion);
+    } else {
+      $('#posicion').val('default');
+    }
+
     $('#Nombre').val(jugador.Nombre);
     $('#cedula').val(jugador.cedula);
-    $('#posicion').val(jugador.posicion);
     $('#estado_salud').val(jugador.estado_salud);
     $('#telefono').val(jugador.telefono);
-    $('#edad').val(jugador.edad);
+    
+    
     $('#numero_jugador').val(jugador.numero_jugador);
 
+  
+    const fechaISO8601 = jugador.fecha_nacimiento;
+    
+    const fecha = new Date(fechaISO8601);
 
+    // Obtener la fecha en formato YYYY-MM-DD (sin incluir la hora ni la zona horaria)
+    const fechaISO = fecha.toISOString().split('T')[0];
     
 
-    console.log('Segun este es mi jugador: ',jugador);
-    console.log('El id jugador con su numero de jugador es: ',jugador.numero_jugador);
+    $('#edad').val(fechaISO);  
+  
 
     const nombreDivision = jugador.id_equipo;
     const estadoSalud = jugador.estado_salud;
     const posicionJugador = jugador.posicion;
 
     
-
     $('#id_equipo option').each(function() {
         const valorOpcion = $(this).val();
         if (valorOpcion.includes(nombreDivision)) { 
@@ -735,6 +824,8 @@ rangoEdad();
             if(numeroJugador !== '' ){
               if(response.existe){
                 ValidarNumeroJugador = true;
+                $('#enviarFormEditar').removeClass('inactive');
+                $('#enviarFormEditar').prop('disabled', false);
                 $('#numeroJugadorLabel').text('Número de jugador').css('color', ''); // Restablece el color a su valor predeterminado
                 $('#numero_jugador').css({
                     'color': '', // Restablece el color a su valor predeterminado
@@ -749,6 +840,9 @@ rangoEdad();
                         'border-color': 'red',
                         'outline': 'none'
                     });
+                    console.log('no disponible');
+
+                    $('#enviarFormEditar').addClass('inactive').prop('disabled', true);
                     ValidarNumeroJugador = false;
                   }
                 
@@ -772,11 +866,12 @@ rangoEdad();
 
       $('#enviarFormEditar').off('click').on('click',()=>{
         if(ValidarNumeroJugador === true){
-         
           console.log('Voy a editar el id de jugador',jugador.id);
           enviarFormEditar(jugador.id);
+          
         }else{
-          alert('Elija un número de jugador disponible');
+          
+
         }
         
       })
@@ -792,7 +887,7 @@ rangoEdad();
       const posicion = $('#posicion').val();
       const estadoSalud =$('#estado_salud').val();
       const telefono = $('#telefono').val();
-      const edad = $('#edad').val();
+      const fecha_nacimiento = $('#edad').val();
       const numeroJugador = $('#numero_jugador').val();
       const equipo = $('#id_equipo').val();
 
@@ -803,7 +898,7 @@ rangoEdad();
         posicion : posicion,
         numero_jugador : numeroJugador,
         estado_salud : estadoSalud,
-        edad: edad,
+        fecha_nacimiento: fecha_nacimiento,
         id_equipo : equipo
       }
     
@@ -995,6 +1090,20 @@ rangoEdad();
   }
   
 
+  // traer edad en base a fecha
+  
+  function calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const fechaNac = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+  
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+      edad--;
+    }
+  
+    return edad;
+  }
 
 
 

@@ -261,14 +261,14 @@ izquierda.on('click',function(){
   eleccion = "";
   elegirPiernaHabil('IZQUIERDA');
   eleccion = izquierda.data('pierna');
-  console.log(eleccion);
+ 
 })
 
 derecha.on('click',function(){
   eleccion = "";
   elegirPiernaHabil('DERECHA');
   eleccion = derecha.data('pierna');
-  console.log(eleccion);
+  
 })
 
 
@@ -352,8 +352,6 @@ formRegistro.on('submit', function(event) {
             alert('error');
           }
         })
-
-      
       },error:function(error){
         console.error('Error al crear usuario',error);
       }
@@ -394,7 +392,7 @@ function usuarioExiste(usuario){
     type:'GET',
     url:'/usuario/existente/'+usuario,
     success: function(response){
-      console.log(response);
+      
       if(response.existe === true){
         $('.error-user').show();
       }else{
@@ -412,7 +410,7 @@ function correoExistente(correo){
     type:'GET',
     url:'/correo/existente/'+correo,
     success: function(response){
-      console.log(response);
+     
       if(response.existe === true){
         $('.error-correo').show();
       }else{
@@ -455,7 +453,7 @@ const jugadorPiernaHabil = $('#piernaJugador');
 function asignarCampos(){
   if(eleccion){
     jugadorPiernaHabil.val(eleccion);
-    console.log(`Se agrego, ${eleccion} como valor a pierna habil`);
+    
   }
 }
 
@@ -524,7 +522,7 @@ function infoJugador(){
       dataType:'json',
       success: function(response){
         
-        console.log(response.results);
+        
         $('#categorias').empty();
 
         var opcionPlaceholder = $('<option>', {
@@ -667,7 +665,7 @@ function infoJugador(){
          
           if(jugador !== ''){
             if(response.existe){
-              console.log('disponible');
+              
               $('.jugadornodisponible').remove();
   
               $('.guardar-btn').off('click').on('click',function(){
@@ -695,7 +693,7 @@ function infoJugador(){
   
             }else{
               $('.guardar-btn').prop('disabled',true);
-              console.log('No disponible');
+              
               const mensajeDisponibilidad =$('<p>').text('El número de jugador no está disponible. Por favor, elija otro número.');
               mensajeDisponibilidad.addClass('jugadornodisponible');
               $('.config-numero-div').append(mensajeDisponibilidad);

@@ -15,6 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.7/lottie.min.js"></script>
   <!-- css -->
   <link rel="stylesheet" href="css/jugadores.css">
+  <link rel="stylesheet" href="css/asistencia.css">
   <link rel="stylesheet" href="css/modal-jugador.css">
   <link rel="stylesheet" href="css/complementos.css">
 </head>
@@ -395,6 +396,191 @@
   
       
     </section>
+
+
+   
+
+     <!-- seccion imporante ASISTENCIA -->
+    <section class="asistencia" id="asistenciaMain">
+      
+    
+      <div class="inner-asistencia">
+        <div class="main-evento">
+          <div class="inner-main-evento">
+            <div class="title-event">
+              <p>Programar evento</p>
+            </div>
+
+            <div class="descripcion-evento">
+                <div class="prueba">
+          
+                  <div class="event-tag">
+                    <p>Equipo</p> 
+                  </div>
+              
+                  <div class="dropdown-asist">
+                    <div class="dropdow-inner">
+                      <select id="equipoAsistencia">
+                      
+                        <!-- <option value="1">Sub 10</option>
+                        <option value="2">Sub 12</option>
+                        <option value="3">Sub 13</option> -->
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="prueba">
+
+                  <div class="event-tag">
+                    <p>Evento</p> 
+                  </div>
+              
+                  <div class="dropdown-asist">
+                    <div class="dropdow-inner">
+                      <select id="eventoAsistencia">
+                        <option value="">Selecciona una opcion</option>
+                        <option value="Entrenamiento">Entrenamiento</option>
+                        <option value="Partido">Partido</option>
+                        <option value="Reunion">Reunion</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="prueba">
+
+                  <div class="event-tag">
+                    <p>Estado</p> 
+                  </div>
+              
+                  <div class="dropdown-asist">
+                    <div class="dropdow-inner">
+                      <select id="estadoAsistencia">
+                        <option value="">Selecciona una opcion</option>
+                        <option value="todos">Todos</option>
+                        <option value="Sano">Sano</option>
+                        <option value="Lesionado">Lesionado</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="prueba">
+                  <div class="event-tag">
+                    <p>Evento</p> 
+                  </div>
+              
+                  <div class="dropdown-asist">
+                    <div class="dropdow-inner">
+                      <select id="equipoAsistencia">
+                        <option value="1">Sub 10</option>
+                        <option value="2">Sub 12</option>
+                        <option value="3">Sub 13</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="fechas-evento">
+              <div class="event-date">
+                 <div class="event-date-cal">
+                    <div class="event-inner">
+                      <label for="event-date">Fecha</label>
+                      <input type="date" name="event-date" id="fechaEvento">
+                    </div>
+                  
+                 </div>
+
+                 <div class="event-date-hour">
+                    <div class="event-inner">
+                      <label for="event-hour">Hora</label>
+                      <input type="time" name="event-hour" id="horaEvento">
+                    </div>
+                 </div>
+              </div>
+
+              <div class="event-desc">
+                <div class="event-desc-inner">
+                  <label for="">Descripcion</label>
+                  <textarea name="" id="descEvento"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="listado-div">
+          <button id="crearListadoButton">CREAR LISTADO</button>
+          <!-- <button>Borrar Listado</button> -->
+        </div>
+
+        <div class="asistencia-main">
+          <div class="tabla-asistencia">
+            <div class="atendance-title">
+             
+            </div>
+            
+            <div id="loadingAnimation" style="width: 100px; height: 100px; margin: auto; display: none;"></div>
+
+            <table class="table-asist">
+              <tr>
+                <th>Jugador</th>
+                <th>Presente</th>
+                <th>Ausente</th>
+                <th>Tardanza</th>
+                <th>Ausencia Justificada</th>
+                <th>Comentarios</th>
+              </tr>
+
+              <tbody class="datos-asistencia">
+
+              </tbody>
+              
+
+              <!-- <tr class="data-asist">
+                <td>Francisco</td>
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" name="estado" id="presente">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" name="estado" id="ausente">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" name="estado" id="tardanza">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="custom-checkbox">
+                    <input type="checkbox" name="estado" id="justificado">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                
+                <td>
+                  <textarea name="" id=""></textarea>
+                </td>
+              </tr> -->
+
+             
+
+            
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
   </section>
 
   
@@ -411,7 +597,7 @@
         <div class="section-1-profile">
           <div class="foto-perfil">
             <div class="foto-perfil-container">
-
+              <img src="" alt="" id="fotoPerfilJugador">
             </div>
           </div>
 
@@ -554,7 +740,7 @@
           <section class="documentos">
             <div class="doc-gallery">
               <div class="doc-p">
-                <div class="doc-obj">
+                <div class="doc-obj" id="doc-download">
                   <i class="fa-regular fa-address-card id-big"></i>
                   <p>Cedula</p>
                 </div>
@@ -579,7 +765,7 @@
   </div>
   
   
-  <!-- seccion imporante informacion total del jugador -->
+ 
 
   <div class="modal">
 
@@ -602,7 +788,7 @@
 
               <label for="posicion">Posicion</label>
               <select name="posicion" id="posicion" required>
-                <option value="">Eliga una opcion</option>
+                <option value="default">Eliga una opcion</option>
                 <option value="Portero">Portero</option>
                 <option value="Defensa Central">Defensa Central</option>
                 <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
@@ -626,10 +812,10 @@
 
             <div class="right-edit-div">
               <label for="telefono">Teléfono</label>
-              <input type="number" id="telefono" name="telefono" required>
+              <input type="text" id="telefono" name="telefono" required>
 
-              <label for="edad">Edad:</label>
-              <input type="number" id="edad" name="edad" required>
+              <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+              <input type="date" id="edad" name="fecha_nacimiento" required>
 
               
 
@@ -663,6 +849,11 @@
     </div>
   </div>
 
+
+  <!-- seccion imporante informacion total del jugador -->
+
+
+ 
 
   <!-- complementos y pop ups -->
 
@@ -719,3 +910,4 @@
 
 <script src="/js/infoJugador.js"></script>
 <script src="/js/jugadores.js"></script>
+<script src="/js/asistencia.js"></script>

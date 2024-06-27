@@ -1,0 +1,364 @@
+.asistencia{
+  background-color:white;
+  width: 100%;
+  height: 100vh;
+  /* border-radius: 10px; */
+  margin: auto;
+  padding: 0;
+  /* margin-top: 20px; */
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* crear listado  */
+.listado-div{
+  width: 90%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+  margin: auto;
+  /* background-color: red; */
+}
+
+.listado-div button{
+  border: none;
+  width: 25%;
+  height: 50%;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+  letter-spacing: 2px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.listado-div button:hover{
+  opacity: 0.7;
+}
+
+.listado-div button:first-child{
+  background-color: rgb(39, 145, 198);
+  color: white;
+}
+
+
+.datos-asistencia {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.table-asist{
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.datos-asistencia.visible , .table-asist.visible{
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+ 
+/* main asistencia */
+.inner-asistencia{
+  width: 90%;
+  height: 90%;
+  /* background-color: rgb(203, 203, 203); */
+}
+
+
+/* evento main */
+.main-evento{
+  width: 100%;
+  height: 30%;
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-main-evento{
+  width: 95%;
+  height: 90%;
+  /* border-style: solid; */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+p{
+  margin: 0;
+}
+
+/* header evento */
+.title-event{
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* desp y seleccion */
+.descripcion-evento{
+  width: 100%;
+  height: 40%;
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.prueba{
+  /* border-style: solid; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+}
+
+.event-tag{
+  width: 90%;
+  display: flex;
+  align-content: center;
+  justify-content: left;
+}
+.prueba p{
+  color: grey;
+  font-size: 12px;
+}
+
+.dropdown-asist{
+  width: 90%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: green; */
+}
+
+.dropdow-inner{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: red; */
+}
+
+.dropdow-inner select{
+   height: 100%;
+   border: none;
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.fechas-evento{
+  width: 100%;
+  height: 40%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* background-color: green; */
+}
+
+.event-date{
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  
+}
+
+.event-date-cal, .event-date-hour{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;
+  /* border-style: solid; */
+}
+
+.event-inner{
+  /* background-color: red; */
+  width: 90%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+}
+.event-inner label, .event-desc-inner label{
+  font-size: 12px;
+  color: grey;
+}
+
+.event-inner input{
+  border: none;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  height: 80%;
+  padding-left: 10px;
+  border-radius: 4px;
+}
+
+
+
+.event-desc{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-desc-inner{
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: green; */
+}
+
+
+
+.event-desc-inner textarea{
+  height: 90%;
+  border-radius: 4px;
+  border: none;
+  padding: 5px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;  
+}
+
+
+/* main div de tabla */
+.asistencia-main{
+  height: 70%;
+  width: 100%;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabla-asistencia{
+  width: 95%;
+  height: 90%;
+  border-radius: 10px;
+  background-color: white;
+}
+
+/* tabla */
+
+.table-asist{
+  width: 100%;
+  border-collapse: collapse;
+  /* background-color: red; */
+}
+
+/* personalizar row de header */
+.table-asist th{
+  padding: 20px;
+  color: grey;
+  font-weight: 100;
+  font-size: 15px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: lightgrey;
+}
+
+/* personalizar row de datos */
+.table-asist td{
+  /* background-color: blue; */
+  padding: 20px;
+  font-size: 12px;
+  text-align: center;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: lightgrey;
+}
+
+.table-asist td textarea{
+  resize: none; /* Evita que se pueda redimensionar el textarea */
+  width: 100%;
+  padding: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  border-color: lightgrey;
+}
+
+
+
+/* Ocultar el checkbox estándar */
+.custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+/* Estilo del contenedor del checkbox personalizado */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 10px;
+  user-select: none;
+}
+
+/* Estilo del "checkmark" */
+.custom-checkbox .checkmark {
+  width: 40px;
+  height: 40px;
+  background-color: #eee;
+  border: none;
+  border-radius: 4px;
+  position: relative;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Estilo del "checkmark" cuando está marcado */
+/* .custom-checkbox input[type="checkbox"]:checked + .checkmark {
+  background-color: #1d7804;
+  border-color: #1d7804;
+} */
+
+/* Estilos de colores según el estado */
+
+
+/* Estilo del símbolo de check dentro del "checkmark" */
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Mostrar el símbolo de check cuando el checkbox está marcado */
+.custom-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  opacity: 1;
+}
+
+.ausente:checked + .checkmark {
+  background-color: red;
+  border-color: red;
+}
+
+.tardanza:checked + .checkmark {
+  background-color: orange;
+  border-color: orange;
+}
+
+.justificado:checked + .checkmark {
+  background-color: yellow;
+  border-color: yellow;
+}
+
+.presente:checked + .checkmark {
+  background-color: green;
+  border-color: green;
+}

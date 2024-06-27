@@ -70,6 +70,11 @@
   overflow: hidden;
 }
 
+#posicion-m.asignar{
+  color: green;
+  font-size: 1.2em;
+}
+
 .foto-perfil{
   width: 100%;
   height: 70%;
@@ -80,10 +85,18 @@
 }
 
 .foto-perfil-container{
-  width: 140px;
-  height: 140px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   background-color: white;
+  overflow: hidden;
+}
+
+.foto-perfil-container img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
 }
 
 .info-perfil{
