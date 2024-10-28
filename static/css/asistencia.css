@@ -1,6 +1,6 @@
 .asistencia{
   background-color:white;
-  width: 100%;
+  width: 90%;
   height: 100vh;
   /* border-radius: 10px; */
   margin: auto;
@@ -13,251 +13,251 @@
 }
 
 
+
 /* crear listado  */
-.listado-div{
-  width: 90%;
-  height: 10%;
+.crearListadoBtn{
+  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2%;
-  margin: auto;
-  /* background-color: red; */
+  justify-content: end;
 }
 
-.listado-div button{
+.crearListadoBtn button{
   border: none;
-  width: 25%;
-  height: 50%;
-  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
-  letter-spacing: 2px;
-  border-radius: 5px;
+  width: 20%;
+  height: 100%;
   cursor: pointer;
+  background-color: rgb(75, 76, 76);
+  color: white;
 }
 
 .listado-div button:hover{
   opacity: 0.7;
 }
 
-.listado-div button:first-child{
-  background-color: rgb(39, 145, 198);
-  color: white;
-}
-
-
-.datos-asistencia {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
 
 .table-asist{
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
 
-.datos-asistencia.visible , .table-asist.visible{
+.table-asist.visible, .enviar-asist-div.visible{
   opacity: 1;
 }
 
+.enviar-asist-div{
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
 
 
+/* enviar asist button */
+.enviar-asist-div{
+  width: 90%;
+  height: 7%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 2%;
+  margin-top: 2%;
+  /* background-color: red; */
+}
+
+.enviar-asist-div button{
+  width: 20%;
+  height: 90%;
+  /* padding: 5px; */
+  /* height: 0%; */
+}
+
+.enviar-asist-div button:first-child{
+  background-color: rgb(112, 221, 70);
+  font-size: 12px;
+}
+
+.enviar-asist-div button{
+  background-color: rgb(39, 145, 198);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+}
 
 
-
-
-
- 
 /* main asistencia */
 .inner-asistencia{
   width: 90%;
-  height: 90%;
-  /* background-color: rgb(203, 203, 203); */
+  height: 100%;
 }
-
-
 /* evento main */
 .main-evento{
   width: 100%;
-  height: 30%;
-  /* background-color: red; */
+  height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
-.inner-main-evento{
-  width: 95%;
-  height: 90%;
-  /* border-style: solid; */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.inner-main-evento p{
+  margin: 0;
 }
 
 p{
   margin: 0;
 }
 
+.inner-main-evento{
+  width: 80%;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  gap: 5%;
+  margin-top: 2%;
+}
+
+/* division */
+.main-division{
+  width: 100%;
+  /* background-color: red; */
+  height: 42vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.left-event{
+  display: flex;
+  flex-direction: column;
+  /* background-color: red; */
+  gap: 7%;
+}
+
+.input-asist{
+  border: solid 1px rgb(232, 232, 232);
+  padding: 5px;
+  width: 100%;
+  height: 38px;
+  padding-left: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.main-division label{
+  margin: 0;
+}
+
 /* header evento */
 .title-event{
   width: 100%;
-  height: 20%;
+  /* height: 10%; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* desp y seleccion */
-.descripcion-evento{
-  width: 100%;
-  height: 40%;
-  /* background-color: red; */
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
+
 .prueba{
   /* border-style: solid; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4%;
-}
-
-.event-tag{
   width: 90%;
-  display: flex;
-  align-content: center;
-  justify-content: left;
-}
-.prueba p{
-  color: grey;
-  font-size: 12px;
-}
-
-.dropdown-asist{
-  width: 90%;
-  height: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* background-color: green; */
-}
-
-.dropdow-inner{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   /* background-color: red; */
-}
-
-.dropdow-inner select{
-   height: 100%;
-   border: none;
-   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-}
-
-.fechas-evento{
-  width: 100%;
-  height: 40%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* background-color: green; */
-}
-
-.event-date{
-  /* background-color: red; */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* border-style: solid; */
+  /* background-color: yellow; */
   
 }
 
-.event-date-cal, .event-date-hour{
+
+
+
+/*  row 2 */
+
+
+/* row 3 */
+.desc-container{
+  width: 100%;
+  height: 30%;
+  /* background-color: red; */
+}
+
+.event-desc{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.event-desc-inner{
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;  
-  align-items: center;
-  /* border-style: solid; */
-}
-
-.event-inner{
-  /* background-color: red; */
-  width: 90%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-}
-.event-inner label, .event-desc-inner label{
-  font-size: 12px;
-  color: grey;
-}
-
-.event-inner input{
-  border: none;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  height: 80%;
-  padding-left: 10px;
-  border-radius: 4px;
-}
-
-
-
-.event-desc{
-  display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.event-desc-inner{
-  width: 90%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
   /* background-color: green; */
 }
 
-
+.event-desc-inner:first-child{
+  align-items: start;
+}
 
 .event-desc-inner textarea{
-  height: 90%;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
   border-radius: 4px;
-  border: none;
-  padding: 5px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;  
+  /* font-size: 1px; */
+  padding: 10px;
 }
+
 
 
 /* main div de tabla */
 .asistencia-main{
-  height: 70%;
   width: 100%;
-  /* background-color: green; */
-  display: flex;
-  justify-content: center;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
   align-items: center;
 }
 
 .tabla-asistencia{
-  width: 95%;
-  height: 90%;
+  width: 90%;
+  height: 80%;
   border-radius: 10px;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* tabla */
 
-.table-asist{
-  width: 100%;
+.table-asist, .table-asist-new{
+  width: 90%;
   border-collapse: collapse;
   /* background-color: red; */
 }
 
+/* tabla modal asistencia */
+.container-asist-table{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
 /* personalizar row de header */
-.table-asist th{
+.table-asist th, .table-asist-modal th, .table-asist-new th{
   padding: 20px;
   color: grey;
   font-weight: 100;
@@ -268,9 +268,9 @@ p{
 }
 
 /* personalizar row de datos */
-.table-asist td{
+.table-asist td, .table-asist-modal td, .table-asist-new td{
   /* background-color: blue; */
-  padding: 20px;
+  padding: 5px;
   font-size: 12px;
   text-align: center;
   border-bottom-style: solid;
@@ -278,14 +278,15 @@ p{
   border-bottom-color: lightgrey;
 }
 
-.table-asist td textarea{
+
+
+.table-asist td textarea, .table-asist-modal td textarea, .table-asist-new td textarea{
   resize: none; /* Evita que se pueda redimensionar el textarea */
   width: 100%;
   padding: 5px;
   font-family: Arial, Helvetica, sans-serif;
   border-color: lightgrey;
 }
-
 
 
 /* Ocultar el checkbox estándar */
@@ -305,8 +306,8 @@ p{
 
 /* Estilo del "checkmark" */
 .custom-checkbox .checkmark {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   background-color: #eee;
   border: none;
   border-radius: 4px;
@@ -314,13 +315,57 @@ p{
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* Estilo del "checkmark" cuando está marcado */
-/* .custom-checkbox input[type="checkbox"]:checked + .checkmark {
-  background-color: #1d7804;
-  border-color: #1d7804;
-} */
 
-/* Estilos de colores según el estado */
+/* modal tabla */
+.table-asist-modal{
+  width:90%;
+  border-collapse: collapse;
+}
+
+.update-list{
+  width: 90%;
+  height: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2%;
+  margin-top: 2%;
+}
+
+.tablaAsistBtn{
+  /* background-color: blue; */
+  display: flex;
+  justify-content: end;
+  gap: 5%;
+}
+
+.tablaAsistBtn button{
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tablaAsistBtn button:hover{
+  opacity: 0.7;
+}
+
+.tablaAsistBtn button:focus{
+  outline: none;
+}
+
+
+.paginacionTablaAsist{
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paginaTablaInner{
+  width: 90%;
+  height: 90%;
+  /* background-color: blue; */
+}
 
 
 /* Estilo del símbolo de check dentro del "checkmark" */
@@ -361,4 +406,770 @@ p{
 .presente:checked + .checkmark {
   background-color: green;
   border-color: green;
+}
+
+
+/* una vez se envía asistencia */
+.asistencia-enviada{
+  width: 100%;
+  height: 100%;
+  /* background-color: red; */
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.aEnviada-inner{
+  /* background-color: blue; */
+  width: 95%;
+  height: 90%;
+  /* background-color: blue; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.title-aEnviada{
+  width: 100%;
+  /* background-color: green; */
+  text-align: center;
+  font-size: 2em;
+}
+.title-aEnviada h1{
+  margin: 0;
+}
+
+.aEnviada-opciones{
+  width:100%;
+  height: 30%;
+  margin-top: 2%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.aEnviada-opciones-inner{
+  width: 70%;
+  height: 100%;
+  gap: 5%;
+  overflow: hidden;
+  /* background-color:yellow; */
+  display:grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.aEnviada-opciones-inner button{
+  border: none;
+  cursor: pointer;
+  border: none;
+  font-size: 1.2em;
+  border-radius: 5px;
+  transition: all 0.15s ease;
+}
+.aEnviada-opciones-inner button:hover{
+  background-color: #2873B8;
+  color: white;
+}
+ 
+
+
+
+/* setting asistencia */
+.asistencia-setting{
+  width: 100%;
+  height: 90%;
+  background-color: rgb(226, 226, 226);
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  overflow: hidden;
+}
+
+.hour-date-show{
+  width: 90%;
+  height: 100%;
+  margin: auto;
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.ubicacion-show{
+  width: 95%;
+  height: 80%;
+  border-radius: 10px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  cursor: pointer;
+}
+
+.ubicacion-show-inner{
+  width: 80%;
+  height: 60%;
+  /* background-color: red; */
+  display: grid;
+  grid-template-rows:2fr 1fr 1fr;
+}
+
+.ubicacion-show-inner i{
+  font-size: 50px;
+}
+
+.gps-div{
+  /* border-style: solid; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-date-show{
+  width: 100%;
+  height: 80%;
+  margin: auto;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.hour-show, .date-show{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hour-show p{
+  font-size: 1.7em;
+  font-weight: bold;
+}
+.date-show p{
+  font-size: 1.3em;
+}
+
+.div-cambiar-hora{
+  width: 100%;
+  height: 20%;
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-cambiar-hora, .gps-div button{
+  border: none;
+  width: 80%;
+  height: 100%;
+  font-size: 14px; 
+  /* font-weight: bold; */
+  border-radius: 6px;
+  background-color: rgb(0, 0, 0);
+  color:white;
+  transition: all 0.15s;
+}
+
+.btn-cambiar-hora:hover, .gps-div button:hover{
+  background-color: white;
+  color: rgb(75, 106, 230);
+  font-weight: bold;
+} 
+
+.btn-cambiar-hora button:focus, .gps-div button:focus{
+  outline: none;
+}
+
+
+
+
+
+/* inferior */
+* {
+  box-sizing: border-box;
+}
+.inf-asist-show{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  /* background-color: red; */
+  align-items: top;
+  justify-content: center;
+}
+
+.inf-asist-inner{
+  width: 90%;
+  height: 100%;
+  display: grid;
+  /* background-color: blue; */
+  margin: auto;
+  grid-template-columns: 1fr 2fr 1fr;
+  overflow: hidden;
+  justify-content: center;
+  gap: 20px;
+
+}
+
+/* box pequeños */
+.inf-asist-box{
+  background-color: white;
+  height: 80%;
+  width: 100%;
+  border-radius: 10px;
+  /* background-color: green; */
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.inf-asist-box:hover, .inf-partido-info:hover, .inner-date-show:hover, .ubicacion-show:hover{
+  background-color: rgb(75, 106, 230);
+  color: white;
+}
+
+.info-box-innner{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* background-color: blue; */
+}
+
+.info-box-innner i{
+  font-size: 60px;
+}
+
+
+/* box de partido */
+.inf-partido-info{
+  width: 100%;
+  height: 80%;
+  display: flex;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  cursor: pointer;
+}
+
+.partido-inner{
+  width:100%;
+  height: 90%;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.equipos-partido{
+  width: 90%;
+  height: 60%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  justify-content: center;
+  align-items: center;
+  /* background-color: blue; */
+}
+
+.equipo-div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: black; */
+  height: 90%;
+  overflow: hidden;
+}
+
+.nombre-equipo p{
+  margin: 0;
+}
+
+/* VS WORD */
+.vs-p{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.vs-p p{
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.logo-equipo-div{
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  /* background-color: blue; */
+}
+.logo-equipo-div img{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+
+/* change date modal css */
+.modal-change-date{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+/* content ubicacion */
+.changelocation-content{
+  width: 30%;
+  height: 50%;
+  margin-top:10%;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* inner */
+.inner-location{
+  width: 70%;
+  height: 70%;
+  display: grid;
+  grid-template-rows: 2fr 1fr 1fr;
+  /* background-color: red; */
+}
+
+/* icon div */
+.col-loc1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(49, 49, 49);
+}
+
+.col-loc1 i{
+  font-size: 60px;
+
+}
+
+/* input div loc */
+.col-loc2{
+  display: flex;
+  flex-direction: column;
+}
+.col-loc2 label{
+  font-size: 10px;
+  margin: 0;
+}
+.col-loc2 input{
+  padding: 5px;
+  border: 1px solid lightgrey;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* botones div */
+.col-loc3{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: start;
+  gap: 5%;
+}
+
+.col-loc3 button{
+  outline: none;
+  border: none;
+  padding: 10px;
+  font-size: 13px;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+}
+.col-loc3 button:hover{
+  opacity: 0.7;
+}
+
+
+/* content date */
+.changedate-content{
+  width: 50%;
+  height: 50%;
+  margin-top:10%;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.changedate-header{
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  /* background-color: green; */
+}
+
+.changedate-header p{
+  margin: 0;
+  
+}
+
+.inlineCalendar{
+  width: 100%;
+  height: 70%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* background-color: red; */
+  align-items: center;
+  justify-content: center;
+}
+
+.col-m-6{
+  /* background-color: red; */
+  width: 100%;
+  height: 100%;
+}
+
+.datePicker{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid lightgray;
+}
+
+.datepicker-inner{
+  height: 100%;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  overflow: hidden;
+ 
+}
+
+.col-m-8{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10%;
+  /* background-color: red; */
+}
+
+/* hora picker */
+.timePicker{
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+
+}
+
+/* inicio hora */
+
+.hora-inicio{
+  /* background-color: green; */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.col-hora{
+  width: 80%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 3fr;
+  /* background-color: yellow; */
+}
+
+.col-hora-1{
+  width: 100%;
+  display: flex;
+ 
+  gap: 10%;
+}
+
+.datepicker-input{
+  text-align: center;
+}
+
+.datepicker-input{
+  border: solid 1px lightgrey;
+  font-size: 12px;
+  height: 20%;
+  width: 20%;
+  padding-left: 5px;
+}
+
+.datetimepicker-input{
+  height: 40%;
+  width: 20%;
+  border: solid 1px lightgrey;
+  font-size: 12px;
+  padding-left: 5px;
+}
+
+.btn-hr{
+  border: none;
+  background-color: lightgray;
+  outline: none;
+  height: 40%;
+}
+
+.active-btn-hr{
+  background-color: rgb(46, 112, 255);
+  color: white;
+  outline: none;
+}
+
+
+.changedate-select{
+  height: 15%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  /* background-color: red; */
+}
+
+.changedate-select button{
+  border: none;
+  border-radius: 6px;
+  outline: none;
+}
+
+/* SECCION EVENTO INFO */
+.evento-Info{
+  width: 100%;
+  height: 90%;
+  background-color: red;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.col-info-1{
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.col-info-1:first-child{
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: lightgrey;
+}
+
+.inner-col-info-1{
+  width: 90%;
+  height: 80%;
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* form izq */
+.form-info-evento{
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-items: center;
+  
+  gap: 5%;
+}
+
+.form-col{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.form-col input{
+  color: lightgrey;
+  padding: 5px;
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 1px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.form-col label{
+  margin: 0;
+  margin-bottom: 2%;
+}
+
+.form-btn{
+  width: 80%;
+  height: 20%;
+  /* background-color: red; */
+}
+
+.form-btn button{
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  background-color:rgb(44,44,44);
+}
+
+
+/* responsive */
+@media screen and (max-width: 768px) {
+  
+  .changedate-content{
+    height: 50%;
+    width: 85%;
+  }
+
+  .inlineCalendar{
+    font-size: 13px;
+  }
+
+  /* date side */
+
+  .datePicker{
+    justify-content: start;
+  }
+
+  .datepicker-input{
+    font-size: 10px;
+    height: 15%;
+    width: 100%;
+  }
+
+  .col-m-8{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    
+    
+  }
+
+  .col-hora-1{
+     flex-direction: column;
+  }
+  /* hour side */
+  .responsive-hour{
+    
+    display: flex;
+    flex-direction: row;
+    height: 30%;
+    gap: 10%;
+  }
+
+  .responsive-hour input{
+    width: 40%;
+    height: 100%;
+  }
+
+  .btn-hr-div{
+    width: 100%;
+    display: flex;
+    gap: 5%;
+  }
+  .btn-hr-div button{
+    height: 100%;
+    width: 40%;
+  }
+
+
+  /* location mobile */
+  .changelocation-content{
+    width: 80%;
+  }
+
+  .col-loc2{
+    gap: 2%;
+  }
+
+  .inner-main-evento{
+    width: 100%;
+    gap: 2%;
+  }
+
+  .main-division{
+    height: 35vh;
+  }
+
+  .tool-bar{
+    display: none;
+  }
+
+  .crearListadoBtn{
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .crearListadoBtn button{
+    width: 60%;
+    border-radius: 20px;
+  }
+
+  /* tabla */
+  .asistencia-main{
+    align-items: start;
+    overflow: auto;
+  }
+
+  .tabla-asistencia{
+    height: 60%;
+    margin-top: 10%;
+    overflow: auto;
+    align-items: start;
+  }
+
+  .table-asist{
+    overflow: auto;
+
+  }
+
+  .enviar-asist-div{
+    height: 8%;
+  }
+
+  .enviar-asist-div button{
+    width: 60%;
+  }
+  .enviar-asist-div button:first-child{
+    font-size: 10px;
+  }
+  
+
 }

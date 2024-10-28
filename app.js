@@ -7,6 +7,11 @@ const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid'); // Para generar identificadores únicos
 const crypto = require('crypto');
+const dbConexion = require('./db'); 
+
+// importar login 
+const { router: loginRouter, authenticateToken } = require('./login');  
+const { router: eventosRouter } = require("./eventos.js");
 
 
 
@@ -35,11 +40,8 @@ const port = 3000;
 app.use(cookieParser());
 
 
-
-// conexion a mysql
-const mysql = require('mysql');
 const { reset } = require('nodemon');
-
+const { Console } = require('console');
 // usar directorio 
 app.use(express.static('static'));
 app.use('/archivos', express.static('uploads'));
@@ -93,26 +95,18 @@ const finalizarSubida = (fileName, fileBuffer, callback) => {
 // limite paginacion
 const limit = 10;
 
-// conexion a la base de datos
-const dbConexion = mysql.createConnection({
-  host:'localhost',
-  user:'root',
-  password:'',
-  database:'aguilafc'
-})
-
-// manejo de error BD
-dbConexion.connect((error)=>{
-  if(error){
-    console.error('Error conectando a base de datos: '+ error.message);
-  }else{
-    console.log('Conectado a la base de datos');
-  }
-})
 
 // Middleware para analizar application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+
+// login page 
+app.use('/', loginRouter);  // Esto asegura que cualquier ruta definida en login.js sea accesible
+
+// evento
+//
+app.use("/",eventosRouter);
 
 
 // index
@@ -420,9 +414,22 @@ app.get('/numero-jugador-disponible',(req,res)=>{
 });
 
 // muestra informacion de jugadores
-app.get('/jugadores',(req,res)=>{
+app.get('/jugadores', (req,res) =>{
   res.sendFile(__dirname + '/templates/jugadores.html');
-})
+});
+
+// prueba 
+// muestra informacion de jugadores
+app.get('/jugadores/prueba', (req,res) =>{
+  res.sendFile(__dirname + '/templates/jugadores.html');
+});
+
+
+// middleware para verificar token
+app.get('/verify-token', authenticateToken, (req, res) => {
+  // Si el token es válido, se envía una respuesta positiva
+  res.json({ message: 'Token válido' });
+});
 
 // trae informacion de jugadores
 app.get('/info/jugadores/:id',(req,res)=>{
@@ -502,6 +509,149 @@ app.get('/get-jugadores',(req,res)=>{
 })
 
 
+// TRAE JUGADORES EN BASE A EVENTO
+app.get('/jugador/evento', (req,res) =>{
+    const eventoId = req.query.evento;
+ 
+
+    const query = (`SELECT * FROM asistencias WHERE id_evento = ${eventoId}`)
+
+    dbConexion.query(query,(error,results) =>{
+      if(error){
+        console.error('Error al ejecutar la consulta para traer jugadores:', error);
+        res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+      }else {
+        res.status(200).json(results);
+        
+      }
+    })
+
+});
+
+// Traer asistencia de jugador en base a evento y id de jugador
+app.get('/estado/asistencia', (req,res) => {
+  const idJugador = req.query.id_jugador;
+  const evento = req.query.evento;
+  
+  // Verifica que los parámetros estén presentes
+  if (!idJugador || !evento) {
+    return res.status(400).json({ message: 'Faltan parámetros requeridos: id_jugador e id_evento' });
+  }
+  
+  const query = 'SELECT estado, descripcion_asist FROM asistencias WHERE id_jugador = ? AND id_evento = ?';
+
+  dbConexion.query(query, [idJugador,evento], (error,results) => {
+
+    if (error) {
+      console.error('Error al obtener el estado de asistencia:', error);
+      return res.status(500).json({ message: 'Error al obtener el estado de asistencia' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No se encontró estado de asistencia para los parámetros proporcionados' });
+    }
+
+
+    res.status(200).json({ estado: results[0].estado, descripcion: results[0].descripcion_asist });
+
+  })
+
+});
+
+
+// TRAE JUGADORES EN BASE A EVENTO
+app.get('/jugador/evento/asistencia', (req, res) => {
+  const evento = req.query.evento; // Asegúrate de que el parámetro evento sea recibido
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const offset = (page - 1) * limit;
+
+
+  // Inicia una transacción
+  dbConexion.beginTransaction((error) => {
+    if (error) {
+      console.error('Error al iniciar la transacción:', error);
+      return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+    }
+
+    // Verifica si el evento existe
+    const queryEvento = 'SELECT id FROM evento WHERE id = ?';
+    dbConexion.query(queryEvento, [evento], (error, results) => {
+      if (error) {
+        return dbConexion.rollback(() => {
+          console.error('Error al verificar el evento:', error);
+          res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+        });
+      }
+
+      if (results.length === 0) {
+        return dbConexion.rollback(() => {
+          res.status(404).json({ error: 'Evento no encontrado' });
+        });
+      }
+
+      // Si el evento existe, realiza la consulta para traer jugadores
+      const query = `
+        SELECT j.id,j.Nombre
+        FROM jugadores j
+        JOIN asistencias a ON j.id = a.id_jugador
+        WHERE a.id_evento = ?
+        LIMIT ? OFFSET ?
+      `;
+      const params = [evento, limit, offset];
+
+      dbConexion.query(query, params, (error, results) => {
+        if (error) {
+          return dbConexion.rollback(() => {
+            console.error('Error al ejecutar la consulta para traer jugadores:', error);
+            res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+          });
+        }
+
+
+        // paginacion 
+        const totalQuery = 'SELECT COUNT(*) AS total FROM asistencias WHERE id_evento = ?';
+        dbConexion.query(totalQuery, [evento], (error, countResults) => {
+
+
+          if (error) {
+            return dbConexion.rollback(() => {
+              console.error('Error al contar asistencias:', error);
+              res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+            });
+          }
+
+
+          const total = countResults[0].total; // Total de asistencias
+          const totalPages = Math.ceil(total / limit); // Total de páginas
+
+           // Commit de la transacción
+          dbConexion.commit((error) => {
+            if (error) {
+              return dbConexion.rollback(() => {
+                console.error('Error al realizar el commit de la transacción:', error);
+                res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+              });
+            }
+
+            // Enviar la respuesta con los resultados
+      
+            // Enviar la respuesta con los resultados y la paginación
+            res.status(200).json({
+              players: results,
+              totalPages: totalPages,
+              currentPage: page,
+              totalPlayers: total
+            });
+
+        });
+      })
+
+  
+      });
+    });
+  });
+});
+
 // TRAE JUGADORES EN BASE ASISTENCIA
 app.get('/get/jugador/asistencia', (req, res) => {
   const equipo = req.query.equipo;
@@ -510,30 +660,100 @@ app.get('/get/jugador/asistencia', (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
 
-  let query = `
-    SELECT *
-    FROM jugadores
-    WHERE id_equipo = ?
-  `;
+    // Si el evento existe, realiza la consulta para traer jugadores
+    let query = `
+      SELECT *
+      FROM jugadores
+      WHERE id_equipo = ?
+    `;
 
-  console.log(estado);
-  if (estado !== "todos") {
-    query += " AND estado_salud = ?";
+
+    if (estado !== "todos") {
+      query += " AND estado_salud = ?";
+    }
+
+    query += " LIMIT ? OFFSET ?";
+
+    const params = estado === "todos" ? [equipo, limit, offset] : [equipo, estado, limit, offset];
+
+    dbConexion.query(query, params, (error, results) => {
+      if (error) {
+        console.error('Error al ejecutar la consulta para traer jugadores:', error);
+        res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+      } else {
+        res.status(200).json(results);
+      }
+    });
+  });
+
+// MODIFICA LA ASISTENCIA DE UN EVENTO
+app.put('/modificar/asistencia', (req, res) => {
+  const asistencias = req.body; // Expecting an array of records
+
+  console.log('corrio');
+  if (!Array.isArray(asistencias) || asistencias.length === 0) {
+    return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un arreglo de objetos de asistencia.' });
   }
 
-  query += " LIMIT ? OFFSET ?";
+  const queries = asistencias.map(asistencia => {
+    const { id_jugador, id_evento, estado, observaciones } = asistencia;
 
-  const params = estado === "todos" ? [equipo, limit, offset] : [equipo, estado, limit, offset];
-
-  dbConexion.query(query, params, (error, results) => {
-    if (error) {
-      console.error('Error al ejecutar la consulta para traer jugadores:', error);
-      res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
-    } else {
-      res.status(200).json(results);
+    if (!id_jugador || !id_evento || !estado) {
+      return Promise.reject('Faltan parámetros requeridos en uno de los registros.');
     }
+
+    const query = 'UPDATE asistencias SET estado = ?, descripcion_asist = ? WHERE id_jugador = ? AND id_evento = ?';
+    return new Promise((resolve, reject) => {
+      dbConexion.query(query, [estado, observaciones, id_jugador, id_evento], (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+
+        if (results.affectedRows === 0) {
+          return reject('No se encontró el registro de asistencia para uno de los parámetros proporcionados.');
+        }
+
+        resolve();
+      });
+    });
+  });
+
+  Promise.all(queries)
+    .then(() => res.status(200).json({ message: 'Asistencias modificadas exitosamente' }))
+    .catch(error => {
+      console.error('Error al modificar la asistencia:', error);
+      res.status(500).json({ message: 'Error al modificar la asistencia' });
+    });
+});
+
+
+// trae la informacion de un evento 
+app.get('/get/evento', (req, res) => {
+  const evento = req.query.evento;
+
+  // Verificar si el parámetro 'evento' está presente
+  if (!evento) {
+    return res.status(400).json({ message: 'El parámetro evento es requerido' });
+  }
+
+  const query = "SELECT * FROM evento WHERE id = ?";
+
+  dbConexion.query(query, [evento], (error, results) => {
+    if (error) {
+      console.error('Error al obtener el evento:', error);
+      return res.status(500).json({ message: 'Error al obtener el evento' });
+    }
+
+    // Verificar si se encontraron resultados
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Evento no encontrado' });
+    }
+
+    // Enviar los resultados al cliente
+    res.status(200).json(results[0]);
   });
 });
+
 
 // Define la nueva ruta para manejar las solicitudes de búsqueda
 app.get('/buscar-jugadores', (req, res) => {
@@ -846,13 +1066,14 @@ app.put('/editar/jugador/:id',(req,res)=>{
 
 
 app.get('/get/equipo',(req,res) => {
-  const query = "SELECT * FROM equipo"
+  const query = 'SELECT * FROM equipo';
 
   dbConexion.query(query,(error,results) => {
     if(error){
       console.error('Error al actualizar el jugador:', err);
       res.status(500).json({ error: 'Error al actualizar el jugador' });
     }else{
+      
       res.status(200).json({ results });
     
     }
@@ -894,7 +1115,262 @@ app.get('/rango/edad',(req,res)=>{
 })
 
 
-// USUARIOS
+// ASISTENCIA
+app.post('/asistencia/guardar', (req, res) => {
+  const { asistencias, eventos } = req.body; // Se espera un arreglo de objetos con los datos de asistencia
+
+  if (!asistencias || !Array.isArray(asistencias) || !eventos) {
+    return res.status(400).json({ message: 'Datos de asistencia inválidos' });
+  }
+
+  // Iniciar la transacción
+  dbConexion.beginTransaction((err) => {
+    if (err) {
+      console.error('Error al iniciar la transacción:', err);
+      return res.status(500).json({ message: 'Error al guardar la asistencia' });
+    }
+
+    // Paso 1: Insertar eventos
+    const valuesEvento = [
+      [eventos.evento, eventos.equipoId, eventos.fecha, eventos.hora, eventos.horaFinalizacion, eventos.descripcion, eventos.ubicacion]
+    ];
+
+    const queryEvento = 'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion) VALUES ?';
+
+    dbConexion.query(queryEvento, [valuesEvento], (errorEventos, resultsEvento) => {
+      if (errorEventos) {
+        dbConexion.rollback(() => {
+          console.error('Error al insertar eventos:', errorEventos);
+          return res.status(500).json({ message: 'Error al guardar los eventos' });
+        });
+      } else {
+        const eventoId = resultsEvento.insertId; // Obtener el ID del evento insertado
+
+        // Paso 2: Insertar asistencias con el ID del evento
+        if (asistencias.length > 0) {
+          const valuesAsistencias = asistencias.map(a => [
+            a.jugadorId,
+            a.estado,
+            a.observaciones,
+            eventoId // Asignar el ID del evento a cada asistencia
+          ]);
+
+          const queryAsistencia = 'INSERT INTO asistencias (id_jugador, estado, descripcion_asist, id_evento) VALUES ?';
+
+          dbConexion.query(queryAsistencia, [valuesAsistencias], (errorAsistencia, resultsAsistencia) => {
+            if (errorAsistencia) {
+              dbConexion.rollback(() => {
+                console.error('Error al insertar datos de asistencia:', errorAsistencia);
+                res.status(500).json({ message: 'Error al guardar la asistencia' });
+              });
+            } else {
+              // Commit la transacción si todo ha ido bien
+              dbConexion.commit((err) => {
+                if (err) {
+                  dbConexion.rollback(() => {
+                    console.error('Error al hacer commit de la transacción:', err);
+                    res.status(500).json({ message: 'Error al guardar la asistencia' });
+                  });
+                } else {
+                  console.log('Evento guardado correctamente, asistencias vacías o guardadas');
+                  res.status(200).json({ message: 'Evento guardado correctamente, asistencias vacías o guardadas' });
+                }
+              });
+            }
+          });
+        } else {
+          // Si no hay asistencias, simplemente hacer commit
+          dbConexion.commit((err) => {
+            if (err) {
+              dbConexion.rollback(() => {
+                console.error('Error al hacer commit de la transacción:', err);
+                res.status(500).json({ message: 'Error al guardar la asistencia' });
+              });
+            } else {
+              console.log('Evento guardado correctamente, asistencias vacías');
+              res.status(200).json({ message: 'Evento guardado correctamente, asistencias vacías' });
+            }
+          });
+        }
+      }
+    });
+  });
+});
+
+
+// guardar jugadores en evento ya creado
+app.post('/evento/existente/guardar', (req,res) => {
+  const {asistencias, evento} = req.body;
+  // const evento = req.query.evento;
+
+  console.log(asistencias);
+  console.log(evento);
+
+  // Paso 1: Query 
+  const queryAsistencia = 'INSERT INTO asistencias (id_jugador, estado, descripcion_asist, id_evento) VALUES ?';
+
+  // Paso 2: Insertar asistencias con el ID del evento
+  const valuesAsistencias = asistencias.map(a => [
+    a.jugadorId,
+    a.estado,
+    a.observaciones,
+    evento // Asignar el ID del evento a cada asistencia
+  ]);
+
+
+  // commit
+  dbConexion.query(queryAsistencia, [valuesAsistencias], (errorAsistencia, resultsAsistencia) => {
+
+    if (errorAsistencia) {   
+      res.status(500).json({ message: 'Error al guardar la asistencia' });
+    }else{
+      console.log('Asistencia y evento guardados correctamente');
+      res.status(200).json({ message: 'Asistencia y evento guardados correctamente' });
+    }
+  })
+
+
+})
+
+// EVENTOS ------- SECCION-EVENTO
+// traer eventos
+app.get('/eventos', (req, res) => {
+  const query = "SELECT * FROM evento ORDER BY fecha DESC LIMIT 8";
+
+  dbConexion.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al obtener eventos:', error);
+      return res.status(500).json({ message: 'Error al obtener eventos' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+
+app.get('/eventos/page', (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Obtener la página de la query, por defecto 1
+  const limit = 5; // Número de eventos por página
+  const offset = (page - 1) * limit; // Calcular el offset
+
+  const query = `SELECT * FROM evento ORDER BY fecha DESC LIMIT ? OFFSET ?`;
+
+  dbConexion.query(query, [limit, offset], (error, results) => {
+    if (error) {
+      console.error('Error al obtener eventos:', error);
+      return res.status(500).json({ message: 'Error al obtener eventos' });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// modificar fecha de evento
+app.put('/modificar/fecha/evento', (req,res) => {
+  const { id_evento, dia, mes, anio, hora_inicio, minuto_inicio, periodo_inicio,hora_final, minuto_final,periodo_final } = req.body;
+
+  if (!id_evento || !dia || !mes || !anio || !hora_inicio || !minuto_inicio || !periodo_inicio || !hora_final || !minuto_final || !periodo_final) {
+    return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+  }
+
+  // Convertir la hora de inicio a formato 24 horas
+  let horaInicio24 = parseInt(hora_inicio);
+  if (periodo_inicio.toLowerCase() === 'pm' && horaInicio24 < 12) {
+    horaInicio24 += 12;
+  } else if (periodo_inicio.toLowerCase() === 'am' && horaInicio24 === 12) {
+    horaInicio24 = 0; // Medianoche
+  }
+
+  // Convertir la hora final a formato 24 horas
+  let horaFinal24 = parseInt(hora_final);
+  if (periodo_final.toLowerCase() === 'pm' && horaFinal24 < 12) {
+    horaFinal24 += 12;
+  } else if (periodo_final.toLowerCase() === 'am' && horaFinal24 === 12) {
+    horaFinal24 = 0; // Medianoche
+  }
+
+  // Crear la fecha en formato 'YYYY-MM-DD'
+  const fecha = `${anio}-${mes}-${dia}`;
+
+  // Crear las horas en formato 'HH:MM:SS'
+  const horaInicio = `${horaInicio24}:${minuto_inicio}:00`;
+  const horaFinal = `${horaFinal24}:${minuto_final}:00`;
+
+   // Consulta para actualizar la fecha, hora de inicio y hora final del evento
+   const query = 'UPDATE evento SET fecha = ?, hora = ?, hora_final = ? WHERE id = ?';
+
+   dbConexion.query(query, [fecha, horaInicio, horaFinal, id_evento], (error, results) => {
+    if (error) {
+      console.error('Error al modificar la fecha y horas del evento:', error);
+      return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+    }
+
+    res.status(200).json({ message: 'Fecha y horas del evento modificadas correctamente' });
+  });
+
+});
+
+
+// modificar location del evento
+app.put('/modificar/lugar/evento',(req,res)=>{
+  const {id, lugar} = req.body;
+
+  if (!id || !lugar ) {
+    return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+  }
+  console.log(lugar);
+
+  // Consulta para actualizar la ubicacion del evento
+  const query = 'UPDATE evento SET ubicacion = ? WHERE id = ?';
+
+  dbConexion.query(query, [lugar, id], (error, results) => {
+    if (error) {
+      console.error('Error al modificar la ubicacion del evento:', error);
+      return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+    }
+
+    res.status(200).json({ message: 'ubicacion del evento modificadas correctamente' });
+  });
+});
+
+
+
+
+
+// PARTIDOS
+
+// modificar partido
+app.put('/modificar/partido',(req,res)=>{
+  const {id, nombre_rival, golEquipo, golRival} = req.body;
+
+  if (!id || !nombre_rival || !golEquipo || !golRival ) {
+    return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+  }
+
+  console.log(id);
+  // Definir la consulta de actualización
+  const query = `UPDATE evento SET equipo_rival = ?, gol_local = ?, gol_visita = ? WHERE id = ?`;
+
+  dbConexion.query(query, [nombre_rival, golEquipo, golRival, id], (error, results) => {
+    if (error) {
+      console.error('Error al actualizar el partido:', error);
+      return res.status(500).json({ error: 'Error del servidor' });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'No se encontró el partido con el ID proporcionado' });
+    }
+
+    // Si la actualización fue exitosa
+    res.status(200).json({ message: 'Partido actualizado con éxito' });
+  });
+ 
+});
+
+
+
+
+// USUARIOS---- SECCION-USUARIO
 
 // RUTA BASE TRAE USUARIO E INFO
 app.get('/user/:id',(req,res)=>{
@@ -1061,7 +1537,7 @@ app.get('/usuario/existente/:user',(req,res) => {
     
     })
 
-  })
+  });
 
 
 
@@ -1109,6 +1585,8 @@ const verificarNumeroJugador = (numeroJugador, division)=>{
     });
   })
 } 
+
+
 
 
 

@@ -6,7 +6,7 @@ html{
 body{
   margin: 0;
   padding: 0;
-  background-color: rgba(188, 208, 217, 0.46);
+  background-color: rgb(84, 157, 201);
 }
 
 header{
@@ -40,7 +40,59 @@ header h1{
   flex-direction: column;
   align-items: center;
   transition: width 0.5s ease;
+  position: relative;
 }
+
+
+/* tool bar mouseover */
+.eventos-options{
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 100;
+  width: 15vw;
+  height: 100vh;
+  background-color:#3283E5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-eventos-options{
+  width: 100%;
+  height: 90%;
+  /* background-color: red; */
+}
+
+.sub-option{
+  width: 100%;
+  height: 8%;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  /* background-color: green; */
+  cursor: pointer;
+}
+
+.sub-option:hover{
+  background-color: rgb(211, 75, 75);
+}
+
+.icon-div{
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-div i{
+  color: white;
+}
+
+.word-div{
+  width: 50%;
+}
+
 
 .tool-bar.collapsed {
   width: 4%;
@@ -146,14 +198,15 @@ header h1{
 }
 
 .option:hover{
-  background-color: rgb(226, 226, 226);
+  background-color: rgba(255, 255, 255, 0.444);
+  
   /* color: rgb(86, 155, 238); */
 }
 
 .name-option{
   width: 50%;
   font-size: 13px;
-  /* background-color: green; */
+
 }
 
 
@@ -662,14 +715,26 @@ header h1{
 .modal-content {
   background-color: #fefefe; /* Fondo blanco para el contenido del modal */
   border-radius: 10px;
-  margin: 10% auto; /* Centra el modal verticalmente */
-  padding: 20px;
   border: 1px solid #888;
   width: 30%; /* Ancho del contenido del modal */
   height: 50%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+}
+
+.modal-asistencia-header{
+  /* background-color: red; */
+  
+  display: flex;
+
+}
+
+
+.modal-asistencia-header button{
+  border: none;
+  background-color: transparent;
 }
 
 .modal-head{
@@ -885,7 +950,7 @@ input[type="number"]::-webkit-outer-spin-button {
   opacity: 0.8;
 }
 
-.numeros-paginacion{
+.numeros-paginacion,.numeros-paginacion-asist{
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -907,16 +972,23 @@ a:active {
   text-decoration: none; /* Elimina cualquier decoración de texto, como subrayado */
 }
 
-#btnAnterior, #btnSiguiente{
+#btnAnterior, #btnSiguiente, #btnSiguienteAsist, #btnAnteriorAsist{
   background-color:transparent;
   border: none;
   display: flex;
   align-items: center;
   cursor: pointer;
+
+}
+
+#btnSiguienteAsist, #btnAnteriorAsist{
+  font-size: 10px;
 }
 
 #btnAnterior:hover, 
-#btnSiguiente:hover{
+#btnSiguiente:hover,
+#btnSiguienteAsist:hover, 
+#btnAnteriorAsist:hover{
   color: rgb(55, 55, 226);
 }
 

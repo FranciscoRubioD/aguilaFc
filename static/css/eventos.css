@@ -1,0 +1,204 @@
+
+.hidden{
+  display: none;
+}
+
+.lista-eventos{
+  width: 80%;
+  height: 80%;
+  /* background-color: red; */
+}
+
+/* toolbar */
+.tool-bar-evento{
+  height: 10%;
+  /* background-color: green; */
+}
+
+/* grid evento */
+.grid-evento{
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* background-color: blue; */
+}
+
+.grid-evento-side, .grid-evento-side-right{
+  /* border-style:solid; */
+  width: 100%;
+  height: 100%;
+  display:grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.evento{
+  /* border-style: solid; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-box{
+  width: 90%;
+  height: 90%;
+  background-color: rgba(240, 240, 240, 0.753)
+}
+
+.header-box-event{
+  width: 100%;
+  height: 25%;
+  border-bottom: solid 1px;
+  display: flex;
+  align-items: center;
+  /* background-color: red; */
+}
+
+.tipo-event, .header-opt-event{
+  width: 50%;
+}
+.tipo-event p{
+  margin-left: 5px;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: bold;
+  color: grey;
+}
+
+.header-opt-event{
+  display: flex;
+  justify-content: right;
+}
+.header-opt-event i{
+  margin-right: 5%;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.header-opt-event i:hover{
+  opacity: 0.7;
+}
+
+.content-box-event{
+  width: 100%;
+  height: 75%;
+  /* background-color: red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.date-event,.desc-event-box{
+  /* border-style: solid; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+  overflow: hidden;
+}
+
+.desc-event-box p{
+  font-size: 12px;
+  color: rgb(165, 162, 162);
+}
+
+.date-event p{
+  font-size: 20px;
+  color: rgb(165, 162, 162);
+}
+
+/* index evento */
+.index-evento{
+  height: 10%;
+  width: 100%;
+  /* background-color: yellow;*/
+}
+
+
+/* modal asistencia */
+.modal-asistencia{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 8;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+.modal-content-asistencia{
+  width: 90%;
+  height: 95%;
+  border-radius: 10px;
+  background-color: white;
+  margin: auto;
+  overflow: hidden;
+}
+
+
+.modal-asistencia-header{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.modal-asistencia-cont{
+  height: 90%;
+  
+  /* background-color: red; */
+}
+
+#closeAsistModal{
+  position: absolute;
+  top:10px;
+  cursor: pointer;
+  right: 20px;
+  font-size: 25px;
+}
+
+.bar-asistencia{
+  width: 100%;
+  height: 10%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+}
+
+.optAsist{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: lightgray; */
+  cursor: pointer; 
+}
+
+.optSelected{
+  color: white;
+  background-color: rgb(145, 145, 255);
+}
+
+.optAsist:hover{
+  opacity: 0.8;
+}
+
+/* asistencia opcion */
+.asistenciaEvento{
+  height: 100%;
+  overflow: auto;
+}
+
+.modal-asistencia-header p{
+  margin: 0;
+  font-size: 2em;
+}
+/* evento grid */
+
+
+

@@ -16,8 +16,35 @@
   <!-- css -->
   <link rel="stylesheet" href="css/jugadores.css">
   <link rel="stylesheet" href="css/asistencia.css">
+
+  <link rel="stylesheet" href="css/usuarios.css">
+
+  <!-- dropdown niceselect-->
+  <script src="/js/plugins/nice-select2.js"></script>
+
+  <!-- partido css programar -->
+  <link rel="stylesheet" href="css/partido.css">
+
+  <!-- nice select -->
+  <link href="css/cssplugins/nice-select2.css" rel="stylesheet"/>
+
+  <!-- toggle -->
+  <script src="/js/plugins/jtoggler.js"></script>
+  <link rel="stylesheet" href="css/cssplugins/jtoggler.styles.css">
+
   <link rel="stylesheet" href="css/modal-jugador.css">
   <link rel="stylesheet" href="css/complementos.css">
+  <link rel="stylesheet" href="css/eventos.css">
+
+  <!-- FullCalendar CSS -->
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+  <link rel="stylesheet" href="css/cssplugins/fullcalendar.css">
+
+
+
+   <!-- Tempus Dominus CSS (DateTime Picker) -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
+  
 </head>
 <body>
   
@@ -26,14 +53,13 @@
   </header> -->
 
   <section class="main">
-
   
     <section class="tool-bar">
 
       <div class="academy-name">
         <div class="title-name">
           <div class="logo-aguila-container">
-            <img src="Aguilas-FC-logo.png" alt="" class="logo-aguila">
+            <img src="/logos/Aguilas-FC-logo.png" alt="" class="logo-aguila">
           </div>
           <p class="tool-bar-name">Aguila FC</p>
         </div>
@@ -52,32 +78,67 @@
           
         </div>
 
-        <div class="option">
-          <i class="fa-solid fa-chart-line"></i>
-          <div class="name-option">
+        <div class="option" id="jugadorOpt">
+          <i class="fa-solid fa-people-group"></i>
+          <div class="name-option" >
             <p>Jugadores</p>
           </div>
           
         </div>
         
-        <div class="option">
-          <i class="fa-solid fa-chart-line"></i>
+        <div class="option" id="usuariosOpt">
+          <i class="fa-solid fa-user"></i>
           <div class="name-option">
             <p>Usuarios</p>
           </div>
       
         </div>
 
-        <div class="option">
-          <i class="fa-solid fa-chart-line"></i>
-          <div class="name-option">
-            <p>Entrenamientos</p>
+        <div class="option" id="asistenciaOpt">
+          <i class="fa-regular fa-calendar"></i>
+          <div class="name-option" >
+            <p>Eventos</p>
           </div>
    
         </div>
+
+        <div class="eventos-options" style="display: none;">
+          <div class="inner-eventos-options">
+
+            <div class="sub-option" id="calendar-opt">
+              <div class="icon-div">
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+              <div class="word-div">
+                <p>Calendario</p>
+              </div>
+            </div>
+
+            <div class="sub-option" id="crearEvento-opt">
+              <div class="icon-div">
+                <i class="fa-solid fa-dumbbell"></i>
+              </div>
+              <div class="word-div">
+                <p>Crear Evento</p>
+              </div>
+            </div>
+
+            <div class="sub-option" id="crearPartido-opt">
+              <div class="icon-div">
+                <i class="fa-solid fa-futbol"></i>
+              </div>
+              <div class="word-div">
+                <p>Crear Partido</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+
         
         <div class="option">
-          <i class="fa-solid fa-chart-line"></i>
+          <i class="fa-solid fa-chalkboard-user"></i>
           <div class="name-option">
             <p>Partidos</p>
           </div>
@@ -89,8 +150,10 @@
       </div>
      
     </section>
-  
-    <section class="seccion-jugadores">
+
+    
+    <!-- importante del codigo jugadores -->
+    <section class="seccion-jugadores" id="seccionJugadores" style="display:none;">
       
       <div class="titulo-seccion-jugadores">
         <p>Tabla de Jugadores</p>
@@ -398,126 +461,653 @@
     </section>
 
 
-   
+     <!-- seccion imporante ASISTENCIA // eventos -->
+    <!-- modal asistencia -->
+     <div class="modal-asistencia" style="display: none;">
 
-     <!-- seccion imporante ASISTENCIA -->
-    <section class="asistencia" id="asistenciaMain">
-      
-    
-      <div class="inner-asistencia">
-        <div class="main-evento">
-          <div class="inner-main-evento">
-            <div class="title-event">
-              <p>Programar evento</p>
-            </div>
+      <div class="modal-content-asistencia">
+        <div class="modal-asistencia-header">
+          <p>Información de Evento</p>
+          <p id="closeAsistModal">X</p>
+        </div>
+        <div class="modal-asistencia-cont">
 
-            <div class="descripcion-evento">
-                <div class="prueba">
-          
-                  <div class="event-tag">
-                    <p>Equipo</p> 
-                  </div>
-              
-                  <div class="dropdown-asist">
-                    <div class="dropdow-inner">
-                      <select id="equipoAsistencia">
-                      
-                        <!-- <option value="1">Sub 10</option>
-                        <option value="2">Sub 12</option>
-                        <option value="3">Sub 13</option> -->
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="prueba">
+          <div class="bar-asistencia">
+            <div class="optAsist" id="toggleBtn1">Información General</div>
+            <div class="optAsist" id="toggleBtn2">Asistencia</div>
+            <div class="optAsist" id="toggleBtn3">Actualizar Información</div>
+          </div>
 
-                  <div class="event-tag">
-                    <p>Evento</p> 
-                  </div>
-              
-                  <div class="dropdown-asist">
-                    <div class="dropdow-inner">
-                      <select id="eventoAsistencia">
-                        <option value="">Selecciona una opcion</option>
-                        <option value="Entrenamiento">Entrenamiento</option>
-                        <option value="Partido">Partido</option>
-                        <option value="Reunion">Reunion</option>
-                      </select>
-                    </div>
-                  </div>
+          <div>
 
-                </div>
-                <div class="prueba">
+          </div>
 
-                  <div class="event-tag">
-                    <p>Estado</p> 
-                  </div>
-              
-                  <div class="dropdown-asist">
-                    <div class="dropdow-inner">
-                      <select id="estadoAsistencia">
-                        <option value="">Selecciona una opcion</option>
-                        <option value="todos">Todos</option>
-                        <option value="Sano">Sano</option>
-                        <option value="Lesionado">Lesionado</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="prueba">
-                  <div class="event-tag">
-                    <p>Evento</p> 
-                  </div>
-              
-                  <div class="dropdown-asist">
-                    <div class="dropdow-inner">
-                      <select id="equipoAsistencia">
-                        <option value="1">Sub 10</option>
-                        <option value="2">Sub 12</option>
-                        <option value="3">Sub 13</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-            </div>
+          <!-- SECCION 2 ASISTENCIA TABLA -->
+          <div class="asistenciaEvento" style="display: none;">
+            <div class="container-asist-table">
 
-            <div class="fechas-evento">
-              <div class="event-date">
-                 <div class="event-date-cal">
-                    <div class="event-inner">
-                      <label for="event-date">Fecha</label>
-                      <input type="date" name="event-date" id="fechaEvento">
-                    </div>
+              <!-- tabla 1 evento existe con asistencia -->
+              <table class="table-asist-modal" style="display: none;">
+                <tr>
+                  <th>Jugador</th>
+                  <th>Presente</th>
+                  <th>Ausente</th>
+                  <th>Tardanza</th>
+                  <th>Ausencia Justificada</th>
+                  <th>Comentarios</th>
+                </tr>
+  
+                <tbody class="datos-asistencia-modal">
                   
-                 </div>
+                </tbody>
+  
+              </table>
 
-                 <div class="event-date-hour">
-                    <div class="event-inner">
-                      <label for="event-hour">Hora</label>
-                      <input type="time" name="event-hour" id="horaEvento">
+              <!-- tabla 2 evento existe sin asistencias -->
+              <table class="table-asist-new" style="display: none;">
+                <tr>
+                  <th>Jugador</th>
+                  <th>Presente</th>
+                  <th>Ausente</th>
+                  <th>Tardanza</th>
+                  <th>Ausencia Justificada</th>
+                  <th>Comentarios</th>
+                </tr>
+  
+                <tbody class="datos-asistencia-new">
+                  
+                </tbody>
+  
+              </table>
+
+              <div class="update-list" id="updateList">
+
+                <div>
+
+                  <div class="paginaTablaInner">
+                    
+                    <div class="inner-barra-paginacion">
+                      <button id="btnAnteriorAsist">
+                         <span style="margin-right:10px"><i class="fa-solid fa-chevron-left"></i></span>
+                         Pagina anterior
+                      </button>
+                      <div class="numeros-paginacion-asist">
+                        
+                      </div>
+                      <button id="btnSiguienteAsist">
+                        Siguiente Página
+                        <span  style="margin-left:10px"><i class="fa-solid fa-chevron-right"></i></span>
+                      </button>
+                      
                     </div>
-                 </div>
+                    
+                    <!-- ward1 -->
+                  </div>
+
+                </div>
+
+                <div class="tablaAsistBtn">
+                  <button id="presenteAllBtnModal">Marcar Presente todos</button>
+                  <button class="enviar-asist-btn" id="updateAsistBtn">Enviar</button>
+                  <button>Cancelar</button>
+                </div>
+
+          
+            </div>
+
+            <div class="update-list" id="newList">
+
+              <button id="presenteAllBtnNew">Marcar Presente todos</button>
+              <button class="enviar-asist-btn" id="enviarNewAsist">Enviar</button>
+              <button>Cancelar</button>
+        
+            </div>
+            </div>
+           
+
+            
+          </div>
+
+          <!-- SECCION 1 informacion -->
+          <div class="asistencia-setting">
+
+            <!-- modal change date -->
+            <div class="modal-change-date" style="display: none;">
+
+              <!-- change location modal -->
+              <div class="changelocation-content" style="display: none;">
+                <div class="inner-location">
+                  <div class="col-loc1">
+                    <i class="fa-solid fa-location-dot"></i>
+                  </div>
+                  
+                  <div class="col-loc2">
+                    <label for="ubicacionChange">Ubicación</label>
+                    <input type="text" name="ubicacionChange" id="ubicacionChange">
+                  </div>
+
+                  <div class="col-loc3">
+                    <button id="updateUbicacion">Enviar</button>
+                    <button class="closeGlobal">Cancelar</button>
+                  </div>
+                  
+                </div>
               </div>
 
-              <div class="event-desc">
-                <div class="event-desc-inner">
-                  <label for="">Descripcion</label>
-                  <textarea name="" id="descEvento"></textarea>
+              <!-- change date -->
+              <div class="changedate-content" style="display: none;">
+
+                <div class="changedate-header">
+                  <p>Elegir Fechas</p>
                 </div>
+
+                <div style="overflow:hidden;" class="inlineCalendar">
+                  <div class="datePicker col-m-6">
+                    <div style="height: 10%;">
+                      <p style="margin: 0;">Fecha (DD/MM/AA)</p>
+                    </div>
+
+                    <div class="datepicker-inner">
+                      <div class="col-m-8">
+                        
+                        <input type="text" id="day" name="day" maxlength="2" placeholder="DD" class="datepicker-input">
+                        
+                 
+                        <input type="text" id="month" name="month" maxlength="2" placeholder="MM" class="datepicker-input">
+                  
+                        <input type="text" id="year" name="year" maxlength="4" placeholder="YYYY" class="datepicker-input">
+                      </div>
+                          
+                    </div>
+                    
+                  </div>
+
+                  <div class="timePicker col-m-6">
+                    <!-- inicio div 1 -->
+                    <div class="hora-inicio">
+                      <div class="col-hora">
+
+                        <div>
+                          <p style="margin: 0;">Hora de inicio</p>
+                        </div>
+
+                        <div class="col-hora-1">
+
+                          <!-- <div class="responsive-hour" style="display: none;">
+                            <input type="text" id="hour" name="hour" maxlength="2" placeholder="HH" class="datetimepicker-input">
+                            <input type="text" id="minute" name="minute" maxlength="2" placeholder="MM" class="datetimepicker-input">
+                          </div> -->
+
+                          <input type="text" id="hour" name="hour" maxlength="2" placeholder="HH" class="datetimepicker-input">
+                          <input type="text" id="minute" name="minute" maxlength="2" placeholder="MM" class="datetimepicker-input">
+
+                          <div class="btn-hr-div">
+                            <button class="btn-hr" id="amBtn">AM</button>
+                            <button class="btn-hr" id="pmBtn">PM</button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+
+                    <!-- final div 2 -->
+                    <div class="hora-inicio">
+                      <div class="col-hora">
+
+                        <div>
+                          <p style="margin: 0;">Hora Final</p>
+                        </div>
+
+                        <div class="col-hora-1">
+                          <!-- <div class="responsive-hour" style="display: none;">
+                            <input type="text" id="hourFinal" name="hour" maxlength="2" placeholder="HH" class="datetimepicker-input">
+                            <input type="text" id="minuteFinal" name="minute" maxlength="2" placeholder="MM" class="datetimepicker-input">
+                          </div> -->
+
+                          <input type="text" id="hourFinal" name="hour" maxlength="2" placeholder="HH" class="datetimepicker-input">
+                          <input type="text" id="minuteFinal" name="minute" maxlength="2" placeholder="MM" class="datetimepicker-input">
+
+                          <div class="btn-hr-div">
+                            <button class="btn-hr" id="amBtnFinal">AM</button>
+                            <button class="btn-hr" id="pmBtnFinal">PM</button>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="changedate-select">
+                  <button>Cambiar</button>
+                  <button class="closeGlobal">Cancelar</button>
+                </div>
+              </div>
+           
+            </div>
+
+            <!-- parte superior -->
+            <div class="hour-date-show">
+
+              <div class="ubicacion-show">
+
+                <div class="ubicacion-show-inner">
+                  <div class="gps-div">
+                    <i class="fa-solid fa-location-dot"></i>
+                  </div>
+  
+                  <div class="gps-div">
+                    <p id="ubicacionInfo"></p>
+                  </div>
+  
+                  <div class="gps-div">
+                    <button id="btn-cambiar-ubicacion">Cambiar ubicacion</button>
+                  </div>
+                </div>
+                
+                
+              </div>
+
+              <div class="inner-date-show">
+                <div class="hour-show">
+                  <p id="horaShow"></p>
+                </div>
+                <div class="date-show">
+                  <p id="fechaShow"></p>
+                </div>
+
+                <div class="div-cambiar-hora">
+                  <button class="btn-cambiar-hora">Cambiar hora</button>
+                </div>
+              </div>
+
+              <div class="ubicacion-show">
+                <div class="ubicacion-show-inner">
+                  <div class="gps-div">
+                    <i class="fa-solid fa-people-pulling"></i>
+                  </div>
+  
+                  <div class="gps-div">
+                    <p>Francisco</p>
+                  </div>
+  
+                  <div class="gps-div">
+                    <button>Esto hace algo</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+             <!-- Parte inferior -->
+             <div class="inf-asist-show">
+                <div class="inf-asist-inner">
+                  <div class="inf-asist-box">
+
+                    <div class="info-box-innner">
+                      <div>
+                        <i class="fa-regular fa-clipboard"></i>
+                      </div>
+                      <div>
+                        <p>Notas</p>
+                      </div>
+                    </div>
+                    
+                  </div>
+
+                  <div class="inf-partido-info">
+
+                    <div class="partido-inner">
+                      <div class="equipos-partido">
+                        <div class="equipo-div">
+                          <div class="logo-equipo-div">
+                            <img src="/logos/Aguilas-FC-logo.png">
+                          </div>
+                          <div class="nombre-equipo">
+                            <p>Aguila-FC</p>
+                          </div>
+                   
+                        </div>
+
+                        <div class="vs-p">
+                          <p>VS</p>
+                        </div>
+
+                        <div class="equipo-div">
+                          <div class="logo-equipo-div">
+                            <img src="/logos/pngwing.com.png">
+                          </div>
+                          <div class="nombre-equipo">
+                            <p id="rival-show">Aguila-FC</p>
+                          </div>
+                   
+                        </div>
+                      </div>
+
+                      
+                    </div>
+
+                  </div>
+
+                  <div class="inf-asist-box">
+
+                    
+                  </div>
+                </div>
+             </div>
+
+          </div>
+
+          <!-- SECCION 3 info evento -->
+          <div class="evento-Info">
+            <div class="col-info-1">
+              <div class="inner-col-info-1">
+                <form action="" class="form-info-evento">
+                  <div class="form-col">
+                    <label for="">Equipo</label>
+                    <input type="text" value="Aguila-Fc" readonly>
+                  </div>
+
+                  <div class="form-col">
+                    <label for="">Goles</label>
+                    <input type="text" class="gol-equipo" id="golEquipo" maxlength="2" pattern="\d*" >
+                  </div>
+
+                  <div class="form-col">
+                    <label for="">Tarjetas Amarillas</label>
+                    <input type="text" class="gol-equipo" maxlength="2" pattern="\d*" >
+                  </div>
+
+                  <div class="form-col">
+                    <label for="">Tarjetas rojas</label>
+                    <input type="text" class="gol-equipo" maxlength="2" pattern="\d*" >
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+            <div class="col-info-1">
+              <div class="inner-col-info-1">
+                <form action="" class="form-info-evento">
+
+                    <div class="form-col">
+                      <label for="">Equipo Rival</label>
+                      <input type="text" value="" id="Rival">
+                    </div>
+  
+                    <div class="form-col">
+                      <label for="">Goles</label>
+                      <input type="text" class="gol-equipo" id="golRival" maxlength="2" pattern="\d*" >
+                    </div>
+  
+                    <div class="form-col">
+                      <label for="">Tarjetas Amarillas</label>
+                      <input type="text" class="gol-equipo" maxlength="2" pattern="\d*">
+                    </div>
+  
+                    <div class="form-col">
+                      <label for="">Tarjetas rojas</label>
+                      <input type="text" class="gol-equipo" maxlength="2" pattern="\d*">
+                    </div>
+  
+                    <div class="form-btn">
+                      <button type="button" id="btnPartidoUpdate">Enviar</button>
+                    </div>
+
+                  
+                </form>
               </div>
             </div>
           </div>
+
+         
+
+
+        </div>
+      </div>
+     </div>
+
+
+    <section class="asistencia" id="asistenciaMain">
+
+    
+      <!-- calendario -->
+       <div class="calendar-div">
+        <div id="calendar" class="full-calendar"></div>
+       </div>
+      
+      <!-- crear partido -->
+      <section id="partidoEvento" style="display: none;">
+
+        <div class="instruccion-partido">
+          <h1>Crear Partido</h1>
+          <p>Completa el formulario para poder agendar un partido</p>
+        </div>
+  
+        <div class="partidoCreado" style="display: none;">
+          <div class="innerCreadoPartido">
+  
+            <div class="colCreadoPartido">
+              <h1>Se ha creado un Partido</h1>
+              <p style="margin: 0;">ve al <span><a href="">calendario</a> para ver el partido creado</span></p>
+            </div>
+  
+            <div class="colCreadoBtn">
+              <button id="aceptResetForm">Aceptar</button>
+              <button>Volver</button>
+            </div>
+            
+          </div>
+        </div>
+  
+        <form class="partidoForm" id="formPartido">
+  
+          <div class="form-part-col1">
+  
+            <div>
+              <label for="mySelect">Categoría</label>
+              <select id="mySelect" class="wide" required>
+                
+              </select> 
+            </div>
+            
+            <div>
+              <label for="mySelect1">Tipo de Partido</label>
+              <select id="mySelect1" class="wide" required>
+                <option data-display="Custom Text">Amistoso</option>
+                <option data-display="Custom Text">Torneo</option>
+                <option data-display="Custom Text">Liga</option>
+              </select>
+            </div>
+  
+            <div class="partido-date">
+              <label for="datePartido">Fecha</label>
+              <input type="date" id="fechaPartido" name="datePartido"">
+            </div>
+  
+            <div class="partido-hour">
+              <label for="">Hora de Inicio</label>
+              <input type="time" id="horaInicio">
+            </div>
+  
+            <div class="partido-hour">
+              <label for="">Hora de Finalizacion</label>
+              <input type="time" id="horaFinal">
+            </div>
+  
+            <div class="partido-hour">
+              <label for="">Ubicacion</label>
+              <input type="text" id="ubicacionPartido">
+            </div>
+  
+            <div class="btn-partido1">
+  
+              <div class="btn-partido-col">
+                <button type="button" class="btn-ant-partido">Volver</button>
+              </div>
+              
+              <div class="btn-partido-col">
+                <button type="button" class="btn-sig-partido">Siguiente</button>
+              </div>
+              
+            </div>
+          </div>
+  
+  
+          <div class="form-part-col2" style="display: none;">
+  
+            <div class="partido-hour">
+              <label for="">Equipo Rival</label>
+              <input type="text" id="rivalPartido" required>
+            </div>
+                        
+            <div>
+              <input data-jtlabel="Partido de vuelta" type="checkbox" class="jtoggler">
+            </div>
+  
+            <div class="partidoVuelta" style="display: none;">
+              <div class="partido-hour">
+                <label for="">Goles a favor</label>
+                <input type="number" id="golFavor">
+              </div>
+  
+              <div class="partido-hour">
+                <label for="">Goles en contra</label>
+                <input type="number" id="golContra">
+              </div>
+            </div>
+  
+            <div>
+              <label for="myselect2">Encargado</label>
+              <select id="mySelect2" name="myselect2" class="wide"  required></select>
+            </div>
+            
+            <div>
+              <label for="">Comentarios</label>
+              <textarea class="no-resize" id="comentarioPartido" rows="5" cols="30" placeholder="Escribe algo aquí..."></textarea>
+            </div>
+  
+            <div class="btn-partido1">
+  
+              <div class="btn-partido-col">
+                <button type="button" class="btn-ant-partido">Volver</button>
+              </div>
+              
+              <div class="btn-partido-col">
+                <button type="submit" class="btn-sig-partido">Siguiente</button>
+              </div>
+              
+            </div>
+          </div>
+  
+  
+  
+          
+        
+  
+        
+            
+        </form>
+  
+  
+      </section>
+
+      <!-- programar evento -->
+      <div class="inner-asistencia" style="display: none;">
+
+        <div class="main-evento">
+          <div class="inner-main-evento">
+            <div class="title-event">
+              <h1>Programar evento</h1>
+            </div>
+
+            <div class="main-division">
+              <div class="left-event">
+                <div class="prueba">
+                  <label for="">Equipo</label>
+                  <select id="equipoAsistencia" class="wide">
+                  </select>
+                </div>
+
+                <div class="prueba">
+                  <label for="">Estado</label>
+                  <select id="estadoAsistencia" class="wide">
+                    <option value="">Selecciona una opcion</option>
+                    <option value="todos">Todos</option>
+                    <option value="Sano">Sano</option>
+                    <option value="Lesionado">Lesionado</option>
+                  </select>
+                </div>
+
+                <div class="prueba partido-date">
+                  <p>Lugar</p> 
+                  <input type="text" class="input-asist" id="ubicacion" placeholder="Lugar">
+                </div>
+
+                <div class="prueba">
+                  <label for="event-hour">Hora de Inicio</label>
+                  <input type="time" name="event-hour" id="horaEvento" class="input-asist">
+                </div>
+
+              
+                
+
+              </div>
+                  
+              <div class="left-event">
+
+                  <div class="prueba">
+                    <label for="">Evento</label>
+                    
+                    <select id="eventoAsistencia" class="wide">
+                      <option value="">Selecciona una opcion</option>
+                      <option value="Entrenamiento">Entrenamiento</option>
+                      <option value="Partido">Partido</option>
+                      <option value="Reunion">Reunion</option>
+                    </select> 
+                  </div>
+
+                  <div class="prueba">
+                    <label for="event-date">Fecha</label>
+                    <input type="date" name="event-date" id="fechaEvento" class="input-asist">
+                  </div>
+
+                  <div class="prueba">
+                    <label for="event-hour">Entrenador</label>
+                    <select name="Entrenador" id="entrenador" class="wide"></select>
+                  </div>
+                
+                <div class="prueba">
+                  <label for="event-hour">Hora de Finalizacion</label>
+                  <input type="time" name="hour-final" id="horaEventoFinal" class="input-asist">
+                </div>
+            
+              </div>
+            </div>
+
+            <div>
+              <label for="">Descripcion</label>
+              <textarea class="no-resize" id="descEvento" rows="5" cols="30" placeholder="Escribe algo aquí..."></textarea>
+            </div>
+            
+
+
+
+            <div class="crearListadoBtn">
+              <button id="crearListadoButton">Crear Listado</button>
+              <!-- <button>Borrar Listado</button> -->
+            </div>
+
+
+          </div>
         </div>
 
-        <div class="listado-div">
-          <button id="crearListadoButton">CREAR LISTADO</button>
-          <!-- <button>Borrar Listado</button> -->
-        </div>
-
-        <div class="asistencia-main">
+        
+        <div class="asistencia-main" style="display: none;">
           <div class="tabla-asistencia">
             <div class="atendance-title">
-             
+              
             </div>
             
             <div id="loadingAnimation" style="width: 100px; height: 100px; margin: auto; display: none;"></div>
@@ -535,49 +1125,311 @@
               <tbody class="datos-asistencia">
 
               </tbody>
-              
 
-              <!-- <tr class="data-asist">
-                <td>Francisco</td>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" name="estado" id="presente">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" name="estado" id="ausente">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" name="estado" id="tardanza">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                <td>
-                  <label class="custom-checkbox">
-                    <input type="checkbox" name="estado" id="justificado">
-                    <span class="checkmark"></span>
-                  </label>
-                </td>
-                
-                <td>
-                  <textarea name="" id=""></textarea>
-                </td>
-              </tr> -->
+            </table>
 
-             
+            <div class="enviar-asist-div">
+              <button id="presenteAllBtn">Marcar Presente todos</button>
+              <button class="enviar-asist-btn" id="enviarAsistBtn">Enviar</button>
+              <button>Cancelar</button>
+            </div>
 
             
 
-            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="asistencia-enviada" style="display: none;">
+        <div class="aEnviada-inner">
+          <div class="title-aEnviada">
+            <h1>Asistencia Guardada</h1>
+          </div>
+          <div class="aEnviada-opciones">
+            <div class="aEnviada-opciones-inner">
+              <button>Menú asistencias</button>
+              <button>Guardar este evento</button>
+              <button>Deshacer asistencia</button>
+            </div>
+            
           </div>
         </div>
       </div>
     </section>
+
+
+    <!-- seccion Usuarios -->
+    <section class="usuarios-seccion" id="seccionUsuarios" style="display: none;">
+     
+
+      <!-- modals -->
+      <div class="crearUsuario-modal" id="crearUsuarioModal" style="display: none;">
+        <div class="crearUsuario-content">
+          
+          <i class="fa-solid fa-x cerrarCrearUsuario"></i>
+
+
+          <div class="crearUsuario-header">
+            <h2 style="margin: 0;">Agregar Usuario</h2>
+            
+          </div>
+
+          <form action="" class="formCrear-usuario" id="crearUsuarioForm">
+
+            <div class="formUsuario-col1">
+
+              <div class="formUsuario-col1-l">
+                <div class="user-profile-pic-create">
+                  <div class="d3-profile-create"></div>
+                </div>
+              </div>
+
+              <div class="formUsuario-col1-r">
+
+                <div class="formUsuario-div">
+                  <label for="nombreUsuario">Nombre de usuario</label>
+                  <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Nombre de usuario" required>
+                </div>
+                
+                <div class="formUsuario-div">
+                  <label for="nombrePersona">Nombre</label>
+                  <input type="text" id="nombrePersona" name="nombrePersona" placeholder="Nombre" required>
+                </div>
+                <div class="formUsuario-div">
+                  <label for="correoUsuario">Correo</label>
+                  <input type="email" id="correoUsuario"  name="correoUsuario" placeholder="correo" required>
+                </div>
+              
+              </div>
+
+            </div>
+
+            <div class="formUsuario-col2">
+              <div class="formUsuario-col2-up">
+                <label for="myselect3" style="font-size: 10px;">Rol</label>
+                <select id="mySelect3" name="myselect3" class="wide" required>
+                  <option data-display="Custom Text">Administrador</option>
+                  <option data-display="Custom Text" >Entrenador</option>
+                
+                </select>
+                
+              </div>
+
+              
+              <div class="multipleSeleccion">
+                <p style="font-size: 10px; margin: 0;">Equipo</p>
+                <div class="selectBox nice-select wide">
+                  Select an option
+                  <div id="checkBoxEquipo" style="display: none;">
+                   
+                    
+                  </div>
+                </div>
+                <div id="error-message" style="color: red; font-size:10px; margin: 0; display: none;">Debes seleccionar al menos uno.</div>
+                
+              </div>
+
+
+              <div class="addUserBtn">
+                <button style="outline: none;">Agregar usuario</button>
+              </div>
+
+
+            </div>
+
+
+
+          </form>
+
+          </div>
+
+
+
+
+        </div>
+      </div>
+
+
+      <!--  -->
+      <div class="crearUsuario-modal" id="editUserModal" style="display: none;">
+          <div class="editUser-content">
+           
+            <div class="editUser-top">
+              <i class="fa-solid fa-x cerrarEditUser"></i>
+              <div class="editUser-inner-top">
+                
+                <div class="editPic-div">
+                  <div class="user-profile-pic-create">
+                    <div class="d3-profile-create"></div>
+                  </div>
+                </div>
+
+                <div class="edit-info-1">
+                  
+                  <div class="col-edit">
+
+                    <div class="col-edit-input">
+
+                      <label for="userEdit">Usuario</label>
+                      <input type="text" name="userEdit" id="userEdit">
+
+                    </div>
+
+                    <div class="col-edit-input">
+
+                      <label for="nameEdit">Nombre</label>
+                      <input type="text" name="nameEdit" id="nameEdit">
+
+                    </div>
+
+
+                  </div>
+
+                  <div class="col-edit-password">
+                    <div class="col-edit-input-password">
+                      <label for="passwordEdit">Contraseña</label>
+                      <input type="password" name="passwordEdit" id="passwordEdit" placeholder="****************">
+                    </div>
+                    
+                  </div>
+
+
+                </div>
+               
+  
+              </div>
+
+              <div class="editUser-inner-bott">
+
+                <div class="estadoUsuarioDiv">
+                  <select name="estadoUsuario" id="estadoUsuario">
+                    <option value="0">Activo</option>
+                    <option value="1">Bloqueado</option>
+                  </select>
+                </div>
+
+                <div class="actualizarBtnDiv">
+                  <button id="actualizarDatosUser">Actualizar</button>
+                </div>
+
+              </div>
+              
+
+            </div>
+            
+
+            <div class="editFunctionUser">
+            
+              <div class="funct-col">
+                <p>Equipos asignados</p>
+                <div class="divEquipos">
+
+                  <div class="divEquipos-inner">
+                     
+                   
+                 
+                    
+
+                  </div>
+
+                </div>
+
+
+              </div>
+
+              <div class="funct-col-2">
+
+                <p>Agregar equipo</p>
+                <div class="divAgregarEquipo">
+                  <div class="divAgregarEquipo-1">
+                    <label for="myselect4" style="font-size: 10px; margin: 0;">Equipos</label>
+                    <select id="mySelect4" name="myselect4" class="wide" required>
+                    </select>
+                  </div>
+
+                  <div class="divAgregarEquipo-2">
+                    <button id="agregarEquipobtn">Agregar</button>
+                  </div>
+                
+
+
+                </div>
+
+              </div>
+
+
+            </div>
+
+          </div>
+      </div>
+
+      <div class="u-col1">
+
+        <div class="u-col1-l">
+          <div class="addUser-div">
+
+            <div class="addUser-l">
+              <div class="addUser-l-col addUserF"> 
+                <i class="fa-solid fa-people-group"></i>
+                <h3 style="margin: 0; font-size: 18px; ">Usuarios</h3>
+              </div>
+
+              <div class="addUser-l-col">
+                <p>Puedes agregar hasta 4 usuarios</p>
+              </div>
+              
+
+            </div>
+
+
+            <div class="addUser-r">
+
+              <div class="addUser-r-col">
+                <button id="addUserbtn2">AGREGAR USUARIO</button>
+              </div>
+              
+            </div>
+
+          </div>
+        </div>
+
+       
+
+      </div>
+
+     
+       
+      <div class="u-col2"> 
+        
+        <div style="height: 10%; margin-bottom: 10px;">
+          <p style="font-weight: bold;">Tus usuarios</p>
+          <p>puedes agregar y editar usuarios</p>
+        </div>
+        
+        <div class="u-col2-2">
+          <div class="tabla-usuarios">
+
+
+
+        
+          </div>
+
+          <div class="paginacion-usuarios">
+
+          </div>
+
+        </div>
+
+
+        
+
+
+
+      </div>
+
+    </section>
+
+    
 
 
 
@@ -765,8 +1617,6 @@
   </div>
   
   
- 
-
   <div class="modal">
 
     <div class="modal-content">
@@ -851,10 +1701,6 @@
 
 
   <!-- seccion imporante informacion total del jugador -->
-
-
- 
-
   <!-- complementos y pop ups -->
 
   <!-- confirmar borrar -->
@@ -908,6 +1754,63 @@
 </body>
 </html>
 
+
+
+
 <script src="/js/infoJugador.js"></script>
 <script src="/js/jugadores.js"></script>
 <script src="/js/asistencia.js"></script>
+<script src="/js/user.js"></script>
+
+<!-- js crear partido -->
+<script src="/js/partidoCrear.js"></script>
+
+<!-- Moment.js -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
+
+<!-- FullCalendar -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+
+    // NiceSelect.bind(document.getElementById("mySelect"), {
+    // });
+
+    
+    NiceSelect.bind(document.getElementById("mySelect1"), {
+    });
+    NiceSelect.bind(document.getElementById("eventoAsistencia"), {
+    });
+    NiceSelect.bind(document.getElementById("estadoAsistencia"), {
+    });
+
+    //  create modal
+    NiceSelect.bind(document.getElementById("mySelect3"), {
+    });
+
+    // edit modal
+    
+   
+    
+
+    
+
+    
+
+
+  });
+
+ 
+
+</script>
+
+

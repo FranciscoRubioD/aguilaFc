@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+
+  <!-- Incluir jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- css -->
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+  
+  <section class="login">
+    <div class="inner-login">
+      <form id="loginForm">
+        <div class="col-1">
+          <label for="username">Usuario</label>
+          <input type="text" name="username" id="username" required>
+        </div>
+  
+        <div class="col-1">
+          <label for="contrasena">Contraseña</label>
+          <input type="password" name="password" id="contrasena" required>
+        </div>
+  
+        <!-- Contenedor del mensaje de error, inicialmente oculto -->
+        <div id="errorMsg" style="display: none; color: red;">
+          <p>El usuario o contraseña no son correctos</p>
+        </div>
+  
+        <div class="col-2">
+          <button type="submit" id="btnLogin">Iniciar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+</body>
+
+</html>
+
+<script src="/js/loginjs.js"></script>

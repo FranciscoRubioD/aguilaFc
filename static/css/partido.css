@@ -1,0 +1,237 @@
+
+p{
+  margin: 0;
+}
+
+
+.instruccion-partido{
+  width: 50%;
+  margin: auto;
+  margin-top: 2%;
+  /* background-color: red; */
+}
+
+
+#partidoEvento{
+  width: 100%;
+  height: 100vh;
+  /* background-color: lightgrey; */
+  overflow: hidden;
+  /* background-color: blue; */
+}
+
+.partidoForm{
+  /* background-color: red;   */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  overflow: hidden;
+}
+
+
+.form-part-col1,.form-part-col2{
+  margin-top: 0%;
+  width: 50%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+}
+
+.form-part-col1 label, .form-part-col2 label{
+  color: rgb(124, 123, 123);
+  font-size: 12px;
+}
+
+
+
+/* contenedor de date picker */
+.partido-date,.partido-hour{
+  display: flex;
+  flex-direction: column;
+}
+
+.partido-date input, .partido-hour input{
+  border: solid 1px rgb(232, 232, 232);
+  padding: 5px;
+  padding-left: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-partido1{
+  width: 100%;
+  margin-top: 2%;
+  display: flex;
+  /* background-color: red; */
+}
+
+.btn-partido-col{
+  /* background-color: green; */
+  width: 100%;
+  display: flex;
+}
+
+.btn-partido-col:last-child{
+  justify-content: end;
+}
+
+
+.btn-partido-col button{
+  width: 50%;
+  padding: 5px;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  background-color:rgb(44,44,44);
+  transition: opacity 0.15s;
+}
+
+.btn-partido1 button:hover{
+ opacity: 0.7;
+}
+
+
+/* pagina 2 */
+.partidoVuelta{
+  display: flex;
+  flex-direction: column;
+  /* background-color: red; */
+}
+
+.partidoVuelta label{
+  font-size: 14px;
+}
+
+.partidoVuelta input{
+  width: 10%;
+  outline: none;
+  border-radius: 2px;
+  padding-left: 3px;
+}
+
+/* textarea */
+.no-resize{
+  resize: none; /* Deshabilita el redimensionamiento */
+  width: 100%;
+  border: solid 2px rgb(232, 232, 232);
+  border-radius: 8px;
+  padding: 10px;
+  outline: none;
+}
+
+
+/* partido creado */
+.partidoCreado{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+.innerCreadoPartido{
+  width: 30%;
+  height: 40%;
+  margin-top: 10%;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.colCreadoPartido{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5%;
+  margin-bottom: 5%;
+}
+
+.colCreadoPartido h1{
+  margin: 0;
+  font-size: 30px;
+}
+
+.colCreadoBtn{
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  gap: 10%;
+  overflow: hidden;
+}
+
+.colCreadoBtn button{
+  width: 100%;
+  border: none;
+  padding: 5px;
+  outline: none;
+}
+
+
+
+
+@media screen and (max-width: 768px) {
+
+  .instruccion-partido{
+    width: 70%;
+    margin-top: 10%;
+  }
+  .instruccion-partido h1{
+    font-size: 25px;
+  }
+  .instruccion-partido p{
+    font-size: 12px;
+  }
+
+  .partidoForm{
+    height: 100%;
+    overflow: auto;
+  }
+
+  .form-part-col2, .form-part-col1{
+    width: 70%;
+  }
+
+  .partidoVuelta input{
+    width: 20%;
+  }
+
+  .no-resize{
+    width: 100%;
+  }
+
+  .btn-partido-col button{
+    width: 80%;    
+  }
+
+  .btn-partido1{
+    height: 10%;
+  }
+
+  /* accept */
+  .innerCreadoPartido{
+    width: 80%;
+    height: 30%;
+  }
+  .colCreadoPartido h1{
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .colCreadoPartido p{
+    font-size: 12px;
+  }
+
+
+}
+
+

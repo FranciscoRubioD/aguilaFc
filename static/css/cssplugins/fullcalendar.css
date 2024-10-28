@@ -1,0 +1,53 @@
+
+.fc {
+  max-width: 95%; /* Ajusta el máximo ancho del calendario */
+  margin: 0 auto; /* Centra el calendario */
+}
+
+
+.fc-content{
+  max-width: 150px; /* Ajusta el máximo ancho que desees para los eventos */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el contenido que se desborda */
+  text-overflow: ellipsis; /* Muestra puntos suspensivos (...) si el texto es demasiado largo */
+  padding: 5px;
+
+}
+
+/* butones del header */
+.fc-left button, .fc-right button{
+  border: none;
+}
+
+.fc-day-number{
+  color: rgb(81, 81, 81);
+  
+}
+
+
+/* dias de la semana */
+.fc-day-header {
+  font-weight: 100; /* Texto en negrita */
+  padding: 10px; /* Padding */
+}
+
+.fc-event-container{
+  font-weight: 100;
+  font-size: 14px;
+}
+
+.fc-button-group button{
+  border:none;
+  box-shadow: none;
+}
+
+.fc .fc-month-button,
+.fc .fc-agendaWeek-button,
+.fc .fc-agendaDay-button {
+    background-color: rgb(0, 132, 255) !important; /* Color de fondo */
+    color: white !important; /* Color del texto */
+    outline: none;
+}
+
+
+

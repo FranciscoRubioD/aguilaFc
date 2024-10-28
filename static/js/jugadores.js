@@ -1,6 +1,43 @@
 $(document).ready(function() {
 
-  $('.seccion-jugadores').hide();
+  const token = localStorage.getItem('token'); // Obtener el token almacenado
+
+  // console.log(token);
+
+  // // Si el token está presente, realizar una solicitud para verificarlo
+  // $.ajax({
+  //   url: '/verify-token',  // Nueva ruta que puedes crear para verificar el token
+  //   method: 'GET',
+  //   headers: {
+  //     'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+  //   },
+  //   success: function(data) {
+  //     // Si el token es válido, carga el contenido protegido o haz alguna acción
+  //     console.log('Token válido, acceso permitido');
+  //     // Aquí puedes hacer más cosas, como cargar jugadores u otro contenido
+      
+  //   },
+  //   error: function(error) {
+  //     if (error.status === 401 || error.status === 403) {
+  //       alert('No estás autorizado para ver esta página');
+  //       window.location.href = '/login/admin'; // Redirigir si el token es inválido
+  //     }
+  //   }
+  // });
+
+  // $('.seccion-jugadores').hide();
+  const seccionJugador = $('#jugadorOpt');
+  const asistencia = $('#asistenciaOpt');
+
+  // seccionJugador.on('click',()=>{
+  //   $('.seccion-jugadores').show();
+  //   $('#asistenciaMain').hide();
+  // });
+
+  // asistencia.on('click',()=>{
+  //   $('.seccion-jugadores').hide();
+  //   $('#asistenciaMain').show();
+  // })
 
   // tool bar 
   function twist(objeto, grados){
@@ -33,7 +70,6 @@ $(document).ready(function() {
   linkInscripcion();
 
  
-
   $('.add-player-btn').on('click',function(){
 
     $('.seccion-agregar-jugador').toggle();
@@ -87,11 +123,9 @@ $(document).ready(function() {
   let ajaxRequestInProgress = false;
 
 
-
   function generarPaginacion(totalPages, funcion){
     $('.numeros-paginacion').empty();
    
-  
     const btnAnterior = $('#btnAnterior');
 
     btnAnterior.off('click');
@@ -179,8 +213,6 @@ $(document).ready(function() {
   }
 
 
-
-
   $('.search-bar-container').hide();
   // logica de lupa abrir el search bar
   $('#lupa-search-bar').on('click',function(){
@@ -257,7 +289,7 @@ $(document).ready(function() {
     dataType:'json',
     success: function(response){
 
-      console.log(response.results);
+     
 
       response.results.forEach(function(equipo) {
      
@@ -744,8 +776,6 @@ rangoEdad();
 
 
     // ponemos valores de cada jugador
- 
-    
     if (jugador.posicion) {
       $('#posicion').val(jugador.posicion);
     } else {
@@ -968,11 +998,11 @@ rangoEdad();
 
         // conseguir nombre de filtro y valor 
         const filtro = $('#' + selectedOption).find('label').attr('for');
-        console.log(filtro);
+        
 
         $('#' + selectedOption + ' select[name]').on('change', function(){
           opcion = $(this).val(); 
-          console.log(opcion);
+   
         }); 
         
         $('#addfiltroResponsive').on('click',()=>{
@@ -1057,7 +1087,7 @@ rangoEdad();
       url:'/jugadores/total',
       success: function(response){
         $('#totalJugadores').text('');
-        console.log(response.jugadores);
+    
         $('#totalJugadores').text(response.jugadores);
       }
     })
@@ -1070,7 +1100,7 @@ rangoEdad();
       url:'/jugadores/disponibles',
       success: function(response){
         $('#jugadoresDisponibles').text('');
-        console.log(response.jugadores);
+    
         $('#jugadoresDisponibles').text(response.jugadores);
       }
     })
@@ -1122,6 +1152,8 @@ rangoEdad();
   
 
  });
+
+
 
 
  

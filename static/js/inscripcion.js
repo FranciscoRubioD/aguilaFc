@@ -556,7 +556,10 @@ function infoJugador(){
           id_equipo = seleccion;
           
           configJugadorbtn.prop('disabled',false);
-        })
+        });
+
+        NiceSelect.bind(document.getElementById("categorias"), {
+        });
       }
     })
   }
