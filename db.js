@@ -3,10 +3,11 @@ const mysql = require('mysql');
 
 // conexion a la base de datos
 const dbConexion = mysql.createConnection({
-  host:'localhost',
+  host:'190.140.248.133',
   user:'fran',
   password:'franWinston@2518!!',
   database:'aguilafc',
+  port: 3306,  // Asegúrate de que el puerto sea el correcto
 })
 
 // manejo de error BD
