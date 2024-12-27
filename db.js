@@ -7,7 +7,6 @@ const dbConexion = mysql.createConnection({
   user:'fran',
   password:'franWinston@2518!!',
   database:'aguilafc',
-  port: 3306,  // Asegúrate de que el puerto sea el correcto
 })
 
 // manejo de error BD
