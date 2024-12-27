@@ -3,7 +3,7 @@ const mysql = require('mysql');
 
 // conexion a la base de datos
 const dbConexion = mysql.createConnection({
-  host:'190.140.248.133',
+  host:'localhost',
   user:'fran',
   password:'franWinston@2518!!',
   database:'aguilafc',
