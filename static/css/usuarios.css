@@ -1,3 +1,34 @@
+/* skeleton */
+/* Skeleton style for loading elements */
+.skeleton {
+  background-color: #e0e0e0; /* light gray color */
+  color: transparent; /* hide text initially */
+  position: relative;
+  overflow: hidden;
+  /* z-index: 100; */
+}
+
+.skeleton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: loading 1.5s infinite;
+}
+
+/* Animation for shimmer effect */
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* skeleton */
+
+
 .usuarios-seccion{
  /* background-color: red; */
   width: 100%;

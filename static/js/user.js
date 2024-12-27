@@ -22,7 +22,6 @@ function showCheckbox() {
 $(document).ready(function() {
 
 
-
   $('#addUserbtn2').on('click',function(){
     $('#crearUsuarioModal').fadeIn();
   });
@@ -82,7 +81,7 @@ $(document).ready(function() {
         const inputOptionEquipo = $('<option>');
         inputOptionEquipo.text(equipo.nombre);
         inputOptionEquipo.val(equipo.id);
-        console.log(`estos son: ${equipo.id}`);
+        
 
         $('#mySelect4').append(inputOptionEquipo);
         
@@ -143,7 +142,7 @@ $(document).ready(function() {
       contrasena : contrasena
     }
 
-    console.log(dataForm);
+    
 
     $.ajax({
       url: '/signup',
@@ -171,9 +170,6 @@ $(document).ready(function() {
 
 
 });
-
-
-
 
 
 
@@ -245,7 +241,7 @@ function editUser(id){
             url:'/user/equipo/'+id,
             dataType: 'json',
             success: function(response){
-              console.log(response);
+            
 
               if (response.results.length === 0) {
                 // Si no hay registros, muestra un mensaje
@@ -253,9 +249,6 @@ function editUser(id){
               } 
   
               response.results.forEach(function(data) {
-  
-                console.log(data.equipo_id);
-                
                 //crear container de etiquetas
                 const contenedorEtiqueta = $('<div>').addClass('container-team');
                 const etiquetaEquipo  = $('<p>').text(data.nombre_equipo);
@@ -271,7 +264,7 @@ function editUser(id){
                 const alertEliminarEquipo = confirm(`Seguro quieres eliminar ${data.nombre_equipo}?`);
 
                 if(alertEliminarEquipo){
-                  eliminarRelacionEquipo(data.equipo_id);
+                  eliminarRelacionEquipo(data.usuario_id,data.equipo_id);
                 }else{
                   return
                 }
@@ -299,24 +292,21 @@ function editUser(id){
         
 
         // eliminar relacion de usuario / equipo
-        function eliminarRelacionEquipo(idEquipo){
+        function eliminarRelacionEquipo(idUsuario, idEquipo) {
           $.ajax({
-            type:'DELETE',
-            url:'/user/equipo/'+idEquipo,
-            dataType: 'json',
-            success: function(response){
-              
-            
-              poblarEtiquetas();
-              
-  
-            },
-            error: function(xhr, status, error) {
-              console.error('Error al obtener informacion de equipo:', error);
-            }
-  
+              type: 'DELETE',
+              url: '/user/equipo/' + idUsuario + '/' + idEquipo, // Separar los parámetros con '/'
+              success: function(response) {
+                  console.log('Relación eliminada:', response.message);
+                  alert('Relación eliminada correctamente');
+                  poblarEtiquetas();
+              },
+              error: function(xhr, status, error) {
+                  console.error('Error al eliminar la relación:', error);
+                  alert('No se pudo eliminar la relación. Por favor, inténtalo de nuevo.');
+              }
           });
-        }
+        } 
 
 
         // agregar team a equipo
@@ -363,102 +353,86 @@ function editUser(id){
       }
   });
 
-
-
-
-  
-
-
 }
 
-function poblarTablaUser(){
-
-  // borramos la lista
+function poblarTablaUser() {
+  // Borramos la lista y aplicamos el skeleton loading
   $('.tabla-usuarios').empty();
-  
-  $.ajax({
-    type:'GET',
-    url:'/get/user',
-    dataType: 'json',
-    success: function(response){
-      
-      
-      response.results.forEach(function(usuario){
 
-        // creamos los usuarios disponibles
-        const user = $('<div>').addClass('user');
-        const userInner = $('<div>').addClass('user-inner');
+  // Agrega temporalmente los skeleton loaders para simular la carga
+  for (let i = 0; i < 4; i++) { // Puedes ajustar el número de skeleton loaders
+    const skeletonLoader = $('<div>').addClass('user-inner skeleton');
+    $('.tabla-usuarios').append(skeletonLoader);
+  }
 
-        // left
-        const userInnerl = $('<div>').addClass('user-inner-l');
-        const userInnerlinner = $('<div>').addClass('user-inner-l-inner');
-        const userProfilePic = $('<div>').addClass('user-profile-pic');
-        const d3Image = $('<div>').addClass('d3-profile');
-        const nombeUsuario  =$('<p>').text(usuario.nombre_usuario);
-        const rolUsuario  =$('<p>').text(usuario.rol).addClass('rol-usuario');
+  // Realiza la solicitud AJAX después de 3 segundos
+  setTimeout(() => {
+    $.ajax({
+      type: 'GET',
+      url: '/get/user',
+      dataType: 'json',
+      success: function(response) {
+        // Limpia los skeleton loaders antes de agregar el contenido real
+        $('.tabla-usuarios').empty();
 
-        // append left
-        userInnerl.append(userInnerlinner);
-        userProfilePic.append(d3Image);
-        userInnerlinner.append(userProfilePic);
-        userInnerlinner.append(nombeUsuario,rolUsuario);
-        
+        response.results.forEach(function(usuario) {
+          // Creación del contenido real del usuario
+          const user = $('<div>').addClass('user');
+          const userInner = $('<div>').addClass('user-inner');
 
-        // right
-        const userInnerR = $('<div>').addClass('user-inner-r');
-        const userInnerRInner = $('<div>').addClass('user-inner-r-inner');
-        
-        const editUserIcon = $('<i>').addClass('fa-regular fa-pen-to-square');
-        const deleteUserIcon  = $('<i>').addClass('fa-solid fa-trash');
+          // Parte izquierda
+          const userInnerl = $('<div>').addClass('user-inner-l');
+          const userInnerlinner = $('<div>').addClass('user-inner-l-inner');
+          const userProfilePic = $('<div>').addClass('user-profile-pic');
+          const d3Image = $('<div>').addClass('d3-profile');
+          const nombreUsuario = $('<p>').text(usuario.nombre_usuario);
+          const rolUsuario = $('<p>').text(usuario.rol).addClass('rol-usuario');
 
-        // locked or not
-        const unlockedUser = $('<i>').addClass('fa-solid fa-lock-open');
-        unlockedUser.attr('style','color:#63E6BE');
+          // Append de la parte izquierda
+          userInnerl.append(userInnerlinner);
+          userProfilePic.append(d3Image);
+          userInnerlinner.append(userProfilePic);
+          userInnerlinner.append(nombreUsuario, rolUsuario);
 
-        const lockedUser = $('<i>').addClass('fa-solid fa-lock');
-        lockedUser.attr('style','color:#bf1818');
+          // Parte derecha
+          const userInnerR = $('<div>').addClass('user-inner-r');
+          const userInnerRInner = $('<div>').addClass('user-inner-r-inner');
 
-        if(usuario.estado === 0){
-          userInnerRInner.append(unlockedUser);
-        }else{
-          userInnerRInner.append(lockedUser);
-        }
+          const editUserIcon = $('<i>').addClass('fa-regular fa-pen-to-square');
+          const deleteUserIcon = $('<i>').addClass('fa-solid fa-trash');
 
-        // locked or not
+          // Estado bloqueado/desbloqueado
+          const unlockedUser = $('<i>').addClass('fa-solid fa-lock-open').css('color', '#63E6BE');
+          const lockedUser = $('<i>').addClass('fa-solid fa-lock').css('color', '#bf1818');
 
-        userInnerR.append(userInnerRInner);
-        userInnerRInner.append(editUserIcon,deleteUserIcon);
+          userInnerRInner.append(usuario.estado === 0 ? unlockedUser : lockedUser);
 
-        user.append(userInner);
-        userInner.append(userInnerl,userInnerR);
+          userInnerR.append(userInnerRInner);
+          userInnerRInner.append(editUserIcon, deleteUserIcon);
 
-        $('.tabla-usuarios').append(user);
+          user.append(userInner);
+          userInner.append(userInnerl, userInnerR);
 
-        editUserIcon.on('click',function(){
-          editUser(usuario.id);
+          $('.tabla-usuarios').append(user);
+
+          editUserIcon.on('click', function() {
+            editUser(usuario.id);
+          });
+
+          deleteUserIcon.on('click', function() {
+            if (confirm('¿Seguro deseas eliminar Jugador?')) {
+              deleteUser(usuario.id);
+            }
+          });
         });
-
-        deleteUserIcon.on('click',function(){
-
-          const confirmarEliminar = confirm('Seguro deseas eliminar Jugador');
-
-          if(confirmarEliminar){
-            deleteUser(usuario.id);
-          }else{
-            return
-          }
-
-         
-        });
-        
-
-      });
-    },
-    error: function(xhr, status, error) {
-      console.error('Error al obtener informacion de equipo:', error);
-    }
-  })
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al obtener información de equipo:', error);
+      }
+    });
+  }, 3000); // 3 segundos de retraso antes de cargar el contenido real
 }
+
 
 
 function deleteUser(id){

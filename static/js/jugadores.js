@@ -2,42 +2,162 @@ $(document).ready(function() {
 
   const token = localStorage.getItem('token'); // Obtener el token almacenado
 
-  // console.log(token);
+  authToken(token);  
 
-  // // Si el token está presente, realizar una solicitud para verificarlo
-  // $.ajax({
-  //   url: '/verify-token',  // Nueva ruta que puedes crear para verificar el token
-  //   method: 'GET',
-  //   headers: {
-  //     'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
-  //   },
-  //   success: function(data) {
-  //     // Si el token es válido, carga el contenido protegido o haz alguna acción
-  //     console.log('Token válido, acceso permitido');
-  //     // Aquí puedes hacer más cosas, como cargar jugadores u otro contenido
+
+
+  function authToken(token){
+     // Si el token está presente, realizar una solicitud para verificarlo
+    $.ajax({
+      url: '/verify-token',  // Nueva ruta que puedes crear para verificar el token
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+      },
+      success: function(response) {
+
+        localStorage.setItem('userRole', response.user.rol); // Guardar rol
+        localStorage.setItem('userName', response.user.nombre); // Guardar nombre si es necesario
       
-  //   },
-  //   error: function(error) {
-  //     if (error.status === 401 || error.status === 403) {
-  //       alert('No estás autorizado para ver esta página');
-  //       window.location.href = '/login/admin'; // Redirigir si el token es inválido
-  //     }
-  //   }
-  // });
+        // Verifica que 'response' contiene la propiedad 'user' y 'user.username'
+        $('#nombreMostrar').text(`Hola, ${response.user.nombre}`); // Muestra el nombre de usuario
+        $('#profileSlideName').text(response.user.nombre);
+        $('#emailProfile').text(response.user.email);
 
-  // $('.seccion-jugadores').hide();
-  const seccionJugador = $('#jugadorOpt');
-  const asistencia = $('#asistenciaOpt');
+        $('#tusEquipos').text('Tus equipos: ');
+        
+          // Opcional: personaliza la interfaz
+          setupNavigation(response.user.rol);
+          setupFields(response.user.id);
 
-  // seccionJugador.on('click',()=>{
-  //   $('.seccion-jugadores').show();
-  //   $('#asistenciaMain').hide();
-  // });
+          // asignar permisos 
+          asignarPermisos(response.user.id);
+         
+      },
+      error: function(error) {
+        if (error.status === 401 || error.status === 403) {
+          alert('No estás autorizado para ver esta página');
+          window.location.href = '/login/admin'; // Redirigir si el token es inválido
+        }
+      }
+    });
+  }
 
-  // asistencia.on('click',()=>{
-  //   $('.seccion-jugadores').hide();
-  //   $('#asistenciaMain').show();
-  // })
+  $('#logoutButton').on('click',function(){
+
+    logout();
+
+  });
+
+  function logout(){
+    // Eliminar token del almacenamiento local
+    localStorage.removeItem('token');
+    localStorage.removeItem('user'); // Si tienes datos del usuario
+
+    // Redirigir al usuario al inicio de sesión o página de inicio
+    window.location.href = '/login/admin';  
+
+  }
+
+ 
+  
+  function setupNavigation(role) {
+    if (role === 'Entrenador') {
+      $('#usuariosOpt').hide(); // Ocultar opción de usuarios
+    } else if (role === 'Administrador') {
+      $('#usuariosOpt').show(); // Mostrar si es admin
+    }
+  }
+
+  function setupFields(idUsuario) {
+    // Realizar la solicitud AJAX al backend
+    $.ajax({
+      url: `/user/equipos/${idUsuario}`, // Ruta para obtener los equipos
+      method: 'GET',
+      success: function(response) {
+        // Manejar la respuesta cuando sea exitosa
+        if (response.equipos && response.equipos.length > 0) {
+          console.log('Equipos permitidos:', response.equipos);
+  
+          // Almacenar los equipos permitidos en una variable o localStorage si es necesario
+          const equiposPermitidos = response.equipos.map(equipo => equipo.equipo_id);
+  
+          // Guardar en localStorage si se desea para uso posterior
+          localStorage.setItem('equiposPermitidos', JSON.stringify(equiposPermitidos));
+  
+          // Asignar permisos en la interfaz según los equipos
+
+          // Cargar el primer equipo
+          const primerEquipo = response.equipos[0];
+          obtenerResultados(primerEquipo.equipo_id);
+          partidoHistorial(primerEquipo.equipo_id);
+          obtenerProximoPartido(primerEquipo.equipo_id);
+          
+
+          // asignarPermisos(equiposPermitidos);
+        } else {
+          console.warn('No tienes acceso a ningún equipo.');
+        }
+      },
+      error: function(error) {
+        console.error('Error al obtener los equipos:', error);
+      }
+    });
+  }
+
+  function asignarPermisos(userId){
+
+    // filtrar jugadores por el select
+    selectEquipos('dashboardTeamView',false, userId);
+    selectEquipos('dashboardTeamViewJugadores',true,userId);
+    selectEquipos('teamViewCrearJugadores',false, userId);
+    selectEquipos('id_equipo',false, userId);   
+    selectEquipos('mySelect',false, userId);
+    selectEquipos('equipoAsistencia',false,userId);
+    // que le muestras al cliente
+
+
+  }
+
+  function selectEquipos(selectElement,all,userId){
+
+    $.ajax({
+      url: `/auth/equipo/${userId}`, // Ruta al backend
+      method: 'GET',
+      success: function(response) {
+        // Limpiar el select antes de agregar nuevas opciones
+        const select = $(`#${selectElement}`);
+        select.empty();
+  
+        // Iterar sobre los resultados y poblar el select
+        if (response.results && response.results.length > 0) {
+          if(all){
+            const option = `<option value="0">Todos</option>`;
+            select.append(option);
+          }
+          response.results.forEach(equipo => {
+            const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
+            select.append(option);
+          });
+        } else {
+          // Si no hay resultados, agregar una opción predeterminada
+          select.append('<option value="">No hay equipos disponibles</option>');
+        }
+        NiceSelect.bind(document.getElementById(`${selectElement}`), {
+        });
+      },
+      error: function(error) {
+        console.error('Error al obtener los equipos:', error);
+        // Manejar el error mostrando un mensaje al usuario
+        const select = $(`#${selectElement}`);
+        select.empty();
+        select.append('<option value="">Error al cargar equipos</option>');
+      }
+    });
+    
+
+  }
+
 
   // tool bar 
   function twist(objeto, grados){
@@ -68,7 +188,6 @@ $(document).ready(function() {
 
   // iniciar con link de inicio
   linkInscripcion();
-
  
   $('.add-player-btn').on('click',function(){
 
@@ -112,8 +231,6 @@ $(document).ready(function() {
     })
   }
  
-
-
   $('#mensajeDisponible').hide();
 
   // controlamos la paginacion
@@ -123,9 +240,9 @@ $(document).ready(function() {
   let ajaxRequestInProgress = false;
 
 
-  function generarPaginacion(totalPages, funcion){
+  function generarPaginacion(totalPages, funcion,params){
     $('.numeros-paginacion').empty();
-   
+
     const btnAnterior = $('#btnAnterior');
 
     btnAnterior.off('click');
@@ -139,7 +256,11 @@ $(document).ready(function() {
           ajaxRequestInProgress = true; // Marcar que la solicitud AJAX está en curso
           currentPage--;
           
-          funcion();
+          if (params) {
+            funcion(params);
+          } else {
+            funcion();
+          }
         }
       });
     }
@@ -154,7 +275,11 @@ $(document).ready(function() {
         link.on('click', function(event) {
           event.preventDefault();
           currentPage = page;
-          funcion();
+          if (params) {
+            funcion(params);
+          } else {
+            funcion();
+          }
         });
       })(i);
       
@@ -172,7 +297,11 @@ $(document).ready(function() {
         if (!ajaxRequestInProgress) { // Verificar si no hay una solicitud AJAX en curso
           ajaxRequestInProgress = true; // Marcar que la solicitud AJAX está en curso
           currentPage++;
-          funcion();
+          if (params) {
+            funcion(params);
+          } else {
+            funcion();
+          }
         }
       });
     }
@@ -183,10 +312,22 @@ $(document).ready(function() {
   // aqui traemos todos los jugadores y hacemos la logica con ello 
   getJugadores();
 
+  console.log(`Este es el token: ${token}`);
   function getJugadores(){
+
+    const token = localStorage.getItem('token'); // Asegúrate de recuperar el token correctamente
+
+    if (!token) {
+      console.error('Token no encontrado');
+      return;
+    }
+
     $.ajax({
       type: 'GET',
       url: `/get-jugadores?page=${currentPage}`,
+      headers: {
+        'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+      },
       success: function(response){
         $('.tabla-jugadores .row-data').remove();
         // vamos a controlar la barra de busqueda
@@ -194,11 +335,38 @@ $(document).ready(function() {
           const textoBusqueda = $('#jugadorBuscar').val().toLowerCase();
         })
 
+
         cargarRowData(response);
+        $('.crear-jugador-modal').hide();
+
+        // cargar jugadores
+        $('#crearJugadorBtn').on('click',function(){
+          $('.crear-jugador-modal').show();
+        });
+
+        $('.crear-jugador-x').on('click',function(){
+          $('.crear-jugador-modal').hide();
+          $('.crear-jugador-content').show();
+          $('.subir-jugadores').hide();
+        });
+     
+        const cargarJugadoresBtn = $('#cargarJugadores');
+        cargarJugadoresBtn.off('click').on('click', function(){
+          cargarJugador();
+        });
+
+        const crearJugadorBtn = $('#crearJugadorManual');
+        crearJugadorBtn.off('click').on('click',function(){
+          crearJugador();
+        })
+
 
         $.ajax({
           type: 'GET',
           url: '/get-total-jugadores',
+          headers: {
+            'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+          },
           success: function(totalJugadores) {
             const totalPages = Math.ceil(totalJugadores / limit);
             generarPaginacion(totalPages,getJugadores);
@@ -227,6 +395,209 @@ $(document).ready(function() {
       $('.search-bar-container').hide();
     })
   })
+
+
+
+  // CREAR JUGADOR 
+
+  // seccion crear jugador individual
+
+
+     // Deshabilitar posición y número si no se selecciona un equipo
+
+    // Deshabilitar posición y número desde el inicio
+    $("#posicionCrearJugadores, #numeroJugador").prop("disabled", true);
+
+    // Habilitar posición y número si se selecciona un equipo
+    $("#teamViewCrearJugadores").on("change", function () {
+        const equipoSeleccionado = $(this).val() !== "0";
+        $("#posicionCrearJugadores, #numeroJugador").prop("disabled", !equipoSeleccionado);
+    });
+
+    // manejo de foto 
+    $("#fotoJugador").on("change", function () {
+      const file = this.files[0];
+      if (file) {
+          const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+          if (!allowedTypes.includes(file.type)) {
+              alert("Por favor, selecciona un archivo de imagen válido (PNG, JPG).");
+              $(this).val(""); // Reinicia el campo de archivo
+          }
+      }
+    });
+
+
+  // input valido jugador o no 
+  $('#numeroJugador').on('input',()=>{
+    const numeroJugador = parseInt($('#numeroJugador').val());
+    const equipo = $('#teamViewCrearJugadores').val();
+    
+    console.log(numeroJugador);
+    console.log(equipo);
+
+    if(numeroJugador === ''){
+      $('.noDisponible').text('');
+      $('.noDisponible').hide();
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/numero-jugador-disponible',
+      data: { numero_jugador: numeroJugador , id_equipo: equipo },
+
+        success: function(response){
+
+          labelNumeroJugador = $('.numeroJugadorLabel').text();
+          
+          if(numeroJugador !== '' ){
+            if(response.existe){
+              ValidarNumeroJugador = true;
+              $('#crearJugador').removeClass('inactive');
+              $('#crearJugador').prop('disabled', false);
+              $('.noDisponible').hide();
+            }else{
+                  $('.noDisponible').show();
+                  $('#crearJugador').addClass('inactive').prop('disabled', true);
+                  ValidarNumeroJugador = false;
+                
+              
+            }
+          }
+        },  
+        error: function(xhr, status, error) {
+          console.error('Error al verificar número de jugador:', error);
+          $('#mensajeNumeroJugador').text('Ha ocurrido un error, por favor intenta nuevamente');
+        }
+    })
+    })
+
+  $('.crear-jugador-xmark').on('click', function(){
+    $('.modal-crear-jugador').hide();
+    $('.crear-jugador-modal').show();
+    $("#formCrearJugador")[0].reset();
+  });
+
+
+  $("#formCrearJugador").on("submit", function (e) {
+    e.preventDefault(); // Evita el envío predeterminado del formulario
+
+     // Validar que todos los campos obligatorios estén completos
+     const nombre = $("#nombreJugador").val().trim();
+     const apellido = $("#apellidoJugador").val().trim();
+     const cedula = $("#cedulaJugador").val().trim();
+     const fechaNacimiento = $("#fechaJugador").val().trim();
+     const nacionalidad = $("#nacionalidadJugador").val().trim();
+     const equipo = $("#teamViewCrearJugadores").val();
+     const posicion = $("#posicionCrearJugadores").val();
+     const numeroJugador = $("#numeroJugador").val();
+     
+
+     if (!nombre || !apellido || !cedula || !fechaNacimiento || !nacionalidad || !equipo) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
+     }
+     if (equipo === "0") {
+        alert("Por favor, selecciona un equipo antes de elegir la posición o número de jugador.");
+        return;
+     }
+
+     // Preparar los datos para enviar al servidor
+     const formData = new FormData(this);
+
+
+     // Enviar datos al servidor usando AJAX
+     $.ajax({
+      url: "/crear/jugador",
+      type: "POST",
+      data: formData,
+      processData: false, // Evitar procesamiento de datos
+      contentType: false, // Evitar encabezado predeterminado
+      success: function (response) {
+          alert("Jugador creado exitosamente.");
+          // Aquí puedes limpiar el formulario o redirigir a otra página si es necesario
+          $("#formCrearJugador")[0].reset();
+          $("#posicionCrearJugadores, #numeroJugador").prop("disabled", true);
+      },
+      error: function (xhr) {
+          if (xhr.status === 400) {
+              const error = xhr.responseJSON;
+              if (error.error === "cedula") {
+                  alert(error.message);
+              } else if (error.error === "numero_jugador") {
+                  alert(error.message);
+              }
+          } else {
+              alert("Ocurrió un error al crear el jugador. Inténtalo nuevamente.");
+          }
+      }
+     });
+
+  });
+
+
+  // seccion crear jugador manual
+  function crearJugador(){
+    $('.modal-crear-jugador').fadeIn();
+    $('.crear-jugador-modal').hide();
+  }
+
+  // seccion importar cargar jugadores
+  function cargarJugador() {
+    const cargarJugadoresInput = $('#cargarJugadoresInput');
+    
+    // Trigger file input click to open file dialog
+    cargarJugadoresInput.click();
+
+    // Listen for file selection
+    cargarJugadoresInput.off('change').on('change', function() {
+        const file = cargarJugadoresInput[0].files[0];
+        
+        // Validate file selection
+        if (!file) {
+            alert('Por favor selecciona un archivo.');
+            return;
+        }
+
+        // Prepare file data for upload
+        const formData = new FormData();
+        formData.append('file', file);
+
+        $('.crear-jugador-content').hide();
+        $('.subir-jugadores').show();
+
+        $('#archivoJugadoresName').text(file.name);
+
+        $('#volverJugadores').off('click').on('click',function(){
+          $('.crear-jugador-content').show();
+          $('.subir-jugadores').hide();
+          $('#archivoJugadoresName').text('');
+        });
+
+
+
+        // AJAX request to send the file to the server
+        $('#enviarJugadores').off('click').on('click',function(){
+          $.ajax({
+            url: '/import-jugadores',
+            type: 'POST',
+            data: formData,
+            contentType: false, // Required for FormData
+            processData: false, // Required for FormData
+            success: function(response) {
+                alert('Archivo cargado exitosamente');
+                // Reset the file input for a fresh selection next time
+                cargarJugadoresInput.val('');
+                getJugadores();
+            },
+            error: function(error) {
+                alert('Error al cargar el archivo');
+                console.error('Error:', error);
+            }
+        });
+        });
+        
+    });
+  }
 
 
   // SECCION IMPORTANTE DEL CODIGO
@@ -469,6 +840,7 @@ rangoEdad();
 
       // Llamar a una función para manejar la actualización de params
       $('.filtrar-button').on('click',()=>{
+        console.log(`estos los param: ${params}`);
         manejarActualizacionParams(params);
       });
 
@@ -477,15 +849,38 @@ rangoEdad();
 
   }
 
+
+  $('#dashboardTeamViewJugadores').on('change', function() {
+    
+    currentPage = 1;
+    let params = {};
+    const id_equipo = $(this).val();
+    const nameFiltro = "equipo"
+    params[nameFiltro] = id_equipo;
+    console.log(`seleccion filtro equipo: ${params}`);
+    manejarActualizacionParams(params);
+    traerTotalJugadores(id_equipo);
+    traerJugadoresDisponibles(id_equipo);
+    
+  
+  });
+
+  // wardT
+
   function manejarActualizacionParams(params) {
+
     // Colocar aquí cualquier acción adicional que necesites realizar
       $.ajax({
         type:'GET',
         url:`/jugadores-filtrados?page=${currentPage}`,
+        headers: {
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+        },
         data: params,
         success: function(response){
           $('.tabla-jugadores .row-data').remove();
 
+          
           if(response.length === 0){
             const fila = $('<tr>').addClass('row-data');
             fila.text('no hay datos');
@@ -495,7 +890,7 @@ rangoEdad();
           cargarRowData(response.result);
 
           const totalPages = Math.ceil(response.totalResults / limit);
-          generarPaginacion(totalPages,manejarActualizacionParams);
+          generarPaginacion(totalPages,manejarActualizacionParams,params);
           ajaxRequestInProgress = false;
 
         }
@@ -504,7 +899,26 @@ rangoEdad();
 }
 
 
+// lottie carga
+const loadingAnimation = lottie.loadAnimation({
+  container: document.getElementById('lottieAnimation'), // El contenedor de la animación
+  renderer: 'svg', // Renderizar como SVG
+  loop: true, // Animación en bucle
+  autoplay: false, // No reproducir automáticamente
+  path: '/lottie/cargar.json' // Ruta al archivo JSON de Lottie
+});
 
+// Función para mostrar el Lottie
+function mostrarLottie() {
+  $('#loadingLottie').fadeIn(); // Muestra el contenedor
+  loadingAnimation.play(); // Reproduce la animación
+}
+
+// Función para ocultar el Lottie
+function ocultarLottie() {
+  loadingAnimation.stop(); // Detiene la animación
+  $('#loadingLottie').fadeOut(); // Oculta el contenedor
+}
 
 
 // formato para agregar data al row y usar sus funciones editar y eso
@@ -512,6 +926,11 @@ rangoEdad();
 
     $('.tabla-jugadores .row-data').empty();
 
+    // Mostrar animación Lottie antes de cargar los datos
+    // mostrarLottie();
+
+    // setTimeout(() => {
+    
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
       fila.data('id-jugador',elemento.id);
@@ -567,14 +986,32 @@ rangoEdad();
           $('#posicion-m').addClass('asignar');
         }
         
+        
         $('#numero-camiseta-m').text(elemento.numero_jugador);
         $('#pierna-m').text(elemento.pierna_habil);
         $('#tarjeta-amarilla-m').text(elemento.tarjeta_amarilla);
         $('#pais-m').text(elemento.pais);
         $('#provincia-m').text(elemento.provincia);
         $('#distrito-m').text(elemento.distrito);
+        $('#email-m').text(elemento.correo);
 
-        console.log(elemento.foto_cedula);
+
+        // foto de perfil
+        const fotoPerfil = elemento.foto_jugador;
+        $.ajax({
+          type:'GET',
+          url:'/archivo/'+ fotoPerfil,
+          success:function(response){
+            console.log(response);
+            $('#fotoPerfilJugador').attr('src', '/archivos/' + fotoPerfil);
+
+          },
+          error: function(xhr, status, error) {
+            console.error('Error al obtener la imagen de perfil:', error);
+            $('#fotoPerfilJugador').attr('src', '/archivos/' + 'default_profile.png');
+            // Manejar errores si es necesario
+          }
+        })
 
         // descargar cedula
         $('#doc-download').one('click',function(){
@@ -595,36 +1032,34 @@ rangoEdad();
         });
         
 
-        // descargar cedula
-
 
         // email del jugador
-        $.ajax({
-          type:'GET',
-          url:'/user/'+ elemento.usuario_id,
-          success:function(response){
-            $('#email-m').text(response.email);
+        // $.ajax({
+        //   type:'GET',
+        //   url:'/user/'+ elemento.usuario_id,
+        //   success:function(response){
+        //     $('#email-m').text(response.email);
             
-            const fotoPerfil = response.foto_perfil;
-              $.ajax({
-                type:'GET',
-                url:'/archivo/'+ fotoPerfil,
-                success:function(response){
-                  console.log(response);
-                  $('#fotoPerfilJugador').attr('src', '/archivos/' + fotoPerfil);
+        //     const fotoPerfil = response.foto_perfil;
+        //       $.ajax({
+        //         type:'GET',
+        //         url:'/archivo/'+ fotoPerfil,
+        //         success:function(response){
+        //           console.log(response);
+        //           $('#fotoPerfilJugador').attr('src', '/archivos/' + fotoPerfil);
 
-                },
-                error: function(xhr, status, error) {
-                  console.error('Error al obtener la imagen de perfil:', error);
-                  $('#fotoPerfilJugador').attr('src', '/archivos/' + 'default_profile.png');
-                  // Manejar errores si es necesario
-                }
-              })
+        //         },
+        //         error: function(xhr, status, error) {
+        //           console.error('Error al obtener la imagen de perfil:', error);
+        //           $('#fotoPerfilJugador').attr('src', '/archivos/' + 'default_profile.png');
+        //           // Manejar errores si es necesario
+        //         }
+        //       })
 
-          },error(err){
-            console.log(err);
-          }
-        })
+        //   },error(err){
+        //     console.log(err);
+        //   }
+        // })
         // email del jugador
 
         $('.closePlayer').one('click',function(){
@@ -658,11 +1093,17 @@ rangoEdad();
             url:`/eliminar/jugador/${idJugador}/${idUsuario}`,
             success:function(response){
               $('.delete-mssg').hide();
-              
               $('.deleted').show();
               activarLottie();
-              borrarLottie.destroy();
+              // borrarLottie.destroy();
               getJugadores();
+
+              setTimeout(function() { // Agregamos un retraso para la animación de cierre
+                $('.pop-up-delete').hide();
+                $('.deleted').hide();
+                $('.delete-mssg').show();
+              }, 2000);
+
             },error: function(xhr, status, error) {
               console.error('Error al eliminar jugador:', error);
             }
@@ -692,46 +1133,46 @@ rangoEdad();
       const fechaCreacion = new Date(fechaISO);
       const fechaFormateadaCreacion = formatDate(fechaCreacion);
 
-
       const propiedadesMostradas = ['Nombre', 'cedula', 'telefono','edad','posicion','numero_jugador','estado_salud','fecha_creacion','nombre_division'];
 
       for (const key in elemento) {
         if (Object.hasOwnProperty.call(elemento, key)) {
           if (propiedadesMostradas.includes(key)) {
-            // Si está en la lista, crear elementos dt y dd
-            if(key !=="estado_cuenta"){
+            // Si está en la lista, crear una celda td
+            const td = $('<td>');  // Crear la celda solo una vez
 
-              if(elemento[key] === ""){
-                const td = $('<td>').text('Por asignar');
-                td.css({
-                  'color':'lightgreen'
-                });
-                fila.append(td);
-              }else if(key ==="Nombre"){
-                const td = $('<td>').text(elemento[key]);
-                fila.append(td);
-              }else if(key === "edad"){
-                const td = $('<td>').text(edad);
-                fila.append(td);
-              }else if(key === "fecha_creacion"){
-                const td = $('<td>').text(fechaFormateadaCreacion);
-                fila.append(td);
-              }
-              else{
-                  const td = $('<td>').text(elemento[key]);
-                  // Agregar los elementos al contenedor donde deseas mostrarlos
-                  fila.append(td);
-              }
-
-            
+            // Si el valor es vacío, asignar "Por asignar" y color
+            if (elemento[key] === "") {
+              td.text('Por asignar');
+              td.css({
+                'color': 'lightgreen',  // Color para "Por asignar"
+                'font-weight': 'bold'
+              });
+            } else if (key === "Nombre") {
+              td.text(elemento[key]);
+            } else if (key === "edad") {
+              td.text(edad);
+            } else if (key === "fecha_creacion") {
+              td.text(fechaFormateadaCreacion);
+            } else {
+              td.text(elemento[key]);
             }
 
-            fila.append(toolDiv);
-            $('.tabla-jugadores').append(fila);
+            // Agregar la celda (td) a la fila (fila)
+            fila.append(td);
           }
         }
       }
-    })
+
+      // Agregar la fila a la tabla
+      $('.tabla-jugadores').append(fila);
+      })
+
+    // Ocultar animación Lottie después de cargar los datos
+    // ocultarLottie();
+
+    
+    // },2000);
   }
 
 
@@ -752,6 +1193,7 @@ rangoEdad();
 
 
   // esta funcion edita un jugador
+
   function editarJugador(idJugador,response){
     $('#Nombre').val('');
     $('#cedula').val('');
@@ -807,6 +1249,7 @@ rangoEdad();
     const posicionJugador = jugador.posicion;
 
     
+
     $('#id_equipo option').each(function() {
         const valorOpcion = $(this).val();
         if (valorOpcion.includes(nombreDivision)) { 
@@ -831,6 +1274,7 @@ rangoEdad();
         }
     });
 
+   
 
     $('#numero_jugador').on('input',()=>{
       const numeroJugador = parseInt($('#numero_jugador').val());
@@ -977,10 +1421,12 @@ rangoEdad();
     responsive();
   }
 
+  // $('.modal').show();
+
   function abrirModalFiltro(){
     $('.modal-filtro').css('display', 'block');
     $('.modal-body').addClass('filter');
-    $('.modal-content').addClass('filter');
+    $('.modal-content-editar').addClass('filter');
 
     $('.filtro').hide();
   }
@@ -1014,7 +1460,7 @@ rangoEdad();
             const nombreEquipo = $('#' + selectedOption + ' select[name]').find('option:selected').text();
            
             params[filtro] = opcion;
-            console.log(params);
+     
             // se agrega el nombre a la etiqueta
             nombreEtiqueta.text(nombreEquipo);
 
@@ -1081,30 +1527,49 @@ rangoEdad();
 
   // DASHBOARD
   // trae total de jugadores 
-  function traerTotalJugadores(){
+  function traerTotalJugadores(id_equipo = 0) {
+    // Construir la URL con el parámetro id_equipo
+    const url = `/jugadores/total?id_equipo=${id_equipo}`;
+
     $.ajax({
-      type:'GET',
-      url:'/jugadores/total',
-      success: function(response){
-        $('#totalJugadores').text('');
-    
-        $('#totalJugadores').text(response.jugadores);
-      }
-    })
-  };
+        type: 'GET',
+        url: url,
+        headers: {
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+        },
+        // wardq
+        success: function(response) {
+            // Limpiar y actualizar el contenido del elemento
+            $('#totalJugadores').text(response.jugadores);
+        },
+        error: function(error) {
+            console.error('Error al obtener el total de jugadores:', error);
+            $('#totalJugadores').text('Error al cargar el total de jugadores');
+        }
+    });
+  }
 
   // traer jugadores disponibles
-  function traerJugadoresDisponibles(){
+  function traerJugadoresDisponibles(id_equipo = 0) {
+    // Construir la URL con el parámetro id_equipo
+    const url = `/jugadores/disponibles?id_equipo=${id_equipo}`;
+
     $.ajax({
-      type:'GET',
-      url:'/jugadores/disponibles',
-      success: function(response){
-        $('#jugadoresDisponibles').text('');
-    
-        $('#jugadoresDisponibles').text(response.jugadores);
-      }
-    })
-  };
+        type: 'GET',
+        url: url,
+        headers: {
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+        },
+        success: function(response) {
+            // Limpiar y actualizar el contenido del elemento
+            $('#jugadoresDisponibles').text(response.jugadores);
+        },
+        error: function(error) {
+            console.error('Error al obtener jugadores disponibles:', error);
+            $('#jugadoresDisponibles').text('Error al cargar los jugadores disponibles');
+        }
+    });
+  }
 
   traerJugadoresDisponibles();
   traerTotalJugadores();

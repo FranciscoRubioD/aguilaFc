@@ -9,6 +9,7 @@ body{
   background-color: rgb(84, 157, 201);
 }
 
+
 header{
   background-color: white;
   height: 15vh;
@@ -26,7 +27,18 @@ header h1{
 .main{
   display: flex;
   flex-direction: row;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* navs */
+.seccion {
+  display: none;
   
+}
+.activo {
+  display: block;
 }
 
 /* barra de herramientas */
@@ -35,7 +47,7 @@ header h1{
   height: 100vh;
   /* margin-top: 10px; */
   border:none;
-  background-color:rgb(86, 155, 238);
+  background-color: rgb(84, 157, 201);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -170,6 +182,7 @@ header h1{
   width: 100%;
   height: 100%;
   margin-top: 10%;
+  gap: 5%;
   transition: opacity 0.5s ease, visibility 0.5s ease; /* Añadimos una transición para la opacidad y visibilidad */
   opacity: 1; /* Aseguramos que la opacidad sea 1 por defecto */
   visibility: visible; /* Aseguramos que la visibilidad sea visible por defecto */
@@ -186,15 +199,26 @@ header h1{
 }
 
 .option{
-  /* background-color: red; */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 10%;
+  width: 80%;
+  height: 7%;
+  border-radius: 5px;
   gap: 5%;
   color: white;
   cursor: pointer;
+}
+
+.activeOpt{
+  background-color: rgb(255, 255, 255);
+  color: rgb(84, 157, 201);
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.activeOpt p{
+  color: rgb(84, 157, 201);
 }
 
 .option:hover{
@@ -206,9 +230,53 @@ header h1{
 .name-option{
   width: 50%;
   font-size: 13px;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
+.sub-options{
+  width: 100%;
+  height: 20%;
+  display: flex;
+  background-color: yellow;
+}
+
+
+
+/* team selecto */
+
+.team-selector{
+  width: 95%;
+  height: 50px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  /* background-color: red; */
+}
+.teamViewJugadores{
+  width: 20%;
+}
+
+.equipoMostrando{
+  height: 100%;
+  width: 5%;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  /* background-color: red; */
+}
+
+.equipoMostrando p{
+  margin: 0;
+}
+
+
+/* lottie loading */
+#loadingLottie{
+  /* background-color: red; */
+}
 
 
 /* caja enlace */
@@ -318,38 +386,141 @@ header h1{
 }
 
 
+/* crear jugador modal  */
+.modal-crear-jugador{
+  position: fixed; /* Posición fija para que el modal permanezca en la misma posición en la pantalla */
+  z-index: 1; /* Hace que el modal esté por encima de otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* El modal ocupa toda la pantalla */
+  height: 100%; /* El modal ocupa toda la pantalla */
+  overflow: auto; /* Añade un scroll si el contenido es demasiado grande */
+  background-color: rgba(0,0,0,0.4); /* Fondo semitransparente para el modal */
+}
+
+.content-crear-jugador{
+  width: 40%;
+  height: 90%;
+  margin: auto;
+  margin-top: 2%;
+  border-radius: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.crear-jugador-xmark{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.crearJugadorTitle{
+  margin: 0;
+  margin-top: 2%;
+}
+
+#formCrearJugador{
+  margin-top: 2%;
+  padding-bottom: 50px;
+  width: 80%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  /* gap: 10%; */
+  overflow: auto;
+}
+
+.fieldSetJugador legend{
+  font-size: 14px;
+  color: grey;
+
+}
+
+.fieldSetJugador{
+  display: flex;
+  /* background-color: red; */
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+
+.form-group{
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+}
+.form-group label{
+  margin: 0;
+  font-size: 10px;
+}
+.form-group input{
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 3px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+/* boton crear jugador */
+.btnCrearJugador{
+  width: 50%;
+  border-radius: 3px;
+  border: none;
+  padding: 5px;
+}
+
 
 /* seccion jugadores */
-.seccion-jugadores, .asistencia{
+#jugadores{
+
   background-color:white;
-  width: 100%;
+  width:100%;
   height: 100vh;
   /* border-radius: 10px; */
   margin: auto;
+  padding: 0;
+  margin: 0;
+  /* margin-top: 20px; */
+  overflow: auto;
+}
+
+#jugadores.activo{}
+
+#asistenciaMain{
+  width:100%;
+  height: 100vh;
+  /* border-radius: 10px; */
+  /* margin: auto; */
   padding: 0;
   /* margin-top: 20px; */
   overflow: auto;
 }
 
-@media screen and (max-width: 768px) {
-  .seccion-jugadores{
-    width: 100vw;
-    height: auto;
-    margin-top: 0px;
-    border-radius: 0px;
-    overflow: auto;
-  }
 
-}
 
 .titulo-seccion-jugadores,.herramientas,.tabla-jugadores ,.etiqueta-filtro-div{
-  margin-left: 30px;
-  margin-top: 5px;
+  margin:auto;
+}
+
+
+.titulo-seccion-jugadores{
+  display: flex;
+  align-items: center;
+}
+
+.titulo-seccion-jugadores p{
+  font-size: 30px;
+  margin: 0;
 }
 
 /* estilos para el searchbar, filtros y más */
 .titulo-seccion-jugadores{
-  width: 100%;
+  width: 95%;
   height: 10%;
   display: flex;
   /* padding-top: 10px; */
@@ -362,32 +533,40 @@ header h1{
 
 /* dashboard */
 .dashboard-jugadores{
-  width: 100%;
-  height: 20%;
-  background-color: rgb(243, 243, 243);
+  width: 95%;
+  height: 10%;
+  border-radius: 10px;
+  margin: auto;
+  background-color: rgb(60, 131, 255);
   display: flex;
   flex-direction: row;
-  gap: 5%;
+  gap: 2%;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+}
+
+.jugadores-totales:first-child{
+  margin-left: 20px;
 }
 
 .jugadores-totales{
-  width: 20%;
+  width: 15%;
+  border-radius: 10px;
   height: 70%;
   background-color: white;
   display: flex;
   /* justify-content: center; */
   align-items: center;
   gap: 5%;
+  font-size: 12px;
 }
 
 .icon-dashboard{
-  width: 40px;
-  height: 40px;
+  width: 10px;
+  height: 10px;
   margin-left: 10%;
   border-radius: 50%;
-  background-color: rgb(84, 157, 201);
+  background-color: rgb(0, 140, 28);
 }
 
 .dato-dashboard{
@@ -482,31 +661,109 @@ header h1{
 }
 
 
-@media screen and (max-width: 768px) {
-  .search-bar-container{
-    width: 100%;
-    height: 100%;
-  }
 
-  #jugadorBuscar{
-    width: 100%;
-    background-color: #ffffff;
-    border-color: rgb(120, 120, 120);
-    height: 80%;
-    border-width: 1px;
-    border-radius: 2px;
-  }
-
-  .icon-tools{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    height: 100%;
-    width: 60%;
-    right: 50px;
-  }
+/* crear jugador admin */
+.crear-jugador-modal{
+  position: fixed; /* Posición fija para que el modal permanezca en la misma posición en la pantalla */
+  z-index: 1; /* Hace que el modal esté por encima de otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* El modal ocupa toda la pantalla */
+  height: 100%; /* El modal ocupa toda la pantalla */
+  overflow: auto; /* Añade un scroll si el contenido es demasiado grande */
+  background-color: rgba(0,0,0,0.4); /* Fondo semitransparente para el modal */
 }
+
+
+.crear-jugador-content,.subir-jugadores{
+  width: 30%;
+  height: 40%;
+  margin: auto;
+  margin-top: 5%;
+  border-radius: 10px;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.subir-jugadores{
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+}
+.col-subir-jugadores{
+  width: 80%;
+  height: 20%;
+  display: flex;
+  gap: 2%;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-subir-jugadores i, .col-subir-jugadores p{
+  margin: 0;
+  font-size: 20px;
+}
+
+.col2-subir-jugadores{
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+  /* background-color: red; */
+}
+.col2-subir-jugadores button{
+  width: 30%;
+  height: 40%;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  /* padding: 5px; */
+  transition: all 0.15s ease;
+}
+
+
+.col2-subir-jugadores button:hover{
+  opacity: 0.8;
+}
+
+.crear-jugador-x{
+  position: absolute; 
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.upload-opt{
+  /* background-color: red; */
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-opt button{
+  padding: 10px;
+  height: 50%;
+  width: 80%;
+  border: none;
+  border-radius: 10px;
+}
+
+
+
+
+
+
+
 
 /* filter styles */
 
@@ -524,7 +781,7 @@ header h1{
   border: none;
   border-radius: 6px;
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 .filter-field{
@@ -635,27 +892,28 @@ header h1{
 }
 
 
-@media screen and (max-width: 768px) {
-  .filter-list-div{
-    width: 100px;
-    height: 200px;
-  }
-
-  .secundary-filter-list , .secundary-filter-list-edad ,.secundary-filter-list-salud,.secundary-filter-list-equipo{
-
-    left: -210px;
-    top: 0;
-    width: 200px;
-  }
-}
 
 /* Estilos para la tabla */
+.tablaJugadores-div{
+  width: 95%;
+  height:500px;
+  margin: auto;
+  overflow-y: auto;
+  /* background-color: red; */
+}
 .tabla-jugadores {
   border-collapse: collapse;
-  width: 95%; /* Ancho completo */
+  width: 100%; /* Ancho completo */
   border: none;
   background-color: white;
+
   margin-top: 10px;
+  overflow: hidden;
+}
+
+.body-tabla-jugadores{
+
+  
 }
 
 /* Estilos para las filas de encabezado */
@@ -693,6 +951,7 @@ header h1{
   transition: all 0.15s ease;
   border-top: 1px solid #ddd; 
   border-bottom: 1px solid #ddd;
+
 }
 
 .row-data:hover{
@@ -701,7 +960,7 @@ header h1{
 
 
 .modal, .modal-filtro {
-  display: none; 
+  display: none ; 
   position: fixed; /* Posición fija para que el modal permanezca en la misma posición en la pantalla */
   z-index: 1; /* Hace que el modal esté por encima de otros elementos */
   left: 0;
@@ -712,21 +971,23 @@ header h1{
   background-color: rgba(0,0,0,0.4); /* Fondo semitransparente para el modal */
 }
 
-.modal-content {
+
+.modal-content-editar {
   background-color: #fefefe; /* Fondo blanco para el contenido del modal */
   border-radius: 10px;
   border: 1px solid #888;
-  width: 30%; /* Ancho del contenido del modal */
-  height: 50%;
+  margin: auto;
+  margin-top: 2%;
+  width: 35%; /* Ancho del contenido del modal */
+  height: 80%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  /* gap: 10px; */
 
 }
 
 .modal-asistencia-header{
   /* background-color: red; */
-  
   display: flex;
 
 }
@@ -739,8 +1000,11 @@ header h1{
 
 .modal-head{
   display: flex;
-  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  position: relative;
+  height: 10%;
+  
 }
 
 .modal-head i{
@@ -754,10 +1018,9 @@ header h1{
 
 .modal-head h2{
   margin: 0;
-  margin: auto;
+  
   padding: 0;
 }
-
 
 .modal-body{
   width: 100%;
@@ -766,85 +1029,31 @@ header h1{
 }
 
 
-@media screen and (max-width: 768px){
-  .modal-content{
-    width: 70%;
-    height: 40%;
-    margin: 35% auto;
-  }
 
-  /* filtros responsive */
-  .modal-content.filter{
-    height: auto;
-    border-radius: 0px;
-  }
-
-
-  .modal-body.filter{
-    /* background-color: red; */
-    display: flex;
-    justify-content: center;
-  }
-
-  .filtrosResponsive{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .filtrosResponsive label{
-    color: rgb(168, 163, 163);
-    font-size: 10px;
-  }
-
-  .filtrosResponsive button{
-    background-color: rgb(97, 130, 248);
-    width: 100px;
-    height: 30px;
-    margin: auto;
-    margin-top: 10px;
-    border-radius: 4px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size:14px;
-  }
-
-  .containerFilterInput ,.containerfilterSelect{
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .containerFilterInput{
-    display: none;
-  }
-
-
-}
 
 /* form editar */
-
 .form-editar{
   width: 100%;
   height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* background-color: red; */
+  align-items: center;
   gap: 10px;
 }
 
 .boton-div{
   margin-top: 20px;
-  height: 30px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .boton-div button{
   background-color: rgb(97, 130, 248);
-  width: 50%;
-  height: 100%;
+  padding: 10px;
+  width: 80%;
   border-radius: 6px;
   border: none;
   color: white;
@@ -859,15 +1068,11 @@ header h1{
 }
 
 .form-content-div{
+  width: 80%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-}
-
-.form-editar label{
-  display: block; /* Muestra el label como bloque para que ocupe toda la anchura disponible */
-  font-weight: 600;
-  font-size: 12px;
+  overflow: visible;
 }
 
 
@@ -878,27 +1083,8 @@ header h1{
 .form-editar input {
   width: 100%; /* El input ocupa todo el ancho disponible */
   padding: 5px; /* Espacio interno del input */
-  border: 1px solid #535252; /* Borde del input */
   border-radius: 5px; /* Borde redondeado del input */
-  box-sizing: border-box; /* Incluye el borde y el relleno en la anchura del input */
-}
-
-select {
-  width: 100%; /* El select ocupa todo el ancho disponible */
-  padding: 5px; /* Espacio interno del select */
-
-  border-color: black;
-
-  border-bottom-color: grey;
-  border-left-color: grey;
-
-  border-radius: 5px; /* Borde redondeado del select */
-  box-sizing: border-box; /* Incluye el borde y el relleno en la anchura del select */
-  appearance: none; /* Oculta la apariencia por defecto del select */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239e9e9e"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
- 
-  background-repeat: no-repeat; /* Evita la repetición de la imagen de fondo */
-  background-position: right 10px center; /* Alinea la flecha a la derecha y ajusta el espacio entre la flecha y el texto */
+  
 }
 
 .left-edit-div, .right-edit-div{
@@ -909,12 +1095,31 @@ select {
   margin-top: 20px;
 }
 
+.left-edit-div label, .right-edit-div label{
+  margin: 0;
+  font-size: 10px;
+}
+
+.editJugadorX{
+  right:10px;
+  top: 10px;
+  position: absolute;
+  font-size: 15px;
+}
+
+
+
+.left-edit-div input, .right-edit-div input{
+  border: 1px solid lightgrey;
+  font-size: 12px;
+  padding: 10px;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 
 
 /* Paginacion */
@@ -924,6 +1129,7 @@ input[type="number"]::-webkit-outer-spin-button {
   width: auto; 
   max-width: 50%;
   margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 .inner-barra-paginacion{
@@ -992,4 +1198,113 @@ a:active {
   color: rgb(55, 55, 226);
 }
 
+@media screen and (max-width: 768px){
+  .modal-content{
+    width: 70%;
+    height: 40%;
+    margin: 35% auto;
+  }
 
+  /* filtros responsive */
+  .modal-content.filter{
+    height: auto; 
+    border-radius: 0px;
+  }
+
+
+  .modal-body.filter{
+    /* background-color: red; */
+    display: flex;
+    justify-content: center;
+  }
+
+  .filtrosResponsive{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filtrosResponsive label{
+    color: rgb(168, 163, 163);
+    font-size: 10px;
+  }
+
+  .filtrosResponsive button{
+    background-color: rgb(97, 130, 248);
+    width: 100px;
+    height: 30px;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size:14px;
+  }
+
+  .containerFilterInput ,.containerfilterSelect{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .containerFilterInput{
+    display: none;
+  }
+
+
+}
+
+
+@media screen and (max-width: 768px) {
+  .search-bar-container{
+    width: 100%;
+    height: 100%;
+  }
+
+  #jugadorBuscar{
+    width: 100%;
+    background-color: #ffffff;
+    border-color: rgb(120, 120, 120);
+    height: 80%;
+    border-width: 1px;
+    border-radius: 2px;
+  }
+
+  .icon-tools{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+    width: 60%;
+    right: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .filter-list-div{
+    width: 100px;
+    height: 200px;
+  }
+
+  .secundary-filter-list , .secundary-filter-list-edad ,.secundary-filter-list-salud,.secundary-filter-list-equipo{
+
+    left: -210px;
+    top: 0;
+    width: 200px;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .seccion-jugadores{
+    width: 100vw;
+    height: auto;
+    margin-top: 0px;
+    border-radius: 0px;
+    overflow: auto;
+  }
+
+
+}

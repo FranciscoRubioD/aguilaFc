@@ -4,6 +4,9 @@ html{
 
 body{
   margin: 0;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
 }
 
 button[disabled] {
@@ -151,9 +154,6 @@ header{
    text-align: center;
 }
 
-.deactive{
-
-}
 
 .section-form{
   width: 100%;
@@ -163,11 +163,6 @@ header{
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-
-
-.section-form :first-child{
-
-}
 
 .option-form{
   /* border-style: solid; */

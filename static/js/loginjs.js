@@ -24,6 +24,7 @@ $(document).ready(function() {
       success: function(response) {
         alert('Login exitoso');
         // Redirigir o hacer algo después del login exitoso
+        
         const token = response.token;
         // Guardar el token en localStorage
         localStorage.setItem('token', token);
@@ -33,8 +34,24 @@ $(document).ready(function() {
       },
       error: function(error) {
         // Mostrar el mensaje de error si ocurre un fallo en el login
-        $('#errorMsg').show();
-        console.error('Error de autenticación: ', error.responseJSON?.error);
+        // Mostrar el mensaje de error si ocurre un fallo en el login
+        const errorMessage = error.responseJSON?.error;
+        $('#errorMsg').text('');
+
+        if (errorMessage === 'Contraseña incorrecta') {
+            $('#errorMsg').text('Usuario o contraseña incorrecta. intente otra vez').show();   
+        } else if (errorMessage === 'Usuario bloqueado. Contacte al administrador.') {
+            $('#errorMsg').text('Tu cuenta está bloqueada. Contacta al administrador.').show();
+        }else if(errorMessage === "Usuario no encontrado"){
+          $('#errorMsg').text('Usuario o contraseña incorrecta. intente otra vez').show(); 
+        } 
+        else {
+            // Mensaje genérico para otros errores
+            $('#errorMsg').text('Ocurrió un error. Inténtalo nuevamente.').show();
+        }
+
+        console.error('Error de autenticación: ', errorMessage);
+
       }
     });
   });

@@ -1,17 +1,27 @@
+
 $(document).ready(function() {
-
-
-  
 
   // calendario 
   const calendar = $('#calendar');
+
   poblarCalendario();
 
-
   function poblarCalendario(){
+
+    // Obtener el token del almacenamiento local o donde lo tengas guardado
+    const token = localStorage.getItem('token'); // O el lugar donde guardas el token
+
+    if (!token) {
+        console.log("No hay token, no se puede acceder a los eventos");
+        return;
+    }
+
     $.ajax({
       type: 'GET',
       url: '/eventos',
+      headers: {
+        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+      },
       dataType: 'json',
       success: function(response) {
         
@@ -23,30 +33,61 @@ $(document).ready(function() {
 
         // Define colores para los tipos de eventos
         const colores = {
-          'Entrenamiento': '#64bd7f',   // Color para entrenamiento
-          'Partido': '#6faad1'           // Color para partido
+          'Entrenamiento': '#ff4800',   // Color para entrenamiento
+          'Partido': '#6faad1',          // Color para partido
+          'Reunion': '#b442ed'           // Color para reunión
+        };
+
+        // Define colores adicionales para los resultados del partido
+        const coloresResultado = {
+          'W': '#4CAF50',  // Ganado (verde)
+          'L': '#F44336',  // Perdido (rojo)
+          'D': '#FFC107'   // Empate (amarillo)
         };
 
 
         // Itera sobre la respuesta y añade cada evento al calendario
         response.forEach(evento => {
 
-        
           // Toma la fecha y la hora del evento y combina en formato ISO
           const fechaISO = evento.fecha.split('T')[0]; // Obtiene solo la parte de la fecha
           const fechaHoraISO = `${fechaISO}T${evento.hora}`;
 
           const fechaISOFinal = evento.fecha.split('T')[0];
-          const fechaHoraISOFinal = `${fechaISO}T${evento.hora_final}`;
+          const fechaHoraISOFinal = `${fechaISOFinal}T${evento.hora_final}`;
           
           // Asigna un color basado en el tipo de evento
-          const color = colores[evento.evento] || 'gray'; // Color por defecto si no coincide
+          let color;
+          
+          // si esta terminado y estado
+          if (evento.estado === 'Terminado') {
+            const resultado = evento.resultado; // Suponiendo que 'resultado' es 'W', 'L' o 'D'
+            color = coloresResultado[resultado] || color; // Asigna color según resultado
+          
+          } else if(evento.estado === "Pendiente"){
+            color = colores[evento.evento] || 'gray'; // Color por defecto si no coincide
+          }
+
+
+
+         let tituloEvento;
+
+        // Verifica si el evento es entrenamiento o no
+        if (evento.evento.toLowerCase() === 'entrenamiento') {
+          tituloEvento = 'Entrenamiento'; // Título para entrenamiento
+        }else if(evento.evento.toLowerCase() === "reunion"){
+          tituloEvento = "Reunión";
+        } 
+        else {
+          tituloEvento = `${evento.evento} vs ${evento.equipo_rival}`; // Título para otros eventos
+        }
+
   
           $('#calendar').fullCalendar('renderEvent', {
             id: evento.id,
             idEquipo : evento.id_equipo,
             ubicacion: evento.ubicacion,
-            title: evento.evento,
+            title: tituloEvento ,
             start: fechaHoraISO,
             end: fechaHoraISOFinal,
             description: evento.descripcion,
@@ -70,7 +111,7 @@ $(document).ready(function() {
       right: 'month,agendaWeek,agendaDay'
     },
     height:650,
-    defaultDate: '2024-10-02', // Fecha de inicio
+    defaultDate: '2024-11-02', // Fecha de inicio
     navLinks: true, // Puede hacer clic en los días/semana para navegar
     // editable: true, // Hacer eventos editables
     eventLimit: true, // Permitir "más" link cuando hay demasiados eventos
@@ -110,8 +151,6 @@ $(document).ready(function() {
   });
 
   // const modalAsistenciaSection = $('.modal-asistencia').show();
-
-
   // // modalInfo(1);
   // eventoInfo(26);
   // modalAsistencia(26);
@@ -151,10 +190,12 @@ $(document).ready(function() {
     toggleBtn2.removeClass('optSelected');
     toggleBtn3.removeClass('optSelected');
 
+
     toggleBtn1.on('click',function(){
       seccion1Info.fadeIn(200);
       seccion2Tabla.fadeOut(200);
       seccion3Tabla.fadeOut(200);
+ 
 
       toggleBtn1.addClass('optSelected');
       toggleBtn2.removeClass('optSelected');
@@ -205,6 +246,9 @@ $(document).ready(function() {
     $.ajax({
       type:'GET',
       url:'/get/equipo',
+      headers: {
+        'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+      },
       dataType:'json',
       success: function(response){
 
@@ -244,230 +288,75 @@ $(document).ready(function() {
 
 
 
-    const crearListadoButton = $('#crearListadoButton');
+    const crearEventoBtn = $('#crearEvento');
 
-    crearListadoButton.on('click',function(){
+    crearEventoBtn.on('click',function(){
       eventoFetch();
     });
     
     // recopilar informacion
     function eventoFetch(){
-      const equipo = $('#equipoAsistencia').val();
-      const estado = $('#estadoAsistencia').val();
   
-      
-      // traer jugadores con el filtro
+      // Re-obtén los valores para garantizar que estén actualizados
+      const equipo = $('#equipoAsistencia').val();
+      const evento = $('#eventoAsistencia').val();
+      const estado = $('#estadoAsistencia').val();
+      const fecha = $('#fechaEvento').val();
+      const hora = $('#horaEvento').val();
+      const horaFinalizacion = $('#horaEventoFinal').val();
+      const descripcion = $('#descEvento').val();
+      const ubicacion = $('#ubicacion').val();
+        
 
-      // Mostrar la animación de carga
-      $('#loadingAnimation').show();
-      animation.play();
-
-      $.ajax({
-        type:'GET',
-        url:'/get/jugador/asistencia',
-        data: {
-          equipo: equipo, // Valor del equipo
-          estado: estado     // Valor del estado
-        },
-        dataType: 'json',
-        success: function(response){
-
-          const bodytable = $('.datos-asistencia');
-          const table = $('.table-asist');
-          bodytable.empty();
-
-          $('.asistencia-main').show(); 
-
-          // Asegúrate de que la tabla sea invisible al principio
-          table.removeClass('visible');
-          $('.enviar-asist-div').removeClass('visible');
-
-          setTimeout(function() {
-
-            if (!response || response.length === 0) {
-              const noDataRow = $('<tr>').append(
-                $('<td>').attr('colspan', '6').text('No se encontraron jugadores.')
-              );
-              bodytable.append(noDataRow);
+      // ENVIAR DATOS DE ASISTENCIA
+      if(!equipo || !fecha || !evento || !hora || !horaFinalizacion || !ubicacion){
+        alert('Completa todos los campos');
+      }
+      else{
+        $.ajax({
+          type: 'POST',
+          url: '/asistencia/guardar',
+          contentType: 'application/json',
+          data: JSON.stringify({ 
+            eventos: {
+              evento: evento,
+              equipoId: equipo,
+              fecha:fecha,
+              hora:hora,
+              horaFinalizacion: horaFinalizacion,
+              descripcion:descripcion,
+              ubicacion: ubicacion
             }
           
-          // Iterar sobre los datos obtenidos y construir filas para cada jugador
-          $.each(response, function(index, jugador) {
+          }),
+          success: function(response){
+            console.log(response);
+            alert('Evento guardado con éxito');
             
-            const fila = $('<tr>');
-         
-            // Columna para el nombre del jugador
-            const columnaNombre = $('<td>').text(jugador.Nombre);
-            fila.append(columnaNombre);
-    
-            ['presente', 'ausente', 'tardanza', 'justificado'].forEach(function(estado) {
-              const columnaEstado = $('<td>');
-              const label = $('<label>').addClass('custom-checkbox');
-              const input = $('<input>').attr({
-                type: 'checkbox',
-                name: 'estado',
-                id: estado + jugador.id // Usar algún identificador único para cada checkbox
-              });
-              input.addClass(estado);
-              const span = $('<span>').addClass('checkmark');
-              label.append(input, span);
-              columnaEstado.append(label);
-              fila.append(columnaEstado);
-    
-            });
-    
-             // Columna para el textarea de observaciones
-             const columnaObservaciones = $('<td>');
-             const textarea = $('<textarea>').attr('id', 'observaciones' + jugador.id);
-             columnaObservaciones.append(textarea);
-             fila.append(columnaObservaciones);
+
+            $('#equipoAsistencia').val('');
+            $('#eventoAsistencia').val('');
+            $('#estadoAsistencia').val('');
+            $('#fechaEvento').val('');
+            $('#horaEvento').val('');
+            $('#horaEventoFinal').val('');
+            $('#descEvento').val('');
+            $('#ubicacion').val('');
             
-             // Agregar la fila al cuerpo de la tabla
-             bodytable.append(fila);
-          })
-    
-          // Manejar cambio en el checkbox para permitir solo uno seleccionado
-          $('input[name="estado"]').change(function() {
-            // Obtener la fila (tr) padre del checkbox actual
-            var fila = $(this).closest('tr');
-            
-            // Desmarcar todos los checkboxes de estado dentro de la misma fila
-            fila.find('input[name="estado"]').not(this).prop('checked', false);
-    
-            var estado = $(this).attr('id').replace(/\d+$/, ''); // Elimina cualquier número al final del id
-            console.log('Estado seleccionado:', estado);
-          });
-// ward1
-           // Ocultar la animación de carga
-          $('#loadingAnimation').hide();
-          animation.stop();
-          // Hacer visible la tabla con la transición
-          table.addClass('visible');
-          $('.enviar-asist-div').addClass('visible');
-        },1000);
-        
-
-         // Marcar todos como presente / Desmarcar todos
-        $('#presenteAllBtn').click(function() {
-          if (marcarTodos) {
-            $('.datos-asistencia tr').each(function() {
-              const fila = $(this);
-
-              // Desmarcar todos los checkboxes en la fila
-              fila.find('input[name="estado"]').prop('checked', false);
-
-              // Marcar el checkbox de "presente"
-              fila.find('input[name="estado"].presente').prop('checked', true);
-            });
-
-            $(this).text('Desmarcar Todos');
-          } else {
-            $('.datos-asistencia tr').each(function() {
-              const fila = $(this);
-
-              // Desmarcar todos los checkboxes en la fila
-              fila.find('input[name="estado"]').prop('checked', false);
-            });
-
-            $(this).text('Marcar Todos como Presente');
+          },
+          error: function(xhr, status, error) {
+            console.error('Error al guardar el evento:', error);
+            alert('Hubo un error al guardar el evento. Por favor, inténtalo de nuevo.');
+           
           }
-
-          marcarTodos = !marcarTodos;
-        });
-        
-        
-        $('#enviarAsistBtn').on('click',function(){
-
-          // Deshabilitar el botón para evitar clics múltiples
-          $(this).prop('disabled', true);
-
-          const asistencias = [];
-          let allSelected = true;
-
-          // Re-obtén los valores para garantizar que estén actualizados
-          const equipo = $('#equipoAsistencia').val();
-          const evento = $('#eventoAsistencia').val();
-          const estado = $('#estadoAsistencia').val();
-          const fecha = $('#fechaEvento').val();
-          const hora = $('#horaEvento').val();
-          const horaFinalizacion = $('#horaEventoFinal').val();
-          const descripcion = $('#descEvento').val();
-          const ubicacion = $('#ubicacion').val();
-
-
-          $('.datos-asistencia tr').each(function(){
-            const fila = $(this);
-            const inputChecked = fila.find('input[name="estado"]:checked');
-            const jugadorIdAttr = inputChecked.attr('id');
-        
-            if (jugadorIdAttr) {
-              const jugadorId = jugadorIdAttr.match(/\d+/)[0];
-              const estadoSeleccionado = jugadorIdAttr.replace(/\d+$/, '');
-              const observaciones = fila.find('textarea').val();
-        
-              asistencias.push({
-                jugadorId: jugadorId,
-                estado: estadoSeleccionado,
-                observaciones: observaciones,
-              });
-            }else{
-              allSelected = false;
-            }
-        
-          });
-         
-
-          // ENVIAR DATOS DE ASISTENCIA
-          if(!equipo || !fecha || !evento || !hora || !horaFinalizacion || !ubicacion){
-            alert('Completa todos los campos');
-          }
-          else{
-            $.ajax({
-              type: 'POST',
-              url: '/asistencia/guardar',
-              contentType: 'application/json',
-              data: JSON.stringify({ 
-                asistencias: asistencias,
-                eventos: {
-                  evento: evento,
-                  equipoId: equipo,
-                  fecha:fecha,
-                  hora:hora,
-                  horaFinalizacion: horaFinalizacion,
-                  descripcion:descripcion,
-                  ubicacion: ubicacion
-                }
-              
-              }),
-              success: function(response){
-                console.log(response);
-                alert('Asistencia guardad con éxito');
-                // actualizar interfaz de usuario
-                $('.inner-asistencia').hide();
-                // $('.asistencia-enviada').show();
-                // Habilitar nuevamente el botón en caso de error
-                $('#enviarAsistBtn').prop('disabled', false);
-              },
-              error: function(xhr, status, error) {
-                console.error('Error al guardar la asistencia:', error);
-                alert('Hubo un error al guardar la asistencia. Por favor, inténtalo de nuevo.');
-                // Habilitar nuevamente el botón en caso de error
-                $('#enviarAsistBtn').prop('disabled', false);
-              }
-            })
-          }
-
-          
-
         })
-        
-
-        }
-      })
-
+      }
+      
     }
 
 
+  let functionRepeater = 0;
+    
   function eventoInfo(evento){
     $.ajax({
       type:'GET',
@@ -479,18 +368,63 @@ $(document).ready(function() {
       success:function(response){
         console.log(response);
 
+        functionRepeater++;
+
+        console.log(functionRepeater);
+
+        $('#toggleBtn3').off('click').on('click', function() {
+          if(response.evento === "Partido") {
+            // Acción para partidos
+            // Aquí podrías agregar cualquier acción que deba ocurrir cuando el evento es un partido
+            toggleModalAsistencia();
+          } else {
+            // Muestra el mensaje solo para eventos que no son partidos
+            $('#mensaje').text("Solo disponible para partidos").fadeIn().delay(1000).fadeOut();
+          }
+        });
+
         // si evento es entrenamiento o partido
-        if(response.evento === "Entrenamiento"){
-          $('.partido-inner').hide();
-        }else{
+        if(response.evento === "Partido"){
+          $('.inf-partido-info').show();
           $('.partido-inner').show();
+          $('.partido-score').show();
+          $('.evento-info').show();
+          $('.inf-asist-inner').removeClass('noPartido');
+        }else{
+          $('.inf-partido-info').hide();
+          $('.partido-score').hide();
+          $('.inf-asist-inner').addClass('noPartido');
         }
+
+        $('#abrirNotas').off('click').on('click',()=>{
+          showNotes(evento);
+        });
 
         const ubicacion = $('#ubicacionInfo');
         const fecha = $('#fechaShow');
         const hora = $('#horaShow');
         const equipoRival = $('#rival-show');
+      
+        
 
+        // si el evento esta cancelado no muestres 
+        if(response.estado === "Cancelado") {
+          $('#estadoPartido').show();
+          $('#estadoPartido').text(response.estado);
+          $('#estadoPartido').removeClass('suspendido terminado').addClass('cancelado');
+        } else if(response.estado === "Suspendido") {
+          $('#estadoPartido').show();
+          $('#estadoPartido').text(response.estado);
+          $('#estadoPartido').removeClass('cancelado terminado').addClass('suspendido');
+        } else if(response.estado === "Terminado") {
+          $('#estadoPartido').show();
+          $('#estadoPartido').text(response.estado);
+          $('#estadoPartido').removeClass('cancelado suspendido').addClass('terminado');
+        } else{
+          $('#estadoPartido').hide();
+          
+        }
+        
 
         equipoRival.text('');
         ubicacion.text('');
@@ -502,7 +436,6 @@ $(document).ready(function() {
         }else{
           ubicacion.text('Ninguno');  
         }
-        
         
         // formato fecha
 
@@ -528,6 +461,26 @@ $(document).ready(function() {
         }else{
           equipoRival.text('No asignado');
         }
+
+
+        // asignar datos partidos
+        $('#scoreTeam').text(response.gol_local);
+        $('#scoreRival').text(response.gol_visita);
+
+        if(response.estado === "Terminado"){
+            
+          if(response.resultado === "W"){
+            $('#scoreEstado').text('Victoria').addClass('terminado');
+          }else if(response.resultado === "L"){
+            $('#scoreEstado').removeClass('terminado');
+            $('#scoreEstado').text('Derrota').addClass('cancelado');
+          }else if(response.resultado === "D"){
+            $('#scoreEstado').text('Empate');
+          }
+        }else{
+          $('#scoreEstado').text('Pendiente');
+        }
+        
         
         // formato hora
         const horaInicio = response.hora;
@@ -559,11 +512,6 @@ $(document).ready(function() {
         const periodoFinalEnviar = horaFinalMoment.format('A'); // AM o PM
 
 
-        console.log(`Hora: ${horaEnviar}`);
-        console.log(`Minuto: ${minutoEnviar}`);
-        console.log(`periodo: ${periodoEnviar}`);
-        // sacar hora de response horas y minutos
-
         // extraer fecha
         const fechaMoment = moment(fechaISO);
 
@@ -572,6 +520,28 @@ $(document).ready(function() {
         const mes = fechaMoment.month() + 1; // Obtiene el nombre completo del mes
         const anio = fechaMoment.year(); // Obtiene el año
 
+        
+        // op cambiar configuracion partido
+        $('.btn-configurar-partido').off('click').on('click',function(){
+         
+          $('.modal-change-date').show();
+          $('.changedate-content').hide();
+          $('.configurar-content').show();
+          $('.change-content').hide();
+
+          configPartido(response.id,response.gol_local,response.gol_visita);
+          
+        });
+
+        // ganador
+        // Limpiar y agregar opción de equipo rival en el select de ganador sin duplicarlo
+        $('#mySelectGanador').append(new Option(response.equipo_rival, 'L'));
+
+        if(functionRepeater === 1){
+          NiceSelect.bind(document.getElementById("mySelectGanador"));
+
+        }
+        
 
         // op cambiar hora y date
         $('.btn-cambiar-hora').on('click',function(){
@@ -580,7 +550,7 @@ $(document).ready(function() {
           $('.change  -content').hide();
 
           changeDate(response.id,dia,mes,anio,horaEnviar,minutoEnviar,periodoEnviar,horaFinalEnviar,minutoFinalEnviar,periodoFinalEnviar);
-        })
+        });
         
         // op cambiar locaiton
         $('#btn-cambiar-ubicacion').on('click',function(){
@@ -593,7 +563,8 @@ $(document).ready(function() {
         
 
         }
-    })
+    });
+
   }
 
   // funcion modal de fechas
@@ -624,6 +595,64 @@ $(document).ready(function() {
       estadoFinal = 'PM';
   });
 
+
+
+  // funcion configurar partido resoluciones y eso
+  function configPartido(id,golFavor,golContra){
+
+    // goles
+    $('#golFavorSend').val(golFavor);
+    $('#golContraSend').val(golContra);
+
+    // cancelar
+    $('#cancelarConfig').on('click',function(){
+      $('.modal-change-date').hide();
+      $('.configurar-content').hide();
+    });
+
+
+    // accion
+    $('#enviarResolucionPartido').off('click').on('click',function(){
+
+      const resolucion = $('#mySelectConfig').val();
+      const ganador = $('#mySelectGanador').val();
+      const golFavor =  $('#golFavorSend').val();
+      const golContra = $('#golContraSend').val();
+
+      
+      const data = {
+        idEvento:id,
+        resolucion: resolucion,
+        ganador: ganador,
+        golFavor: golFavor,
+        golContra: golContra
+      }      
+
+      $.ajax({
+        type: 'POST',
+        url: '/evento/configurar',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+          alert('Evento configurado correctamente');
+          eventoInfo(id);
+          poblarCalendario();
+          $('.modal-change-date').hide();
+          $('.configurar-content').hide();
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al guardar la configuración del evento:', error);
+          alert('Hubo un error al configurar el evento.');
+        }
+      });
+
+    });
+
+
+
+  }
+
+  // cambiar fecha de evento
   function changeDate(id, dia, mes, anio, horaDefault, minutoDefault, periodoDefault, horaFinalDefault, minuteFinalDefault, periodoFinalDefault) {
 
     function addLeadingZero(value) {
@@ -829,7 +858,7 @@ function changeLocation(id,location){
 }
   
   // crear lista de asistencia en evento existente
-  function eventExistList(evento){
+  window.eventExistList = function (evento,page){
     // 
     $.ajax({
       type:'GET',
@@ -849,11 +878,15 @@ function changeLocation(id,location){
           data: {
             equipo: equipo, // Valor del equipo
             estado: estado,     // Valor del estado sano/lesionado/todos
-            evento:evento
+            evento:evento,
+            page:page
           },
           dataType: 'json',
           success: function(response){
-            console.log(`para nuevo evento ${response}`);
+         
+            // paginacion
+            generarPaginacionAsist(evento,response.totalPages,eventExistList);
+
 
              // tabla 
             const newTable = $('.table-asist-new');
@@ -861,8 +894,9 @@ function changeLocation(id,location){
 
             const bodyTable = $('.datos-asistencia-new');
 
-            const btnTabla = $('#newList');
+            const btnTabla = $('.update-list');
             btnTabla.show();
+
             // vaciar tabla
             bodyTable.empty();
 
@@ -877,7 +911,7 @@ function changeLocation(id,location){
             }
 
             // ya tenemos los jugadores ahora poblamos la tabla
-            $.each(response, function(index, jugador) {
+            $.each(response.jugadores, function(index, jugador) {
 
               // se crea un row 
               const fila = $('<tr>');
@@ -893,15 +927,34 @@ function changeLocation(id,location){
                 const label = $('<label>').addClass('custom-checkbox');
                 const input = $('<input>').attr({
                   type: 'checkbox',
-                  name: 'estado',
+                  name: 'estado', // Usar un nombre único,
                   id: estado + jugador.id // Usar algún identificador único para cada checkbox
                 });
+
                 input.addClass(estado);
                 const span = $('<span>').addClass('checkmark');
                 label.append(input, span);
                 columnaEstado.append(label);
                 fila.append(columnaEstado);
-      
+
+
+                input.change(function() {
+                  // Obtener la fila (tr) padre del checkbox actual
+                  var fila = $(this).closest('tr');
+                
+                  
+                  // Desmarcar todos los checkboxes dentro de la misma fila
+                  fila.find('input[type="checkbox"]').not(this).prop('checked', false);
+          
+                  var estado = $(this).attr('id').replace(/\d+$/, ''); // Elimina cualquier número al final del id
+                  
+                  console.log('Estado seleccionado:', estado);
+                });
+  
+                // marcar todos presentes
+                marcarTodosCheckBox($('.presente-all'),'.datos-asistencia-new','estado');
+
+
               });
                // ward2
               // Columna para el textarea de observaciones
@@ -913,29 +966,18 @@ function changeLocation(id,location){
              // Agregar la fila al cuerpo de la tabla
              bodyTable.append(fila);
 
-             // Manejar cambio en el checkbox para permitir solo uno seleccionado
-              $('input[name="estado"]').change(function() {
-                // Obtener la fila (tr) padre del checkbox actual
-                var fila = $(this).closest('tr');
-                
-                // Desmarcar todos los checkboxes de estado dentro de la misma fila
-                fila.find('input[name="estado"]').not(this).prop('checked', false);
-        
-                var estado = $(this).attr('id').replace(/\d+$/, ''); // Elimina cualquier número al final del id
-                console.log('Estado seleccionado:', estado);
-              });
-
-              // marcar todos presentes
-              marcarTodosCheckBox($('#presenteAllBtnNew'),'.datos-asistencia-new');
-
             });
 
             // enviar informacion 
-            const botonEnviar = $('#enviarNewAsist');
+            const botonEnviar = $('.enviar-asist-btn');
+
 
             botonEnviar.on('click', function(){
-              const asistencias = [];
-              let allSelected = true;
+                 
+                // Deshabilitar el botón antes de enviar la solicitud
+                botonEnviar.prop('disabled', true).text('Enviando...')
+                const asistencias = [];
+                let allSelected = true;
 
               $('.datos-asistencia-new tr').each(function(){
                 const fila = $(this);
@@ -958,11 +1000,8 @@ function changeLocation(id,location){
             
               });
 
-              // if (!allSelected) {
-              //   alert('Por favor, asegúrate de que todos los jugadores tengan un estado de asistencia marcado.');
-              //   return; // Salir de la función si falta alguna selección
-              // }
-              // enviar datos
+              console.log(asistencias);
+
               $.ajax({
                 type: 'POST',
                 url: '/evento/existente/guardar',
@@ -975,12 +1014,14 @@ function changeLocation(id,location){
                   alert('Asistencia guardad con éxito');
                   newTable.hide();
                   $('.modal-asistencia').hide();
+                  botonEnviar.prop('disabled', false).text('Enviar');
                 },
                 error: function(xhr, status, error) {
                   console.error('Error al guardar la asistencia:', error);
                   alert('Hubo un error al guardar la asistencia. Por favor, inténtalo de nuevo.');
                   // Habilitar nuevamente el botón en caso de error
-                  $('#enviarAsistBtn').prop('disabled', false);
+                  $('.enviar-asist-btn').prop('disabled', false);
+                  botonEnviar.prop('disabled', false).text('Enviar');  
                 }
               })
 
@@ -1042,9 +1083,8 @@ function changeLocation(id,location){
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function(response){
-              
-              
-              
+              alert('Partido actualizado');
+              eventoInfo(evento);
             },
             error: function(xhr, status, error) {
                 console.error('Error al actualizar partido:', error);
@@ -1087,7 +1127,7 @@ function changeLocation(id,location){
   let currentPage = 1;
 
   
-  function generarPaginacionAsist(evento,totalPages){
+  window.generarPaginacionAsist = function (evento,totalPages,funcion){
 
     $('.numeros-paginacion-asist').empty();
 
@@ -1104,7 +1144,7 @@ function changeLocation(id,location){
         if (!ajaxRequestInProgress) {
           ajaxRequestInProgress = true;
           currentPage--;
-          modalAsistencia(evento, currentPage); // Llamar a la función para cargar resultados
+          funcion(evento, currentPage); // Llamar a la función para cargar resultados
         }
       });
     }
@@ -1122,7 +1162,7 @@ function changeLocation(id,location){
         if (!ajaxRequestInProgress) {
           ajaxRequestInProgress = true;
           currentPage++;
-          modalAsistencia(evento,currentPage); // Llamar a la función para cargar resultados
+          funcion(evento,currentPage); // Llamar a la función para cargar resultados
         }
       });
     }
@@ -1139,7 +1179,7 @@ function changeLocation(id,location){
           if (currentPage !== page) {
             currentPage = page;
             console.log(currentPage);
-            modalAsistencia(evento,currentPage); // Llamar a la función para cargar resultados
+            funcion(evento,currentPage); // Llamar a la función para cargar resultados
           }
         });
       })(i);
@@ -1150,7 +1190,7 @@ function changeLocation(id,location){
 
 
   // select asistencia checkmark
-  function modalAsistencia(evento,page){
+  window.modalAsistencia =  function (evento,page){
 
     $.ajax({
       type: 'GET',
@@ -1158,7 +1198,7 @@ function changeLocation(id,location){
       data: {
         evento: evento,
         page: page, // Puedes ajustar esto según sea necesario
-        limit: 5 // Ajusta el límite aquí
+        limit: 7 // Ajusta el límite aquí
       },
       dataType: 'json',
       success: function(response) {
@@ -1176,8 +1216,7 @@ function changeLocation(id,location){
       
 
         // Generar la paginación
-        generarPaginacionAsist(evento,response.totalPages);
-
+        generarPaginacionAsist(evento,response.totalPages,modalAsistencia);
 
         // Verificar si hay resultados
         if (response.players.length === 0) {
@@ -1186,6 +1225,7 @@ function changeLocation(id,location){
           eventExistList(evento); // Función que se debe definir para manejar la falta de datos
         } else {
           table.show();
+          $('.table-asist-new').hide();
           $('#newList').hide();
           btnTabla.show();
           
@@ -1196,6 +1236,11 @@ function changeLocation(id,location){
             // Columna para el nombre del jugador
             const columnaNombre = $('<td>').text(jugador.Nombre);
             fila.append(columnaNombre);
+
+            
+            // columna cedula
+            const columnaCedula = $('<td>').text(jugador.cedula);
+            fila.append(columnaCedula);
     
             ['presente', 'ausente', 'tardanza', 'justificado'].forEach(function(estado) {
               const columnaEstado = $('<td>');
@@ -1212,7 +1257,6 @@ function changeLocation(id,location){
               columnaEstado.append(label);
               fila.append(columnaEstado);
 
-
               input.change(function() {
                 // Obtener la fila (tr) padre del checkbox actual
                 var fila = $(this).closest('tr');
@@ -1227,7 +1271,7 @@ function changeLocation(id,location){
               });
 
               // marcar todos presentes
-              marcarTodosCheckBox($('#presenteAllBtnModal'),'.datos-asistencia-modal',`${estado}_${jugador.id}`);
+              marcarTodosCheckBox($('.presente-all'),'.datos-asistencia-modal',`${estado}_${jugador.id}`);
 
             });
     
@@ -1236,6 +1280,7 @@ function changeLocation(id,location){
             const textarea = $('<textarea>').attr('id', 'observaciones' + jugador.id);
             columnaObservaciones.append(textarea);
             fila.append(columnaObservaciones);
+
             
             // Agregar la fila al cuerpo de la tabla
             bodytable.append(fila);
@@ -1253,6 +1298,7 @@ function changeLocation(id,location){
                 const descripcionJugador = response.descripcion;
                 const nombreCheckbox = `${estadoJugador}_${jugador.id}`;
                 
+                
     
                 // Buscar la fila correspondiente al jugador
                 const filaJugador = bodytable.find(`tr[data-jugador-id='${jugador.id}']`);
@@ -1265,7 +1311,7 @@ function changeLocation(id,location){
 
                // enviar asistencias
                
-                const botonEnviar = $('#updateAsistBtn');
+                const botonEnviar = $('.enviar-asist-btn');
 
                 botonEnviar.off('click').on('click', function(){
                   const asistencias = [];
@@ -1297,6 +1343,7 @@ function changeLocation(id,location){
                     } else {
                       allSelected = false; // Si hay al menos un jugador sin estado seleccionado
                     }
+
                   });
                 
 
@@ -1305,6 +1352,9 @@ function changeLocation(id,location){
                     return; // Salir si no todos los jugadores tienen un estado
                   }
 
+                  console.log(`estas son las modificaciones, ${asistencias}`);
+
+
                   $.ajax({
                     type: 'PUT',
                     url: '/modificar/asistencia',
@@ -1312,8 +1362,10 @@ function changeLocation(id,location){
                     data: JSON.stringify(asistencias), // Convertir el arreglo a JSON
                     success:function(response){
                       
+                      console.log('Respuesta del servidor:', response);
+
                       alert('Asistencia guardad con éxito');
-                      $('.modal-asistencia').hide();
+                      // $('.modal-asistencia').hide();
                       btnTabla.show();
                     },
                     error: function(xhr, status, error) {
@@ -1343,6 +1395,180 @@ function changeLocation(id,location){
     });
   }
 
+ 
+
+
+  // notas
+  function showNotes(evento){
+
+    $.ajax({
+      type: 'GET',
+      url: '/eventos/info',
+      data: { id_evento: evento },
+      dataType: 'json',
+      success: function(response) {
+        $('.modal-notas-eventos').show();
+        const noteContainer = $('.contenedorNotas');
+        noteContainer.empty(); // Limpiar el contenedor antes de agregar las notas
+        
+        if(response.length === 0){
+          noteContainer.text('No hay notas');
+          $('#mensaje').text("Aún no hay notas").fadeIn().delay(1000).fadeOut();
+        }
+
+        $('.cerrarNotas').off('click').on('click',function(){
+          noteContainer.empty(); // Limpiar el contenedor antes de agregar las notas
+          $('.modal-notas-eventos').hide();
+          $('#notaCrear').val('');
+          $('.crear-nota-div').hide();
+          $('.right-note').hide();
+        });
+
+        // Iterar sobre cada nota y crear el contenido en el front end
+        response.forEach(nota => {
+          
+          const notaDiv = $('<div>').addClass('noteEvento');
+          const innerNota = $('<div>').addClass('inner-note');
+
+          const headerNota = $('<p>').addClass('fechaNota');
+          const fechaNota = $('<span>').addClass('notaFecha').text(formatFecha(nota.fecha_publicacion,'numeric'));
+
+          const creadorNota = $('<span>').addClass('creador-nota').text(nota.nombre_usuario);
+
+          headerNota.append(fechaNota,creadorNota);
+
+          const notaContenedor = $('<div>').addClass('noteDiv');
+          const notaContent = $('<p>').addClass('notaContent').text(nota.notas);
+
+          notaContenedor.append(notaContent);
+
+          notaDiv.append(innerNota);
+          innerNota.append(headerNota,notaContenedor);
+
+          noteContainer.append(notaDiv);
+
+
+          // lado izquierdo
+          notaDiv.on('click',()=>{
+
+            $('.right-note').show();
+            $('.crear-nota-div').hide();
+
+            $('#creadorNota').text('');
+            $('#fechaNotaLong').text(formatFecha(''));
+            $('#contentNote').text('');
+
+            $('#creadorNota').text(nota.nombre_usuario);
+            $('#fechaNotaLong').text(formatFecha(nota.fecha_publicacion,'long'));
+            $('#contentNote').text(nota.notas);
+
+
+            $('.right-note').hide();
+            $('.right-note').fadeIn(800);
+          });
+
+          // formato fecha
+          function formatFecha(fechaISO,formatMonth) {
+            const fecha = new Date(fechaISO);
+          
+            const opciones = { day: 'numeric', month: `${formatMonth}`, year: 'numeric' };
+            // Convierte la fecha a formato "29 de octubre de 2024"
+            return fecha.toLocaleDateString('es-ES', opciones);
+          }
+
+        });
+        
+        function adjustOpacityOnScroll() {
+          const containerOffset = $('.contenedorNotas').offset().top;
+          const containerHeight = $('.contenedorNotas').height();
+        
+          $('.noteEvento').each(function() {
+            const elementOffset = $(this).offset().top - containerOffset;
+            const opacity = Math.max(0.3, 1 - (elementOffset / (containerHeight * 1.5))); // Adjusted for a gentler fade
+            $(this).css('opacity', opacity); // Ensure opacity doesn't go below 0.6
+          });
+        }
+        
+        // Initial adjustment
+        adjustOpacityOnScroll();
+        
+        // Adjust opacity on scroll within contenedorNotas
+        $('.contenedorNotas').on('scroll', function() {
+          adjustOpacityOnScroll();
+        });
+
+
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al obtener las notas:', error);
+      }
+    });
+
+    // agregar nota
+    $('#addNote').off('click').on('click',function(){
+
+      $('#creadorNota').text('');
+      $('#fechaNotaLong').text('');
+      $('#contentNote').text('');
+      $('#notaCrear').val('');
+    
+      $('.right-note').hide();
+      $('.crear-nota-div').fadeIn(800);
+
+      $('#enviarNota').prop('disabled', true);
+
+    }); 
+
+
+    $('#notaCrear').on('input', function() {
+      // Check if the textarea is empty
+      if ($(this).val().trim() === '') {
+          $('#enviarNota').prop('disabled', true); // Disable the button if empty
+      } else {
+          $('#enviarNota').prop('disabled', false); // Enable the button if not empty
+      }
+    });
+
+
+    $('#enviarNota').off('click').on('click',function(){
+
+      const id_evento = evento;
+      const notas = $('#notaCrear').val();
+      const id_usuario = 74;
+
+      const enviarBtn = $('#enviarNota');
+      enviarBtn.prop('disabled',true);
+
+
+      $.ajax({
+        type: 'POST',
+        url: '/eventos/info',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            id_evento: id_evento,
+            notas: notas,
+            id_usuario: id_usuario
+        }),
+        success: function(response) {
+            console.log(response.message); // Handle success
+            showNotes(evento);
+            $('#notaCrear').val('');
+            // Optionally refresh the notes display or show a success message
+        },
+        error: function(xhr) {
+            console.error(xhr.responseJSON.message); // Handle error
+            // Optionally show an error message to the user
+        },
+        complete: function() {
+            // Re-enable the button after the AJAX call completes
+            $('#enviarNota').prop('disabled', true);
+        }
+      });
+
+    });
+  
+  }
+
   // mostrar asistencia
   function determinarAMPM(horaMilitar) {
     const hora = parseInt(horaMilitar.split(':')[0]);
@@ -1370,8 +1596,11 @@ function changeLocation(id,location){
 })
 
 // funcion que selecciona presente a todos
-function marcarTodosCheckBox(obj, tableBody,nombreInput){
+window.marcarTodosCheckBox = function (obj, tableBody,nombreInput){
   let marcarTodos = true;
+
+  // console.log('se marco')
+  
   obj.click(function(){
     if (marcarTodos) {
       $(`${tableBody} tr`).each(function() {
@@ -1389,7 +1618,7 @@ function marcarTodosCheckBox(obj, tableBody,nombreInput){
     } else {
       $(`${tableBody} tr`).each(function() {
         const fila = $(this);
-
+        
         // Desmarcar todos los checkboxes en la fila
         fila.find(`input[name=${nombreInput}]`).prop('checked', false);
       });
@@ -1402,108 +1631,240 @@ function marcarTodosCheckBox(obj, tableBody,nombreInput){
 }
 
 
-//funcion side bar secciones
-sectionNav();
-function sectionNav(){
+window.obtenerProximoPartido = function (id_equipo) {
+  $('#proximoPartidoInfo').text('');
+  $('#proximoPartidoEquipo').text('');
+  $('#messageNoGames').hide();
+  $('.gameInfo').hide();
+  
+  setTimeout(() => {
+    $.ajax({
+      url: `/proximo-partido/${id_equipo}`, // Ruta al backend
+      method: 'GET',
+      success: function(data) {
+          $('.gameInfo').fadeIn();
+          
+          // Extrae los datos y ajusta el formato
+          const tipoPartido = data.tipo_partido; // Ejemplo: "Amistoso"
+          const fecha = data.fecha; // Solo la fecha (ej. "2024-11-16")
+          const hora = data.hora; // Solo la hora (ej. "22:30")
 
+          // Combina la fecha y la hora en un solo valor
+          const fechaHoraPartido = formatFechaHora(fecha, hora);
 
-
-  // seccion
-  const seccionEventos = $('#asistenciaMain');
-  const seccionJugadores = $('#seccionJugadores');
-  const seccionUsuarios = $('#seccionUsuarios');
-    
-  // seccion debug
-  seccionEventos.show();
-  seccionJugadores.hide();
-  seccionUsuarios.hide();
-
-  // boton de seleccion
-  const jugadoresOpcion = $('#jugadorOpt');
-  const eventosOpcion = $('#asistenciaOpt');
-  const usuariosOpcion = $('#usuariosOpt');
-
-  jugadoresOpcion.on('click',function(){
-    seccionEventos.hide();
-    seccionJugadores.show();
-    seccionUsuarios.hide();
+           // Muestra la información en el DOM en el formato solicitado
+           $('#proximoPartidoInfo').text(`${tipoPartido} | ${fechaHoraPartido}`);
+          
+          $('#proximoPartidoEquipo').text(data.equipo_rival); // Ejemplo de cómo mostrar el rival
+      
+      },
+      error: function(xhr) {
+          // Muestra un mensaje de error si no hay partido próximo
+          if (xhr.status === 404) {
+              $('.gameInfo').hide();
+              $('#messageNoGames').text("No hay partidos pendientes próximos").fadeIn();
+          } else {
+              console.error("Error al obtener el próximo partido:", xhr.responseText);
+              $('#proximoPartidoContenedor').text("Error al cargar el próximo partido").fadeIn();
+          }
+      }
   });
 
-  eventosOpcion.on('click',function(){
-    seccionEventos.show();
-    seccionJugadores.hide();
-    seccionUsuarios.hide();
-  });
 
-  usuariosOpcion.on('click',function(){
-    seccionEventos.hide();
-    seccionJugadores.hide();
-    seccionUsuarios.show();
-  });
+  },200);
 
-
+  
 }
+
+
+
+// Función para formatear fecha y hora
+function formatFechaHora(fechaUTC, hora) {
+  // Convierte la fecha UTC a un objeto Date
+  const fechaObj = new Date(fechaUTC); 
+
+  // Verifica si la fecha es inválida
+  if (isNaN(fechaObj)) {
+    console.error("Fecha inválida:", fechaUTC);
+    return "Fecha o hora inválida";
+  }
+
+  // Descompón la hora recibida en hora y minutos
+  const [hours, minutes] = hora.split(':'); // Asumiendo que hora es un string "HH:mm"
+
+  // Actualiza el objeto Date con la hora recibida (añadiendo la hora y minutos)
+  fechaObj.setHours(hours);
+  fechaObj.setMinutes(minutes);
+
+  // Configuración para el formato de fecha y hora
+  const opcionesFecha = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+  const opcionesHora = { hour: 'numeric', minute: '2-digit', hour12: true };
+
+  // Formatea la fecha y hora en el formato adecuado
+  return `${fechaObj.toLocaleDateString('es-ES', opcionesFecha)}, ${fechaObj.toLocaleTimeString('es-ES', opcionesHora)}`;
+}
+
+
+function actualizarEstadisticas(g, e, p) {
+  const total = g + e + p;  // Total de partidos
+
+  // Calcula los porcentajes de cada tipo de resultado
+  const porcentajeGanadas = (g / total) * 100;
+  const porcentajeEmpates = (e / total) * 100;
+  const porcentajePerdidas = (p / total) * 100;
+
+  // Asigna los anchos de cada segmento basado en los porcentajes
+  document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
+  document.getElementById('empates').style.width = porcentajeEmpates + '%';
+  document.getElementById('perdidas').style.width = porcentajePerdidas + '%';
+
+  // Actualiza las etiquetas de texto
+  document.getElementById('textoGanadas').innerText = `Ganadas: ${g}`;
+  document.getElementById('textoEmpates').innerText = `Empates: ${e}`;
+  document.getElementById('textoPerdidas').innerText = `Perdidas: ${p}`;
+}
+
+// Llama a la función con los valores de ejemplo
+
+window.obtenerResultados = function (id_equipo){
+  $('#pjAmount').empty();
+  $.ajax({
+      url: '/obtener-estadisticas', // Cambia esto por la ruta de tu backend
+      type: 'POST',
+      data: { id_equipo: id_equipo },
+      success: function(response) {
+          // 'response' debería contener los resultados de la consulta SQL 
+          actualizarEstadisticas(response.victorias,response.empates, response.derrotas)
+          $('#pjAmount').text(response.partidos_jugados);
+      },
+      error: function(err) {
+          console.error("Error en la consulta: ", err);
+      }
+  });
+}
+
+
+$('#dashboardTeamView').on('change', function() {
+
+  const id_equipo = $(this).val();
+  obtenerResultados(id_equipo);
+  obtenerProximoPartido(id_equipo);
+  partidoHistorial(id_equipo);
+  
+  
+
+});
+
+
+// Funcion sidebar secciones
+// sectionNav();
+
+
+$('.nav-btn').on('click',function(){
+  
+    // Ocultar todas las secciones
+    $('.seccion').removeClass('activo');
+
+    // Remover la clase de todos los botones
+    $('.nav-btn').removeClass('activeOpt');
+
+    // Agregar la clase solo al botón clicado
+    $(this).addClass('activeOpt');
+    
+    // Obtener la sección a mostrar
+    const seccion = $(this).data('seccion');
+    
+    // Mostrar la sección correspondiente
+    $('#' + seccion).addClass('activo');
+
+     // Si es la sección del calendario, actualiza su tamaño
+     if (seccion === 'eventos') {
+      const calendar = $('#calendar').fullCalendar('getCalendar'); // Reemplazar según versión
+      calendar.render(); // Para FullCalendar v5+
+    }
+  
+});
+
+
+
+$('#goToCalendar').on('click', function() {
+  // Oculta todas las secciones y remueve la clase activo
+  $('.seccion').removeClass('activo');
+  
+  // Muestra la sección del calendario (eventos)
+  $('#eventos').addClass('activo');
+  
+  // Actualiza el estado del botón en el menú de navegación
+  $('.nav-btn').removeClass('activeOpt');
+  $('.nav-btn[data-seccion="eventos"]').addClass('activeOpt');
+  
+  // Asegúrate de renderizar correctamente el calendario si es necesario
+  const calendar = $('#calendar').fullCalendar('getCalendar'); // Cambiar según tu versión
+  calendar.render();
+});
 
 
 // función side bar evento sub seccion
 subSection();
-function subSection(){
-
+function subSection() {
   const optionAsistencia = $('#asistenciaOpt');
   const divAbrir = $('.eventos-options');
+  let timeoutId; // Variable para manejar el temporizador
 
-  // abrir div
-  optionAsistencia.on('mouseover', function(){
-    divAbrir.show();
-    
+  // Abrir div
+  optionAsistencia.on('mouseover', function () {
+    clearTimeout(timeoutId); // Cancelar cualquier temporizador de cierre
+    divAbrir.show(); // Mostrar inmediatamente
   });
 
-  optionAsistencia.on('mouseout', function(){
-    divAbrir.hide();
+  optionAsistencia.on('mouseout', function () {
+    timeoutId = setTimeout(function () {
+      divAbrir.hide(); // Ocultar después del retraso
+    }, 300); // Retraso de 300ms (puedes ajustarlo)
   });
 
-  // mantener div
-  divAbrir.on('mouseover', function(){
-    divAbrir.show();
+  // Mantener div abierto
+  divAbrir.on('mouseover', function () {
+    clearTimeout(timeoutId); // Cancelar el temporizador al pasar el mouse por el div
+    divAbrir.show(); // Asegurarse de que el div esté visible
   });
 
-  divAbrir.on('mouseout',function(){
-    divAbrir.hide();
-  })
+  divAbrir.on('mouseout', function () {
+    timeoutId = setTimeout(function () {
+      divAbrir.hide(); // Ocultar después del retraso
+    }, 300); // Retraso de 300ms
+  });
 
   // Abrir calendario
   const btnCalendario = $('#calendar-opt');
   const btnCrearEvento = $('#crearEvento-opt');
   const btnCrearPartido = $('#crearPartido-opt');
 
-  // secciones dentro de asistenc ica
+  // Secciones dentro de asistencia
   const sectionCalendario = $('.calendar-div');
   const sectionCrearEvento = $('.inner-asistencia');
 
-
-  // seccion aparte
+  // Sección aparte
   const sectionCrearPartido = $('#partidoEvento');
 
-  // para abrir calendario hay que cerrar otras
-  btnCalendario.on('click',function(){
+  // Para abrir calendario hay que cerrar otras
+  btnCalendario.on('click', function () {
     sectionCalendario.show();
     sectionCrearEvento.hide();
     sectionCrearPartido.hide();
   });
 
-  // para abrir creador de evento
-  btnCrearEvento.on('click',function(){
+  // Para abrir creador de evento
+  btnCrearEvento.on('click', function () {
     sectionCalendario.hide();
     sectionCrearEvento.show();
     sectionCrearPartido.hide();
   });
 
-  // para abrir creador de partido
-  btnCrearPartido.on('click',function(){
+  // Para abrir creador de partido
+  btnCrearPartido.on('click', function () {
     sectionCalendario.hide();
     sectionCrearEvento.hide();
     sectionCrearPartido.show();
   });
-
-
 }

@@ -8,6 +8,13 @@
   <!-- Incluir jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+
+
+  <!-- roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
   <!-- font awesome -->
   <script src="https://kit.fontawesome.com/7b77090003.js" crossorigin="anonymous"></script>
 
@@ -16,8 +23,8 @@
   <!-- css -->
   <link rel="stylesheet" href="css/jugadores.css">
   <link rel="stylesheet" href="css/asistencia.css">
-
   <link rel="stylesheet" href="css/usuarios.css">
+  <link rel="stylesheet" href="css/perfil.css">
 
   <!-- dropdown niceselect-->
   <script src="/js/plugins/nice-select2.js"></script>
@@ -51,7 +58,6 @@
   <!-- <header>
 
   </header> -->
-
   <section class="main">
   
     <section class="tool-bar">
@@ -70,7 +76,7 @@
       </div>
 
       <div class="option-bar">
-        <div class="option">
+        <div class="option nav-btn activeOpt" data-seccion = "dashboard" id="dashboardOpt">
           <i class="fa-solid fa-chart-line"></i>
           <div class="name-option">
             <p>Dashboard</p>
@@ -78,7 +84,7 @@
           
         </div>
 
-        <div class="option" id="jugadorOpt">
+        <div class="option nav-btn" data-seccion = "jugadores" id="jugadorOpt">
           <i class="fa-solid fa-people-group"></i>
           <div class="name-option" >
             <p>Jugadores</p>
@@ -86,7 +92,7 @@
           
         </div>
         
-        <div class="option" id="usuariosOpt">
+        <div class="option nav-btn" data-seccion = "usuarios" id="usuariosOpt">
           <i class="fa-solid fa-user"></i>
           <div class="name-option">
             <p>Usuarios</p>
@@ -94,13 +100,16 @@
       
         </div>
 
-        <div class="option" id="asistenciaOpt">
+        <div class="option nav-btn" data-seccion = "eventos" id="asistenciaOpt">
           <i class="fa-regular fa-calendar"></i>
           <div class="name-option" >
             <p>Eventos</p>
           </div>
    
         </div>
+
+
+        
 
         <div class="eventos-options" style="display: none;">
           <div class="inner-eventos-options">
@@ -151,12 +160,595 @@
      
     </section>
 
+
+
+
+
+    <!-- seccion impartande Perfil- -->
+    <section class="seccion activo" id="dashboard" >
+
+      <div class="profile-view">        
+        <div class="perfilIconSection">
+          <div class="profileInfo">
+            <div class="picProfile">
+              <img src="" alt="">
+            </div>
+            <div class="welcomeLegend">
+              <p id="nombreMostrar"></p>
+              <p id="fechaActual"></p>
+            </div>
+
+            <div class="popUp-profile">
+
+              <div class="innerPicProfile">
+                
+                <div class="picProfile"></div>
+
+                <div class="ipp-2">
+                  <p id="profileSlideName"></p>
+                  <p id="emailProfile"></p>
+                </div>
+
+              </div>
+
+              <div class="optionProfile">
+                <div class="optionInnerL">
+                  <i class="fa-regular fa-clipboard"></i>
+                </div>
+                
+                <div class="optionInner">
+                  <p>Eventos Asignados</p>
+                </div>
+                
+              </div>
+
+              <div class="optionProfile">
+                <div class="optionInnerL">
+                  <i class="fa-solid fa-user-gear"></i>
+                </div>
+               
+                <div class="optionInner">
+                  <p>Configurar Perfil</p>
+                </div>
+                
+              </div>
+
+              <div class="optionProfile">
+                <div class="optionInnerL">
+                  <i class="fa-solid fa-futbol"></i>
+                </div>
+               
+                <div class="optionInner">
+                  <p>Crear Evento</p>
+                </div>
+                
+              </div>
+
+              <div class="optionProfile">
+                <div class="optionInnerL">
+                  <i class="fa-solid fa-power-off"></i>
+                </div>
+               
+                <div class="optionInner" id="logoutButton">
+                  <p>Cerrar Sesión</p>
+                </div>
+                
+              </div>
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class="welcome-p">
+          <p id="tusEquipos">Bienvenido de vuelta, Francisco</p>
+          <div class="teamViewDiv">
+            <select id="dashboardTeamView" name="dashboardTeamView"  required>
+              <!-- <option data-display="Custom Text" value="1">Sub-10</option>
+              <option data-display="Custom Text" value="3">Sub-12</option> -->
+             
+            </select>
+          </div>
+          
+        </div>
+
+      </div>
+      
+
+      <div class="dashboard-main">
+        <h2>Dashboard</h2>
+        
+
+        <div class="dashboard-inner">
+
+          <div class="dashboard-top">
+            
+            <div class="next-game-div">
+
+              <div class="gamesDiv">
+
+                <div class="col-games header-games">
+
+                  <div class="header-games-col">
+                    <p>Proximo Partido</p>
+                  </div>
+
+                  <div class="header-games-col-2">
+                    <p id="goToCalendar">Ver calendario</p>
+                  </div>
+
+                </div>
+
+                <div id="messageNoGames" style="display: none;"></div>
+
+                <div class="col-games data-game gameInfo">
+
+                  <p id="proximoPartidoInfo"></p>
+
+                </div>
+                <div class="col-games shields-game gameInfo">
+                    <div class="inner-shield">
+
+                      <div class="col-shield">
+                        <div class="shield-img-div">
+                          <img src="/logos/Aguilas-FC-logo.png" alt="">
+                        </div>
+                        <p>Aguila Fc</p>
+                      </div>
+                      <div class="col-shield vsShield">
+                        <p>vs</p>
+                      </div>
+                      <div class="col-shield">
+                        <div class="shield-img-div">
+                          <img src="/logos/pngwing.com.png" alt="">
+                        </div>
+                        <p id="proximoPartidoEquipo"></p>
+                      </div>
+
+                    </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="win-vs-loss">
+
+              <div class="gamesDiv">
+
+                <div class="col-games header-games">
+
+                  <div class="header-games-col">
+                    <p>Estadística de Partidos</p>
+                  </div>
+
+                  <div class="header-games-col-2">
+                    <p>Ver todas estadísticas</p>
+                  </div>
+
+                </div>
+
+
+                <div id="estadisticaContenedor">
+                  <div class="estadistica-barra" id="barraEstadistica">
+                    <div class="segmento" id="ganadas"></div>
+                    <div class="segmento" id="empates"></div>
+                    <div class="segmento" id="perdidas"></div>
+                  </div>
+                  <div class="leyenda">
+                    <span id="textoGanadas">Ganadas</span>
+                    <span id="textoEmpates">Empates</span>
+                    <span id="textoPerdidas">Perdidas</span>
+                  </div>
+                </div>
+
+
+                <div class="PJ-div">
+                  <span style="font-size: 12px;">Partidos Jugados</span>
+                  <span id="pjAmount"></span>
+
+                  
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+          <div class="asistenciaQuick" style="display: none;">
+
+
+            <div class = "tablaContent">
+
+            <i class="fa-solid fa-xmark quick-asist-x"></i>
+              
+              
+              <!-- existe lista -->
+               <div class="quick-table-div">
+
+                <table class="table-asist-modal" id="quickTable" style="display: none;">
+                  <tr class="headerTable">
+                    <th>Jugador</th>
+                    <th>Cedula</th>
+                    <th>Presente</th>
+                    <th>Ausente</th>
+                    <th>Tardanza</th>
+                    <th>Ausencia Justificada</th>
+                    <th>Comentarios</th>
+                  </tr>
+    
+                  <tbody class="datos-asistencia-modal" id="quickTableData">
+                    
+                  </tbody>
+    
+                </table>
+
+                <table class="table-asist-new" style="display: none;">
+                  <tr>
+                    <th>Jugador</th>
+                    <th>Presente</th>
+                    <th>Ausente</th>
+                    <th>Tardanza</th>
+                    <th>Ausencia Justificada</th>
+                    <th>Comentarios</th>
+                  </tr>
+    
+                  <tbody class="datos-asistencia-new">
+                    
+                  </tbody>
+    
+                </table>
+
+               </div>
+             
+
+              
+             
+
+              <div class="update-list" id="updateQuickList">
+
+                <div>
+
+                  <div class="paginaTablaInner">
+                    
+                    <div class="inner-barra-paginacion">
+                      <button id="btnAnteriorAsist">
+                         <span style="margin-right:10px"><i class="fa-solid fa-chevron-left"></i></span>
+                         Pagina anterior
+                      </button>
+                      <div class="numeros-paginacion-asist">
+                        
+                      </div>
+                      <button id="btnSiguienteAsist">
+                        Siguiente Página
+                        <span  style="margin-left:10px"><i class="fa-solid fa-chevron-right"></i></span>
+                      </button>
+                      
+                    </div>
+                    
+                    <!-- ward1 -->
+                  </div> 
+
+                </div>
+
+                <div class="tablaAsistBtn" >
+                  <button id="reiniciarLista" style="display: none;">Reiniciar Lista</button>
+                  <button class="presente-all" id="marcarTodosQuick" style="display: none;">Marcar Presente todos</button>
+                  <button class="enviar-asist-btn" id="enviarAsistQuick">Enviar</button>
+                </div>
+
+                
+                
+
+
+          
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="dashboard-bottom">
+
+            <div class="upcoming-left">
+                <div>
+                  <p style="margin: 0; margin-left: 15px;">Partidos</p>
+                </div>
+
+                <div class="statusMatch" id="upcomingMatch"">
+                  <div class="statusInfo">
+                    <p class="caption">Proximo Partido</p>
+                    <p class="equipoTarea" id="rivalProximo"></p>
+                  </div>
+
+                  <div class="statusClock">
+                    <div class="statusClockInner">
+                      <i class="fa-regular fa-clock"></i>
+                      <p id="horaProximo"></p>
+                    </div>
+
+                    <div class="statusClockInner">
+                      <p>|</p>
+                      <p id="fechaProximo"></p>
+                    </div>
+                    
+                    <div class="statusClockInner">
+                      <i  style="font-size: 20px;"  class="fa-solid fa-ellipsis opcionesJuego">
+                      </i>
+                      <div class="tareas-acciones" style="display: none;">
+                        <div class="task" id="listaPartido">
+                          <p>Pasar lista</p>
+                        </div>
+                        <div class="task">
+                          <p>Configurar</p>
+                        </div>
+                        <div class="task">
+                          <p>Cancelar</p>
+                        </div>
+                      </div>
+
+                      
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+          
+                <div class="statusMatch" id="upcomingMatch"">
+                  <div class="statusInfo">
+                    <p class="caption">Partido pasado</p>
+                    <p class="equipoTarea" id="rivalAnterior"></p>
+                  </div>
+
+                  <div class="statusClock">
+                    <div class="statusClockInner">
+                      <i class="fa-regular fa-clock"></i>
+                      <p id="horaAnterior"></p>
+                    </div>
+
+                    <div class="statusClockInner">
+                      <p>|</p>
+                      <p id="fechaAnterior"></p>
+                    </div>
+                    
+                    <div class="statusClockInner">
+                      <i  style="font-size: 20px;"  class="fa-solid fa-ellipsis opcionesJuego">
+                      </i>
+                      <div class="tareas-acciones" style="display: none;">
+                        <div class="task" id="listaPartidoAnterior">
+                          <p>Pasar lista</p>
+                        </div>
+                        <div class="task">
+                          <p>Configurar</p>
+                        </div>
+                        <div class="task">
+                          <p>Cancelar</p>
+                        </div>
+                      </div>
+
+                      
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+
+                
+              
+
+            </div>
+
+            <div class="upcoming-left">
+              <div>
+                <p style="margin: 0; margin-left: 15px;">Entramientos</p>
+              </div>
+
+              <div class="statusMatch" id="upcomingMatch"">
+                <div class="statusInfo">
+                  <p class="caption">Proximo Entrenamiento</p>
+                  <p class="equipoTarea" id="entrenamientoPr">Aguila FC</p>
+                </div>
+
+                <div class="statusClock">
+                  <div class="statusClockInner">
+                    <i class="fa-regular fa-clock"></i>
+                    <p id="horaProxEn"></p>
+                  </div>
+
+                  <div class="statusClockInner">
+                    <p>|</p>
+                    <p id="fechaProEn"></p>
+                  </div>
+                  
+                  <div class="statusClockInner">
+                    <i  style="font-size: 20px;"  class="fa-solid fa-ellipsis opcionesJuego">
+                    </i>
+                    <div class="tareas-acciones" style="display: none;">
+                      <div class="task" id="listaEntrenamiento">
+                        <p>Pasar lista</p>
+                      </div>
+                      <div class="task">
+                        <p>Configurar</p>
+                      </div>
+                      <div class="task">
+                        <p>Cancelar</p>
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                  
+                  
+                </div>
+              </div>
+        
+              <div class="statusMatch" id="upcomingMatch"">
+                <div class="statusInfo">
+                  <p class="caption">Entrenamiento pasado</p>
+                  <p class="equipoTarea"id="entrenamientoAn"></p>
+                </div>
+
+                <div class="statusClock">
+                  <div class="statusClockInner">
+                    <i class="fa-regular fa-clock"></i>
+                    <p id="horaAntEn"></p>
+                  </div>
+
+                  <div class="statusClockInner">
+                    <p>|</p>
+                    <p id="fechaEnAnt"></p>
+                  </div>
+                  
+                  <div class="statusClockInner">
+                    <i  style="font-size: 20px;"  class="fa-solid fa-ellipsis opcionesJuego">
+                    </i>
+                    <div class="tareas-acciones" style="display: none;">
+                      <div class="task" id="listaEntrenamientoAn">
+                        <p>Pasar lista</p>
+                      </div>
+                      <div class="task">
+                        <p>Configurar</p>
+                      </div>
+                      <div class="task">
+                        <p>Cancelar</p>
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                  
+                  
+                </div>
+              </div>
+
+              
+            
+
+          </div>
+            
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+      
+    </section>
+
+
     
     <!-- importante del codigo jugadores -->
-    <section class="seccion-jugadores" id="seccionJugadores" style="display:none;">
+    <section class="seccion" id="jugadores">
       
       <div class="titulo-seccion-jugadores">
-        <p>Tabla de Jugadores</p>
+        <p>Jugadores </p>
+      </div>
+
+      <!-- modal jugador manual -->
+        <div class="modal-crear-jugador" style="display: none;">
+          <div class="content-crear-jugador">
+             
+            <i class="fa-solid fa-xmark crear-jugador-xmark"></i>
+            <h2 class="crearJugadorTitle">Crear jugador</h2>
+            <form id="formCrearJugador">
+              <!-- informacion personal -->
+              <fieldset class="fieldSetJugador">
+                
+                <div class="form-group">
+                  <legend>Informacion Personal</legend> 
+                  <label for="Nombre">Nombre</label>
+                  <input type="text" id="nombreJugador" name="Nombre">
+                </div>
+                <div class="form-group">
+                  <label for="Apellido">Apellido</label>
+                  <input type="text" id="apellidoJugador" name="apellido">
+                </div>
+                
+                <div class="form-group">
+                  <label for="Cedula">Cedula</label>
+                  <input type="text" id="cedulaJugador" name="cedula">
+                </div>
+                <div class="form-group">
+                  <label for="fechaNacimiento">Fecha de nacimiento</label>
+                  <input type="date" id="fechaJugador" name="fechaJugador">
+                </div>
+                <div class="form-group">
+                  <label for="telefono">Telefono</label>
+                  <input type="text" id="telefonoJugador" name="telefonoJugador">
+                </div>
+                <div class="form-group">
+                  <label for="Correo">Correo</label>
+                  <input type="email" id="correoJugador" name="Correo">
+                </div>
+                <div class="form-group">
+                  <label for="Nacionalidad">Nacionalidad</label>
+                  <input type="text" id="nacionalidadJugador" name="nacionalidadJugador">
+                </div>
+              </fieldset>
+
+              <fieldset class="fieldSetJugador">
+                
+                <div class="form-group">
+                  <legend>Informacion de jugador</legend>
+                  <label for="Equipo">Equipo</label>
+                  <div class="teamViewCrear">
+                   
+                    <select id="teamViewCrearJugadores" name="id_equipo" class="wide" required>
+                 
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="Apellido">Posicion</label>
+                  <div class="teamViewCrear">
+                     <!-- wardt -->
+                    <select id="posicionCrearJugadores" name="posicion" class="wide" required>
+                      <option value="Portero">Portero</option>
+                      <option value="Defensa">Defensa</option>
+                      <option value="Centrocampista">Centrocampista</option>
+                      <option value="Delantero">Delantero</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="numeroJugador">Numero de Jugador <span class="noDisponible" style="color: red; display: none;">No disponible</span></label>
+                  <input type="number" id="numeroJugador" name="numeroJugador">
+                </div>
+
+                <div class="form-group">
+                  <label for="fotoJugador">Foto Jugador (PNG,JPEG,JPG)</label>
+                  <input type="file" id="fotoJugador" accept="image/png, image/jpeg, image/jpg" name="fotoJugador">
+                </div>
+              
+                <button id="crearJugador" class="btnCrearJugador">Crear jugador</button>
+
+               
+              </fieldset>
+
+
+
+            </form>
+
+          </div>
+        </div>
+
+      <div class="team-selector">
+
+        <div class="equipoMostrando">
+          <p>Equipo: </p>
+        </div>
+       
+        <div class="teamViewJugadores">
+          <select id="dashboardTeamViewJugadores" name="dashboardTeamViewJugadores"  required>
+            
+          </select>
+        </div>
       </div>
 
       <div class="dashboard-jugadores">
@@ -169,7 +761,7 @@
           <div class="dato-dashboard">
             <p id="totalJugadores" style="margin: 0;"></p>
           </div>
-          <div class="descripcion-dato">jugadores</div>
+          <div class="descripcion-dato">Total de jugadores</div>
          </div>
 
         </div>
@@ -188,28 +780,7 @@
  
          </div>
 
-         <div class="jugadores-totales">
-          <div class="icon-dashboard">
-           
-          </div>
-          
-          <div>
-           <div class="dato-dashboard">532</div>
-           <div class="descripcion-dato">jugadores</div>
-          </div>
- 
-         </div>
-         <div class="jugadores-totales">
-          <div class="icon-dashboard">
-           
-          </div>
-          
-          <div>
-           <div class="dato-dashboard">532</div>
-           <div class="descripcion-dato">jugadores</div>
-          </div>
- 
-         </div>
+        
       </div>
 
       <div class="herramientas">
@@ -235,27 +806,15 @@
                 
                 <div class="secundary-filter-list">
                   <div class="filter-field-secundary" data-opcion ="Portero"><p>Portero</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Defensa Central" ><p>Defensa Central</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Defensa Lateral Izquierdo"><p>Defensa Lateral Izquierdo</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Defensa Lateral Derecho"><p>Defensa Lateral Derecho</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Defensa" ><p>Defensa</p></div>
                   <div class="filter-field-secundary" data-opcion ="Centrocampista"><p>Centrocampista</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Delantero Central"><p>Delantero Central</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Lateral Derecho"><p>Lateral Derecho</p></div>
-                  <div class="filter-field-secundary" data-opcion ="Lateral Izquierdo"><p>Lateral Izquierdo</p></div>
+                  <div class="filter-field-secundary" data-opcion ="Delantero"><p>Delantero</p></div>
                 </div>
   
               </div>
   
   
-              <div class="filter-field" id="filtroEdad" data-filtro = "edad">
-                <p>Rango de edad</p>
               
-                <div class="secundary-filter-list-edad" id="opcionContainerEdad">
-              
-                </div>
-  
-              </div>
-  
               <div class="filter-field" id="filtroSalud" data-filtro = "estadoSalud">
                 <p>Estado Salud</p>
                 
@@ -275,14 +834,6 @@
              
               </div>
   
-              <div class="filter-field" id="filtroEquipo" data-filtro ="equipo">
-                <p>Equipo</p>
-              
-                <div class="secundary-filter-list-equipo" id="opcionContainer">
-                  
-                </div>
-  
-              </div>
             </div>
           </div>
           
@@ -312,11 +863,51 @@
   
         <div class="crear-jugador"> 
           <p>Crear Jugador</p>
-          <button>Crear</button>
+          <button id="crearJugadorBtn">Crear</button>
         </div>
+
+        
         
       </div>
      
+      <div class="crear-jugador-modal" style="display: none;">
+
+        <div class="crear-jugador-content">
+
+          <i class="fa-solid fa-xmark crear-jugador-x"></i>
+
+          <div class="upload-opt">
+            <button id="cargarJugadores"> <span style="margin-right: 10px;"><i class="fa-solid fa-file-arrow-up"></i></span>Cargar jugadores</button>
+            <input  id="cargarJugadoresInput" type="file" name="file" accept=".xlsx, .xls" style="display: none;" required>
+          </div>  
+
+          <div class="upload-opt">
+            <button id="crearJugadorManual">Crear jugador</button>
+          </div>
+        </div>
+
+        
+
+        <div class="subir-jugadores" style="display: none;">
+
+
+          <i class="fa-solid fa-xmark crear-jugador-x"></i>
+          <div class="col-subir-jugadores">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <p id="archivoJugadoresName"></p>
+          </div>
+
+          <div class="col2-subir-jugadores">
+            <button id="enviarJugadores">Enviar</button>
+            <button id="volverJugadores">Volver</button>
+          </div>
+
+          
+          
+
+        </div>
+
+      </div>
   
   
       <!-- filtro responsive -->
@@ -349,7 +940,7 @@
                   <option value="Portero">Portero</option>
                   <option value="Defensa Central">Defensa Central</option>
                   <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
-                  <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
+                  <option value="Defensa Lateral Derecho">  </option>
                   <option value="Centrocampista">Centrocampista</option>
                   <option value="Delantero Central">Delantero Central</option>
                   <option value="Lateral Derecho">Lateral Derecho</option>
@@ -401,7 +992,6 @@
       </div>
   
   
-  
       <!-- etiquetas de filtro -->
       <div class="etiqueta-filtro-div">
         <p>Filtros</p>
@@ -419,26 +1009,38 @@
       </div>
       
     
-      <table class="tabla-jugadores">
-        <tr class="row-encabezado">
-          <th class="encabezado">Nombre</th>
-          <th class="encabezado">Cedula</th>
-          <th class="encabezado">Teléfono</th>
-          <th class="encabezado">Edad</th>
-          <th class="encabezado">Posición</th>
-          <th class="encabezado">Numero Jugador</th>
-          <th class="encabezado">Estado Salud</th>
-          <th class="encabezado">Fecha de creacion</th>
-          <th class="encabezado">Equipo</th>
-          <th class="encabezado">Acción</th>
-        </tr>
+      <div class="tablaJugadores-div">
+        <table class="tabla-jugadores">
+          <tr class="row-encabezado">
+            <th class="encabezado">Nombre</th>
+            <th class="encabezado">Cedula</th>
+            <th class="encabezado">Teléfono</th>
+            <th class="encabezado">Edad</th>
+            <th class="encabezado">Posición</th>
+            <th class="encabezado">Numero Jugador</th>
+            <th class="encabezado">Estado Salud</th>
+            <th class="encabezado">Fecha de creacion</th>
+            <th class="encabezado">Equipo</th>
+            <th class="encabezado">Acción</th>
+          </tr>
+  
+          <tbody class="body-tabla-jugadores">
+            <!-- Contenedor de la animación de carga -->
+            <tr id="loadingLottie" style="display: none;">
+              <td colspan="10" style="text-align: center; position: relative;">
+                <div id="lottieAnimation" style="width: 150px; height: 150px; margin: 0 auto;"></div>
+              </td>
+            </tr>
         
-        
-        <tr class="row-data">
-          
-        </tr>
-        
-      </table>
+            <!-- Las filas de datos irán aquí -->
+            <tr class="row-data">
+            
+            </tr>
+          </tbody>
+           
+        </table>
+      </div>
+      
   
       <div class="barra-paginacion">
         <div class="inner-barra-paginacion">
@@ -460,7 +1062,9 @@
       
     </section>
 
-
+    <div id="mensaje" style="display: none;">
+            
+    </div>
      <!-- seccion imporante ASISTENCIA // eventos -->
     <!-- modal asistencia -->
      <div class="modal-asistencia" style="display: none;">
@@ -471,6 +1075,8 @@
           <p id="closeAsistModal">X</p>
         </div>
         <div class="modal-asistencia-cont">
+
+       
 
           <div class="bar-asistencia">
             <div class="optAsist" id="toggleBtn1">Información General</div>
@@ -490,6 +1096,7 @@
               <table class="table-asist-modal" style="display: none;">
                 <tr>
                   <th>Jugador</th>
+                  <th>Cedula</th>
                   <th>Presente</th>
                   <th>Ausente</th>
                   <th>Tardanza</th>
@@ -551,17 +1158,16 @@
                   <button class="enviar-asist-btn" id="updateAsistBtn">Enviar</button>
                   <button>Cancelar</button>
                 </div>
-
           
-            </div>
+              </div>
 
-            <div class="update-list" id="newList">
+            <!-- <div class="update-list" id="newList">
 
               <button id="presenteAllBtnNew">Marcar Presente todos</button>
               <button class="enviar-asist-btn" id="enviarNewAsist">Enviar</button>
               <button>Cancelar</button>
         
-            </div>
+            </div> -->
             </div>
            
 
@@ -683,7 +1289,59 @@
                   <button>Cambiar</button>
                   <button class="closeGlobal">Cancelar</button>
                 </div>
-              </div>
+              </div> 
+
+              <!-- configurar partido -->
+               <div class="configurar-content" style="display: none;">
+                
+                <div class="config-inner">
+                  
+                  <form action="" class="formConfigPartido">
+
+                    <div class="configCol">
+                      <label for="mySelectConfig">Resolución</label>
+                      <select id="mySelectConfig" name="mySelectConfig" class="wide" required>  
+                        <option data-display="Custom Text">Pendiente</option>
+                        <option data-display="Custom Text">Terminado</option>
+                        <option data-display="Custom Text">Cancelado</option>
+                        <option data-display="Custom Text">Suspendido</option>
+                      </select>
+                    </div>
+
+                    <div class="configCol">
+                      <label for="mySelectGanador">Ganador</label>
+                      <select id="mySelectGanador" name="mySelectGanador" class="wide" required>
+                        <option data-display="Custom Text" value="D">Empate</option>
+                        <option data-display="Custom Text" value="R">Ninguno</option>
+                        <option data-display="Custom Text" value="W">Aguila-Fc</option>
+                       
+                      </select>
+                    </div>
+
+                    
+                    <div class="config-col configCol">
+                      <label for="">Gol a favor</label>
+                      <input type="number" id="golFavorSend">
+                    </div>  
+
+                    <div class="config-col configCol">
+                      <label for="">Gol en contra</label>
+                      <input type="number" id="golContraSend">
+                    </div>
+
+                    <div class="config-col configCol">
+                      <button id="enviarResolucionPartido" type="button">Enviar</button>
+                      <button type="button" id="cancelarConfig">Cancelar</button>
+                    </div>
+                      
+
+
+
+                  </form>
+
+                </div>
+
+               </div> 
            
             </div>
 
@@ -709,8 +1367,9 @@
                 
               </div>
 
-              <div class="inner-date-show">
+              <div class="inner-date-show hoverInfo">
                 <div class="hour-show">
+                  <h1 id="estadoPartido" style="display: none;"></h1>
                   <p id="horaShow"></p>
                 </div>
                 <div class="date-show">
@@ -718,11 +1377,12 @@
                 </div>
 
                 <div class="div-cambiar-hora">
-                  <button class="btn-cambiar-hora">Cambiar hora</button>
+                  <button class="btn-cambiar-hora btnHoverInfo">Cambiar hora</button>
+                  <button class="btn-configurar-partido btnHoverInfo">Configurar</button>
                 </div>
               </div>
 
-              <div class="ubicacion-show">
+              <div class="ubicacion-show hoverInfo">
                 <div class="ubicacion-show-inner">
                   <div class="gps-div">
                     <i class="fa-solid fa-people-pulling"></i>
@@ -740,9 +1400,107 @@
 
             </div>
              <!-- Parte inferior -->
-             <div class="inf-asist-show">
-                <div class="inf-asist-inner">
-                  <div class="inf-asist-box">
+
+
+             <!-- notas modal -->
+            <div class="modal-notas-eventos" style="display: none;">
+              <div class="notas-content">
+
+                <i class="fa-solid fa-x cerrarNotas"></i>
+                <div class="left-note">
+
+                  <div class="inner-left-note">
+                    <h2>Notas</h2>
+
+                    <button id="addNote">
+                      <i class="fa-solid fa-plus"></i>
+                      Agregar Nota
+                    </button>
+
+                    <div class="contenedorNotas"> 
+
+                      <!-- <div class="noteEvento"> 
+
+                        <div class="inner-note">
+                          <p class="fechaNota"> <span class="notaFecha">20 abril 2024</span> <span class="creador-nota" style="margin-left: 10px;font-weight: 100;">Francisco Rubio</span></p>
+                          
+                            <div class="noteDiv">
+                              <p class="notaContent">Esto es una nota de un evento que va a suceder el dia no se jQuery que de no se que mas aqui va a verkas asdkaskd asdaja djsa jsdja asjd ajsd asjd asdjas hola</p>
+                            </div>
+                        </div>
+
+                    </div> -->
+
+                   
+
+                    </div>
+
+                  
+
+                  </div>
+                  
+
+                </div>
+
+                <div class="crear-nota-div" style="display: none;">
+                  <div class="h1Create">
+                    <h1>Crear Nota</h1>
+                  </div>
+
+                  <div class="textAreaNota">
+                    <textarea name="nota" id="notaCrear">
+
+                    </textarea>
+
+                    
+
+                    <button id="enviarNota">
+                      <i class="fa-solid fa-plus"></i>  
+                      enviar
+                    </button>
+
+
+                  </div>
+                </div>
+
+                <div class="right-note" style="display: none;">
+
+                  <div class="top-note">
+
+                    <p>Notas</p>
+
+                  </div>
+
+                  <div class="info-note">
+
+                    <div class="inner-info-note">
+                      <div class="div-span">
+                        <p style="margin-bottom: 10px; color: grey;">Creado por<p/>
+                        <p style="color: grey;">Nota agregada en<p/>     
+                      </div>
+                      <div class="div-span">
+                        <p class="span-note" id="creadorNota"></p>
+                        <p class="span-note" id="fechaNotaLong"></p>
+                      </div>
+                      
+                    </div>
+                  </div>
+
+                  <div class="noteP">
+                    <p id="contentNote">
+                     
+                    </p>                    
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+
+             <div class="inf-asist-show" >
+                <div class="inf-asist-inner" >
+                  <div class="inf-asist-box" id="abrirNotas">
 
                     <div class="info-box-innner">
                       <div>
@@ -789,12 +1547,25 @@
 
                   </div>
 
-                  <div class="inf-asist-box">
+                  <div class="inf-asist-box partido-score">
 
-                    
+                    <div class="score-col">
+
+                      <p id="scoreTeam"></p>
+                      <p>-</p>
+                      <p id="scoreRival"></p>
+
+                    </div>
+
+                    <div class="scoreBtnDiv">
+                      <p id="scoreEstado"></p>
+                    </div>
                   </div>
                 </div>
              </div>
+
+
+
 
           </div>
 
@@ -869,8 +1640,7 @@
      </div>
 
 
-    <section class="asistencia" id="asistenciaMain">
-
+    <section class="asistencia seccion" id="eventos">
     
       <!-- calendario -->
        <div class="calendar-div">
@@ -1095,7 +1865,7 @@
 
 
             <div class="crearListadoBtn">
-              <button id="crearListadoButton">Crear Listado</button>
+              <button id="crearEvento">Crear Evento</button>
               <!-- <button>Borrar Listado</button> -->
             </div>
 
@@ -1159,7 +1929,7 @@
 
 
     <!-- seccion Usuarios -->
-    <section class="usuarios-seccion" id="seccionUsuarios" style="display: none;">
+    <section class="usuarios-seccion seccion" id="usuarios">
      
 
       <!-- modals -->
@@ -1397,8 +2167,6 @@
 
       </div>
 
-     
-       
       <div class="u-col2"> 
         
         <div style="height: 10%; margin-bottom: 10px;">
@@ -1477,7 +2245,7 @@
             
                   <div class="info-perfil-data">
                     <i class="fa-solid fa-weight-scale"></i>
-                    <p>130lbs</p>
+                    <p></p>
                   </div>
   
                   
@@ -1493,12 +2261,12 @@
   
                   <div class="info-perfil-data">
                     <i class="fa-solid fa-baby-carriage"></i>
-                    <p id="fechaNacimiento-m">2003/03/22</p>
+                    <p id="fechaNacimiento-m"></p>
                   </div>
                   
                   <div class="info-perfil-data">
                     <i class="fa-solid fa-ruler-vertical"></i>
-                    <p>170m</p>
+                    <p></p>
                   </div>
                 </div>
               </div>
@@ -1616,13 +2384,13 @@
     </div>
   </div>
   
-  
+
   <div class="modal">
 
-    <div class="modal-content">
+    <div class="modal-content-editar">
       <div class="modal-head">
-        <i class="fa-solid fa-xmark modal-x-mark"></i>
-        <h2>Datos Personales</h2>
+        <i class="fa-solid fa-xmark modal-x-mark editJugadorX"></i>
+        <h2>Editar Datos</h2>
       </div>
   
       <div class="modal-body">
@@ -1630,45 +2398,57 @@
 
           <div class="form-content-div">
             <div class="left-edit-div">
-              <label for="Nombre">Nombre</label>
-              <input type="text" id="Nombre" name="Nombre" required>
+              <div class="contenedor-numero-jugador">
+                <label for="Nombre">Nombre</label>
+                <input type="text" id="Nombre" name="Nombre" required>
+              </div>
+            
+              <div class="contenedor-numero-jugador">
+                <label for="cedula">Cedula:</label>
+                <input type="text" id="cedula" name="cedula" required>
+              </div>
+          
 
-              <label for="cedula">Cedula:</label>
-              <input type="text" id="cedula" name="cedula" required>
 
-              <label for="posicion">Posicion</label>
-              <select name="posicion" id="posicion" required>
-                <option value="default">Eliga una opcion</option>
-                <option value="Portero">Portero</option>
-                <option value="Defensa Central">Defensa Central</option>
-                <option value="Defensa Lateral Derecho">Defensa Lateral Derecho</option>
-                <option value="Defensa Lateral Izquierdo">Defensa Lateral Izquierdo</option>
-                <option value="Centrocampista">Centrocampista</option>
-                <option value="Delantero Central">Delantero Central</option>
-                <option value="Lateral Derecho">Lateral Derecho</option>
-                <option value="Lateral Izquierdo">Lateral Izquierdo</option>
-        
-              </select>
+              <!-- wardPos -->
+              <div class="contenedor-numero-jugador">
+                <label for="posicion" style="margin: 0;">Posicion</label>
+                <select name="posicion" id="posicion" class="wide" required>
+                  
+                  <option value="Portero">Portero</option>
+                  <option value="Defensa">Defensa</option>
+                  <option value="Centrocampista">Centrocampista</option>
+                  <option value="Delantero">Delantero</option>
+                  
+                </select>
+              </div>
+
               
-              <label for="estado_salud">Estado de salud</label>
-              <select name="estado_salud" id="estado_salud" required>
-                <option value="">Eliga una opcion</option>
-                <option value="Sano">Sano</option>
-                <option value="Lesionado">Lesionado</option>
-                <option value="otro">otro</option>
-              </select>
+              <div class="contenedor-numero-jugador">
+                <label for="estado_salud">Estado de salud</label>
+                <select name="estado_salud" id="estado_salud" class="wide" required>
+                  
+                  <option value="Sano">Sano</option>
+                  <option value="Lesionado">Lesionado</option>
+                  <option value="otro">otro</option>
+                </select>
+              </div>
+              
             </div>
             
 
             <div class="right-edit-div">
-              <label for="telefono">Teléfono</label>
-              <input type="text" id="telefono" name="telefono" required>
 
-              <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-              <input type="date" id="edad" name="fecha_nacimiento" required>
-
+              <div class="contenedor-numero-jugador">
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" required>
+              </div>
               
-
+              <div class="contenedor-numero-jugador"> 
+                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="edad" name="fecha_nacimiento" required>
+              </div>
+          
             <!-- <div class="contenedor-numero-jugador"> -->
               <div class="contenedor-numero-jugador">
                 <label for="numero_jugador" id="numeroJugadorLabel">Numero de jugador</label>
@@ -1677,13 +2457,13 @@
               </div>
               <!-- <p id="mensajeDisponible"></p> -->
             <!-- </div> -->
+            <div class="contenedor-numero-jugador">
+              <label for="id_equipo">Equipo</label>
+              <select class="wide" name="id_equipo" id="id_equipo" required>
+          
 
-            <label for="id_equipo">Equipo</label>
-            <select name="id_equipo" id="id_equipo" required>
-              <option value="">Eliga una opcion</option>
-              <option value="1">Sub-10</option>
-              <option value="3">Sub-12</option>
-            </select>
+              </select>
+            </div>
             </div>
         </div>
 
@@ -1761,6 +2541,7 @@
 <script src="/js/jugadores.js"></script>
 <script src="/js/asistencia.js"></script>
 <script src="/js/user.js"></script>
+<script src="/js/perfil.js"></script>
 
 <!-- js crear partido -->
 <script src="/js/partidoCrear.js"></script>
@@ -1785,7 +2566,26 @@
     // NiceSelect.bind(document.getElementById("mySelect"), {
     // });
 
+    // editar jugador
+    NiceSelect.bind(document.getElementById("posicion"), {
+    });
+    NiceSelect.bind(document.getElementById("estado_salud"), {
+    });
+   
+
     
+
+    // crear jugadores. 
+    // NiceSelect.bind(document.getElementById("teamViewCrearJugadores"), {
+    // });
+
+    NiceSelect.bind(document.getElementById("posicionCrearJugadores"), {
+    });
+
+    
+    
+
+  
     NiceSelect.bind(document.getElementById("mySelect1"), {
     });
     NiceSelect.bind(document.getElementById("eventoAsistencia"), {
@@ -1797,16 +2597,13 @@
     NiceSelect.bind(document.getElementById("mySelect3"), {
     });
 
+    // config select
+    NiceSelect.bind(document.getElementById("mySelectConfig"), {
+    });
+
+
     // edit modal
     
-   
-    
-
-    
-
-    
-
-
   });
 
  

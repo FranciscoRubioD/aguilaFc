@@ -13,10 +13,21 @@
 </head>
 <body>
 
+  <div class="logo-div">
+    <img src="/logos/Aguilas-FC-logo.png" alt="" class="logo">
+
+  </div>
   
   <section class="login">
     <div class="inner-login">
+
+      <div class="loginInfo">
+        <p class="caption">Bienvenido al portal de Aguila-FC</p>
+        <h1 class="heading-top">Accede a tu Cuenta</h1>
+      </div>
+
       <form id="loginForm">
+        
         <div class="col-1">
           <label for="username">Usuario</label>
           <input type="text" name="username" id="username" required>
@@ -28,10 +39,23 @@
         </div>
   
         <!-- Contenedor del mensaje de error, inicialmente oculto -->
-        <div id="errorMsg" style="display: none; color: red;">
-          <p>El usuario o contraseña no son correctos</p>
+        <div id="errorMsg" style="display: none; color: red; font-size: 12px; text-align: center;">
+          
         </div>
-  
+
+        <div class="col-3">
+          <div class="checkboxDiv">
+            <input type="checkbox" name="staySign" id="staySign">
+            <label for="staySign">Sesión activa</label>
+          </div>
+          
+          <div class="forgotPasswordDiv">
+            <p>Olvidaste Contraseña?</p>
+          </div>
+
+        </div>
+        
+
         <div class="col-2">
           <button type="submit" id="btnLogin">Iniciar</button>
         </div>

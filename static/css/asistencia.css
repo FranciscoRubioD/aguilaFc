@@ -1,12 +1,16 @@
-.asistencia{
+#eventos{
   background-color:white;
-  width: 90%;
+  width: 100%;
   height: 100vh;
   /* border-radius: 10px; */
   margin: auto;
   padding: 0;
   /* margin-top: 20px; */
   overflow: auto;
+  
+}
+
+#eventos.active{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,6 +261,12 @@ p{
 }
 
 /* personalizar row de header */
+.headerTable{
+  position: sticky;
+  
+  /* width: 100%; */
+}
+
 .table-asist th, .table-asist-modal th, .table-asist-new th{
   padding: 20px;
   color: grey;
@@ -265,6 +275,7 @@ p{
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: lightgrey;
+  text-align: center;
 }
 
 /* personalizar row de datos */
@@ -329,20 +340,25 @@ p{
   grid-template-columns: 1fr 1fr;
   gap: 2%;
   margin-top: 2%;
+  margin-bottom: 5%;
 }
 
 .tablaAsistBtn{
   /* background-color: blue; */
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-content: end;
   gap: 5%;
+  height: 20px;
 }
 
 .tablaAsistBtn button{
   border: none;
-  padding: 10px;
+  padding: 5px;
+  
   border-radius: 5px;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .tablaAsistBtn button:hover{
@@ -546,6 +562,25 @@ p{
   justify-content: center;
   align-items: center;
 }
+.hour-show{
+  flex-direction: column;
+}
+.hour-show h1{
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.cancelado{
+  color: red;
+}
+
+.terminado{
+  color: green;
+}
+
+.suspendido{
+  color: purple;
+}
 
 .hour-show p{
   font-size: 1.7em;
@@ -562,9 +597,14 @@ p{
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 }
 
-.btn-cambiar-hora, .gps-div button{
+.div-cambiar-hora button{
+  width: 30%;
+}
+
+.btn-cambiar-hora, .gps-div button,.scoreBtn,.btn-configurar-partido{
   border: none;
   width: 80%;
   height: 100%;
@@ -576,7 +616,7 @@ p{
   transition: all 0.15s;
 }
 
-.btn-cambiar-hora:hover, .gps-div button:hover{
+.btn-cambiar-hora:hover, .gps-div button:hover,.scoreBtn:hover,.btn-configurar-partido:hover{
   background-color: white;
   color: rgb(75, 106, 230);
   font-weight: bold;
@@ -585,10 +625,6 @@ p{
 .btn-cambiar-hora button:focus, .gps-div button:focus{
   outline: none;
 }
-
-
-
-
 
 /* inferior */
 * {
@@ -613,7 +649,14 @@ p{
   overflow: hidden;
   justify-content: center;
   gap: 20px;
+}
 
+.noPartido{
+  grid-template-columns: 1fr;
+}
+
+.noPartido:first-child{
+  width: 60%;
 }
 
 /* box pequeños */
@@ -629,6 +672,7 @@ p{
   cursor: pointer;
   transition: all 0.15s ease;
 }
+
 
 .inf-asist-box:hover, .inf-partido-info:hover, .inner-date-show:hover, .ubicacion-show:hover{
   background-color: rgb(75, 106, 230);
@@ -722,6 +766,38 @@ p{
   object-fit: cover;
 }
 
+
+/* score  */
+.partido-score{
+  display: flex;
+  flex-direction: column;
+}
+
+.score-col{
+  width: 100%;
+  height: 50%;
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  gap: 20px;
+}
+.score-col p{
+  margin:0;
+}
+
+.scoreBtnDiv{
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.scoreBtnDiv{
+  width: 75%;
+  height: 15%;
+}
 
 /* change date modal css */
 .modal-change-date{
@@ -914,7 +990,6 @@ p{
 .col-hora-1{
   width: 100%;
   display: flex;
- 
   gap: 10%;
 }
 
@@ -966,6 +1041,70 @@ p{
   border: none;
   border-radius: 6px;
   outline: none;
+}
+
+
+/* change configuracion */
+.formConfigPartido{
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  /* gap: 2%; */
+  height: 100%;
+}
+
+.configCol:last-child{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  /* background-color: red; */
+  /* border-style: solid; */
+}
+
+.configCol button{
+  border: none;
+  width: 50%;
+  height: 50%;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  /* padding: 5px; */
+}
+
+.configCol label{
+  margin:0;
+  margin-bottom: 5px;
+}
+
+.configurar-content{
+  width:25%;
+  height: 60%;
+  border-radius: 10px;
+  margin: auto;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.config-inner{
+  width: 90%;
+  height: 90%;
+  /* background-color: red; */
+}
+
+.config-col{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.config-col input{
+  width: 20%;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 /* SECCION EVENTO INFO */
@@ -1058,6 +1197,14 @@ p{
 
   .inlineCalendar{
     font-size: 13px;
+  }
+
+  /* config partido */
+  .configurar-content{
+    width: 90%;
+    height: 50%;
+    margin: 0;
+    margin-top: 10%;
   }
 
   /* date side */

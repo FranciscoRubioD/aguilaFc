@@ -80,6 +80,260 @@
   opacity: 0.7;
 }
 
+
+/* modal notas */
+.modal-notas-eventos{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 8;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+.cerrarNotas{
+  position: absolute;
+  font-size: 20px;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.notas-content{
+  width: 80%;
+  height: 90%;
+  margin: auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  position: relative;
+}
+
+.left-note, .right-note{
+  /* border-style: solid; */
+}
+
+.left-note{
+  display: flex;
+  justify-content: center;
+  border-right: 2px solid lightgrey;
+}
+
+.inner-left-note{
+  width: 90%;
+  height: 100%;
+  margin-top: 10%;
+  /* background-color: lightgreen; */
+}
+
+#addNote{
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  text-align: start;
+}
+
+#addNote:focus{
+  outline: none;
+}
+ 
+#addNote:hover{
+  opacity: 0.8;
+}
+
+#addNote i{
+  font-size: 15px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+
+/* nota div */
+
+.contenedorNotas{
+  overflow: auto;
+  height: 400px;
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  /* background-color: red; */
+}
+
+.contenedorNotas::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in WebKit browsers like Chrome and Safari */
+}
+
+
+.noteEvento{
+  width: 100%;
+  height: 140px;
+  border-radius: 10px;
+  background-color: rgb(244, 244, 244);
+  margin-top: 5%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.noteEvento:last-child{
+  margin-bottom: 100px;
+}
+
+.inner-note{
+  width: 90%;
+  height: 90%;
+  /* background-color: white; */
+}
+
+.inner-note p{
+  margin: 0;
+}
+
+.fechaNota{
+  color: grey;
+  font-weight: bold;
+}
+
+.noteDiv{
+  width: 100%;
+  height: 70%;
+  /* background-color: red; */
+  overflow: hidden; /* Oculta el texto que se desborda */
+  text-overflow: ellipsis; /* Agrega los puntos suspensivos (...) */
+}
+
+.creador-nota{
+  margin-left: 10px;
+  font-weight: 100;
+}
+
+
+/* right side notes */
+.right-note{
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-note{
+  width: 90%;
+  height: 10%;
+  /* background-color: red; */
+  margin-top: 4%;
+  border-bottom: 1px solid lightgray;
+}
+
+.info-note{
+  width: 90%;
+  height: 15%;
+  border-bottom: 1px solid lightgray;
+  /* background-color: black; */
+}
+
+.inner-info-note{
+  width: 50%;
+  height: 50%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 20px;
+  /* background-color: red; */
+}
+
+.div-span{
+  display: flex;
+  flex-direction: column;
+  /* background-color: red; */
+}
+
+.div-span p{
+  margin: 0;
+
+}
+
+.span-note{
+  /* margin-left: 20px; */
+  color: rgb(95, 95, 95);
+  font-weight:600;
+}
+.span-note:first-child{
+  margin-bottom: 10px;
+}
+
+.info-note p{
+  margin: 0;
+}
+
+
+/* nota grande */
+.noteP{
+  width: 90%;
+  height: 420px;
+  /* background-color: red; */
+}
+
+.noteP p{
+  margin-top: 2%;
+}
+
+
+/* crear nota */
+.crear-nota-div{
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.h1Create{
+  width: 90%;
+  height: 10%;
+  margin-top: 2%;
+  /* background-color: black; */
+}
+
+.textAreaNota{
+  width: 90%;
+  height: 500px;
+  /* background-color: red; */
+}
+.textAreaNota textarea{
+  width: 100%;
+  height:80%;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  resize: none;
+  padding: 10px; /* Add padding for inner spacing */
+  line-height: 1.5; /* Adjust line height for better text alignment */
+  box-sizing: border-box; /* Include padding and border in total size */
+  margin: 0; /* Ensure no additional margin */
+  overflow: auto; /* Allow scrolling if needed */
+ 
+}
+
+.textAreaNota:last-child{
+  text-align: end;
+}
+
+.textAreaNota button{
+  padding: 10px 50px 10px 50px;
+  border: none;
+  border-radius: 5px;
+}
+
+
+
+
+/* -------- */
+
 .content-box-event{
   width: 100%;
   height: 75%;
@@ -136,7 +390,7 @@
   border-radius: 10px;
   background-color: white;
   margin: auto;
-  overflow: hidden;
+  overflow: auto;
 }
 
 
@@ -151,8 +405,35 @@
 
 .modal-asistencia-cont{
   height: 90%;
-  
+  position: relative;
   /* background-color: red; */
+}
+
+#mensaje::before {
+  content: "\26A0"; /* Código Unicode para el símbolo de advertencia */
+  font-size: 20px;
+  color: #f39c12; /* Color de advertencia */
+  text-align: center;
+  margin-right: 10px; /* Espacio entre el icono y el mensaje */
+}
+
+#mensaje {
+  position: fixed;
+  width: 40%;
+  height: 10%;
+  background-color: white;
+  
+  z-index: 100;
+  
+  /* Centrando horizontal y verticalmente */
+  top: 8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* Opcional: ajustes adicionales para apariencia */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
 #closeAsistModal{
@@ -200,5 +481,56 @@
 }
 /* evento grid */
 
+/* hover btn info */
+.hoverinfo{
+  background-color: white;
+  color: rgb(75, 106, 230);
+  font-weight: bold;
+}
 
+
+@media screen and (max-width: 768px){
+
+  .notas-content{
+    height: 50%;
+    width: 90%;
+    margin: 0;
+    margin-top: 2%;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  
+  .noteEvento{
+    height: 110px;
+  }
+
+  .fechaNota{
+    font-size: 10px;
+  }
+
+  .info-note{
+    font-size: 10px;
+  }
+
+  .inner-info-note{
+    margin: 0;
+    width: 100%;
+  }
+  .h1Create h1{
+    font-size: 20px;
+  }
+
+  .textAreaNota{
+    height: 300px;
+  }
+  #enviarNota{
+    width: 100%;
+  }
+
+  .inner-left-note h2{
+    font-size: 15px;
+  }
+  
+
+}
 

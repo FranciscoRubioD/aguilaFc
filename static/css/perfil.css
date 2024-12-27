@@ -1,0 +1,616 @@
+#dashboard{
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+}
+#dashboard.activo {
+  display: flex; /* Solo cuando sea visible */
+}
+
+
+
+.profile-view{
+  width: 90%;
+  height:10%;
+  display: grid;
+  margin-bottom: 10px;
+  grid-template-columns: 1fr 1fr;
+  /* background-color: white; */
+}
+
+.welcome-p{
+  display: flex;
+  gap:5%;
+  align-items: end;
+  /* background-color: green; */
+}
+
+.teamViewDiv{
+  width: 20%;
+  /* gap: 10px; */
+  /* background-color: red; */
+}
+
+.teamViewDiv label{
+  margin: 0;
+}
+
+.welcome-p p{
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+p{
+  margin: 0;
+  
+}
+
+/* dashboard */
+.dashboard-main{
+  width: 90%;
+  height: 90%;
+  /* background-color: white; */
+}
+
+.dashboard-main h2{
+  margin: 0;
+}
+
+.dashboard-inner{
+  /* background-color: red; */
+  height: 90%;
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+}
+
+.dashboard-top,.dashboard-bottom{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* border-style: solid; */
+  overflow: hidden;
+}
+
+
+
+.next-game-div,.win-vs-loss{
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}   
+
+.win-vs-loss{
+  justify-content: center;
+}
+
+.gamesDiv{
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border: none;
+  border-radius: 10px;
+  width: 95%;
+  height:80%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 2fr;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.col-games{
+  /* border-style: solid; */
+}
+
+/* header */
+.header-games{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 30px;
+  /* background-color: red; */
+}
+
+.header-games-col{
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  
+}
+.header-games-col p{
+  margin: 0;
+  margin-left: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.header-games-col-2{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.header-games-col-2 p{
+  margin: 0;
+  margin-right: 20px;
+  color: rgb(74, 152, 207);
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* DATA GAME */
+.data-game, #messageNoGames{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#messageNoGames{
+  /* background-color: red; */
+  height: 100%;
+  margin: auto;
+}
+
+.data-game p{
+  margin: 0;
+  color: grey;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+
+/* shields */
+.shields-game{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  
+}
+.inner-shield{
+  width: 60%;
+  height: 90%;
+  /* border-style: solid; */
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  overflow: hidden;
+  /* background-color: red; */
+}
+.col-shield{
+  /* border-style: solid; */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+}
+.col-shield p{
+  margin: 0;
+  /* font-weight: bold; */
+}
+
+.shield-img-div{
+  width: 50%;
+  height: 50%;
+  overflow: hidden;
+}
+
+.shield-img-div img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+.vsShield{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  /* background-color: red; */
+}
+.vsShield p{
+  margin: 0;
+  font-size: 40px;
+}
+
+
+
+/* ganadas vs */
+#estadisticaContenedor {
+  width: 70%;
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  text-align: center;
+  padding-bottom: 5px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.estadistica-barra {
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.segmento {
+  height: 100%;
+  transition: width 0.5s ease; /* Esto anima el cambio de ancho */
+}
+
+#ganadas {
+  background-color: #28a745; /* Verde para ganadas */
+}
+
+#empates {
+  background-color: #ffc107; /* Amarillo para empates */
+}
+
+#perdidas {
+  background-color: #dc3545; /* Rojo para perdidas */
+}
+
+.leyenda {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.leyenda span {
+  width: 30%;
+}
+
+.PJ-div{
+  width: 70%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  /* background-color: red; */
+}
+
+
+#pjAmount{
+  font-size: 20px;
+}
+
+
+/* bottom */
+.upcoming-Match{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  /* background-color: red; */
+}
+
+.table-match{
+  width: 95%;
+  height: 90%;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table-match i{
+  font-size: 60px;
+}
+
+
+/* upcoming */
+.columnUpcoming{
+  width: 95%;
+  height: 20%;
+}
+.columnUpcoming p{
+  margin: 0;
+}
+
+.upcoming-left{
+  width: 95%;
+  height: 50%;
+  display: grid;
+  grid-template-rows: 1fr 2fr 2fr;
+  background-color: rgb(247, 247, 247);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 3px;
+  border: solid 1px rgb(196, 196, 196);
+  padding-bottom: 10px;
+  /* align-items: center; */
+  /* justify-content: center; */
+
+
+}
+
+.statusMatch{
+  width: 95%;
+  margin: auto;
+  height: 90%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 3px;
+  border: solid 1px rgba(194, 194, 194, 0.436);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  /* overflow: hidden; */
+  align-items: center;
+}
+.statusInfo p{
+  margin: 0;
+  margin-left: 10px;
+}
+
+.equipoTarea{
+  font-size: 14px;
+}
+
+.caption{
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.statusClock, .statusClockInner{
+  display: flex;
+  height: 100%;
+  /* background-color: red; */
+  align-items: center;
+  justify-content: center;
+  /* gap: 2px ; */
+}
+
+.statusClock{
+  gap: 10px;
+}
+
+.statusClockInner{
+  gap: 3px;
+  position: relative;
+}
+
+.statusClockInner i{
+  font-size: 12px;
+}
+
+.statusClock i{
+  font-size: 12px;
+}
+
+.statusClock p{
+  margin: 0;
+  font-size: 12px;
+}
+
+.opcionesJuego{
+  cursor: pointer;
+  position: relative;
+}
+
+.tareas-acciones{
+  width: 150px;
+  height: 100px;
+  right: 0;
+  
+  background-color: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border-radius: 4px;
+  z-index: 200;
+  position: absolute;
+  display: grid;
+  top: 45px;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.task{
+  /* background-color: red; */
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: solid 1px lightgrey;
+  cursor: pointer;
+}
+
+.task:hover{
+  background-color: lightgrey;
+}
+
+
+.dashboard-bottom{
+  /* background-color: green; */
+}
+
+
+
+/* ver perfil opciones */
+.perfilIconSection{
+  /* background-color: red; */
+  display: flex;
+  /* overflow: hidden; */
+}
+
+.profileInfo{
+  width: 40%;
+  height: 100%;
+  display: flex;
+  align-items: end;
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* background-color: blue; */
+  position: relative;
+  
+}
+
+.picProfile{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: green;
+  cursor: pointer;
+}
+
+/* profile */
+.popUp-profile{
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  top: 75px;
+  border-radius: 5px;
+  z-index:5000;
+  background-color: white;
+}
+
+.innerPicProfile{
+  width: 100%;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: solid 1px lightgrey;
+  /* background-color: red; */
+}
+
+.ipp-2 p{
+  margin: 0;
+  font-size: 14px;
+}
+.ipp-2 p:first-child{
+  font-weight: 500;
+}
+
+.ipp-2 p:last-child{
+  color: grey;
+}
+
+
+.optionProfile{
+  width: 90%;
+  height: 40px;
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  /* gap: 3%; */
+  padding-left: 5px;
+  margin: auto;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+
+
+.optionProfile:hover{
+  background-color: rgb(238, 238, 238);
+  border-radius: 5px;
+}
+
+
+.optionInnerL{
+  width: 10%;
+}
+
+.optionInner{
+  width: 80%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* border-style: solid; */
+}
+
+.optionProfile p{
+  margin: 0;
+  font-size: 14px;
+}
+
+/* profile pop up */
+
+
+.welcomeLegend{
+  width: 60%;
+  height: 80%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  /* align-items: center; */
+  justify-content: center;
+  margin-left: 5px;
+  /* background-color: pink; */
+}
+
+.welcomeLegend p:first-child{
+  font-size: 14px;
+  font-weight: 400;
+  color: black;
+  margin-top: 12px;
+}
+
+.welcomeLegend p{
+  margin: 0;
+  font-size: 9px;
+  color: grey;
+}
+
+
+/* quick asistencia */
+.asistenciaQuick{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+
+.tablaContent{
+  width: 90vw;
+  height: 90vh;
+  margin-top: 2%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  /* justify-content: center; */
+  align-items: center;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.quick-table-div{
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  height: 2000px;
+  width: 90%;
+  overflow: auto;
+}
+
+.headerTable{
+  position: sticky;
+}
+
+.quick-asist-x{
+  position:absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 20px;
+  color: grey;
+  cursor: pointer;
+}
+
+
+

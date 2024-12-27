@@ -160,8 +160,6 @@
   });
 
 
-
-
   // ruta para traer los usuarios disponibles
     router.get('/get/user',(req,res) =>{
       const query = "SELECT * FROM usuarios WHERE rol != 'jugador'"
@@ -255,9 +253,43 @@ router.get('/user/equipo/:id', (req, res) => {
   });
 });
 
+// verificar a que equipos tiene accesso 
+router.get('/user/equipos/:id', (req, res) => {
+  const userId = req.params.id;
+
+  const query = `
+      SELECT e.id AS equipo_id, e.nombre AS nombre_equipo
+      FROM usuario_equipos ue
+      JOIN equipo e ON ue.equipo_id = e.id
+      WHERE ue.usuario_id = ?
+  `;
+
+  dbConexion.query(query, [userId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener los equipos:', error);
+          res.status(500).json({ error: 'Error en el servidor al obtener los equipos' });
+      } else if (results.length === 0) {
+          res.status(404).json({ message: 'El usuario no tiene acceso a ningún equipo' });
+      } else {
+          const equipos = results.map(row => ({
+              equipo_id: row.equipo_id,
+              nombre_equipo: row.nombre_equipo
+          }));
+
+          res.status(200).json({
+              message: `El usuario con ID ${userId} tiene acceso a los siguientes equipos.`,
+              equipos
+          });
+      }
+  });
+});
+
+
+
 // Ruta para asignar un equipo a un usuario, verificando si ya existe la relación
 router.post('/user/equipo', (req, res) => {
   const { usuario_id, equipo_id } = req.body;
+
 
   // Verificación básica de los parámetros
   if (!usuario_id || !equipo_id) {
@@ -298,15 +330,18 @@ router.post('/user/equipo', (req, res) => {
   });
 });
 
-router.delete('/user/equipo/:id', (req, res) => {
-  const userId = req.params.id;
+router.delete('/user/equipo/:userId/:equipoId', (req, res) => {
+  const userId = req.params.userId; // Usuario ID
+  const equipoId = req.params.equipoId; // Equipo ID
+
+  console.log(`Eliminando relación usuario: ${userId}, equipo: ${equipoId}`);
 
   const query = `
       DELETE FROM usuario_equipos
-      WHERE equipo_id = ?
+      WHERE usuario_id = ? AND equipo_id = ?
   `;
 
-  dbConexion.query(query, [userId], (error, results) => {
+  dbConexion.query(query, [userId, equipoId], (error, results) => {
       if (error) {
           console.error('Error al eliminar la relación:', error);
           res.status(500).json({ error: 'Error al eliminar la relación' });
@@ -324,58 +359,85 @@ router.delete('/user/equipo/:id', (req, res) => {
 
 
 
+
   // ruta procesar inicio de sesion
-  router.post('/admin/login',(req,res) =>{
-    const { username, password }  = req.body;
-
-    // consultar en bd a ver si existe
-    const query = 'SELECT * FROM usuarios WHERE nombre_usuario = ?';
-    dbConexion.query(query, [username], async(error, results) =>{
-
+  router.post('/admin/login', (req, res) => {
+    const { username, password } = req.body;
+  
+    // Consultar en la base de datos para obtener los datos del usuario
+    const query = 'SELECT id, nombre_usuario, nombre, contrasena, rol, email, estado FROM usuarios WHERE nombre_usuario = ?';
+  
+    dbConexion.query(query, [username], async (error, results) => {
       if (error) {
         return res.status(500).json({ error: 'Error en el servidor' });
       }
-
+  
       if (results.length === 0) {
         return res.status(401).json({ error: 'Usuario no encontrado' });
       }
-
-      const user = results[0];
-
-      // Comparar la contraseña del usuario con la almacenada en la DB
+  
+      const user = results[0]; // Aquí obtienes los datos del usuario
+  
+      // Verificar si el usuario está bloqueado
+      if (user.estado === 1) {
+        return res.status(403).json({ error: 'Usuario bloqueado. Contacte al administrador.' });
+      }
+  
+      // Comparar la contraseña del usuario con la almacenada en la base de datos
       const passwordMatch = await bcrypt.compare(password, user.contrasena);
-
+  
       if (!passwordMatch) {
         return res.status(401).json({ error: 'Contraseña incorrecta' });
       }
-
-      // Generar el JWT token si las credenciales son correctas
-      const token = generateAccessToken({ id: user.id, username: user.username });
-
-      // Enviar el token al cliente
-      res.json({ token });
-      
-    })
-
-
+  
+      // Realizar consulta adicional para obtener los equipos asignados al usuario
+      const equiposQuery = `
+        SELECT equipo_id 
+        FROM usuario_equipos 
+        WHERE usuario_id = ?
+      `;
+  
+      dbConexion.query(equiposQuery, [user.id], (equiposError, equiposResults) => {
+        if (equiposError) {
+          return res.status(500).json({ error: 'Error al obtener los equipos del usuario' });
+        }
+  
+        // Extraer los IDs de los equipos
+        const equiposAsignados = equiposResults.map(row => row.equipo_id);
+  
+        // Agregar los equipos asignados al objeto usuario
+        user.equiposAsignados = equiposAsignados;
+  
+        // Generar el JWT token incluyendo los equipos asignados
+        const token = generateAccessToken(user);
+  
+        // Enviar el token al cliente
+        res.json({ token });
+      });
+    });
   });
+  
+  
 
   router.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Welcome to the protected route!', user: req.user });
   });
 
 
- 
   // funciones
-  function generateAccessToken(user){
+  function generateAccessToken(user) {
     const payload = {
-      id: user.id,
-      username: user.username
+      id: user.id,               // ID del usuario
+      username: user.nombre_usuario,  // Incluye el username en el payload
+      nombre: user.nombre,  // Asegúrate de incluir 'nombre' en el payload
+      rol: user.rol,
+      email: user.email,
+      equipos: user.equiposAsignados
     };
-
+  
     const secret = secretKeyToken;
     const options = { expiresIn: '1h' };
-
+  
     return jwt.sign(payload, secret, options);
   }
 
@@ -394,19 +456,20 @@ router.delete('/user/equipo/:id', (req, res) => {
   function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-
+  
     if (!token) {
-      return res.sendStatus(401);
+      return res.sendStatus(401); // Si no hay token, retornar error 401
     }
-
-    const result = verifyAccessToken(token);
-
-    if (!result.success) {
-      return res.status(403).json({ error: result.error });
-    }
-
-    req.user = result.data;
-    next();
-
+  
+    // Verificar el token
+    jwt.verify(token, secretKeyToken, (err, user) => {
+      if (err) {
+        return res.status(403).json({ error: 'Token inválido' }); // Si el token no es válido
+      }
+  
+      req.user = user; // Asigna el usuario decodificado al objeto req
+      next(); // Llama al siguiente middleware o controlador
+    });
   }
+    
   module.exports = { router, authenticateToken }; // Exportar el router

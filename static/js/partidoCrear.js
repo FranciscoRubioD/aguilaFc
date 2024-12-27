@@ -26,7 +26,6 @@ $(document).ready(function() {
     });
    
 
-
     // controlamos el partido de vuelta toggle
     $('.jtoggler').jtoggler();
     $(document).on('jt:toggled',function(event, target) {
@@ -166,22 +165,37 @@ $(document).ready(function() {
         opcion.val(equipo.id);
         $('#mySelect').append(opcion);
 
-
-        // entrenador -------------section--------------------
-        const opcion2 = $('<option>');
-        opcion2.text(equipo.entrenador);
-        $('#mySelect2').append(opcion2);
-
-          
-
+        
       });
+
+      // get usuarios
+      $.ajax({
+        type:'GET',
+        url:'/get/user',
+        dataType: 'json',
+        success: function(response){
+          
+          response.results.forEach(function(usuario){
+           
+            // entrenador -------------section--------------------
+            const opcion2 = $('<option>');
+            opcion2.text(usuario.nombre);
+            $('#mySelect2').append(opcion2);
+  
+          });
+          NiceSelect.bind(document.getElementById("mySelect2"), {
+          })
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al obtener informacion de equipo:', error);
+        }
+      })
 
       // cargar select de plugin
       NiceSelect.bind(document.getElementById("mySelect"), {
       });
 
-      NiceSelect.bind(document.getElementById("mySelect2"), {
-      });
+   ;
 
 
     },
