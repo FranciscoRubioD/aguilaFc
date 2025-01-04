@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 
 // conexion a la base de datos
@@ -6,7 +6,7 @@ const dbConexion = mysql.createConnection({
   host:'viaduct.proxy.rlwy.net',
   user:'root',
   password:'cjiVOjnNolZkWwWUQKnBdcWFouXjkzpt',
-  database:'mySqlrailway',
+  database:'railway',
   port: 26491,  // Asegúrate de que el puerto sea el correcto
 })
 

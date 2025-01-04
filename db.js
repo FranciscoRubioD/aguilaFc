@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 
 // conexion a la base de datos
@@ -8,7 +8,7 @@ const dbConexion = mysql.createConnection({
   password:'cjiVOjnNolZkWwWUQKnBdcWFouXjkzpt',
   database:'mySqlrailway',
   port: 26491,  // Asegúrate de que el puerto sea el correcto
-})
+});
 
 // manejo de error BD
 dbConexion.connect((error)=>{
