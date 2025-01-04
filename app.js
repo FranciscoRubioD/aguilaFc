@@ -363,36 +363,38 @@ app.post('/crear/jugador', upload.single('fotoJugador'), async (req, res) => {
       numeroJugador,
     } = req.body;
 
-    // Verifica si se subió una imagen
-    if (!req.file) {
-      return res.status(400).json({ error: 'foto', message: 'Por favor, sube una foto válida.' });
+    let savedFileName = null; // Variable para la foto, por defecto será null
+
+    if (req.file) {
+      // Si se subió una imagen, guárdala
+      const fileName = req.file.originalname;
+      const fileBuffer = req.file.buffer;
+
+      finalizarSubida(fileName, fileBuffer, async (err, savedPath) => {
+        if (err) {
+          console.error('Error al guardar la imagen:', err);
+          return res.status(500).json({ error: 'Error al guardar la imagen' });
+        }
+        savedFileName = path.basename(savedPath); // Guardar solo el nombre del archivo
+        console.log('Foto guardada en:', savedPath);
+        insertarJugador(); // Llamar a la función de inserción
+      });
+    } else {
+      insertarJugador(); // Llamar a la función de inserción si no hay foto
     }
 
-    const fileName = req.file.originalname;
-    const fileBuffer = req.file.buffer;
-
-    // Guardar la imagen en el servidor
-    finalizarSubida(fileName, fileBuffer, async (err, savedPath) => {
-      if (err) {
-        console.error('Error al guardar la imagen:', err);
-        return res.status(500).json({ error: 'Error al guardar la imagen' });
-      }
-
-      console.log('Foto guardada en:', savedPath);
-
+    // Función para insertar jugador
+    const insertarJugador = () => {
       // Obtener la fecha de creación
-      const fechaCreacion = new Date()
+      const fechaCreacion = new Date();
 
-      // NOMBRE COMPLETA
-      const nombreCompleto = Nombre + " " + apellido
+      // Nombre completo
+      const nombreCompleto = Nombre + " " + apellido;
 
-      // Guardar solo el nombre del archivo en la base de datos
-      const savedFileName = path.basename(savedPath); // Obtiene solo el nombre del archivo
-
-      // Insertar jugador en la base de datos
+      // Query de inserción
       const query = `
         INSERT INTO jugadores 
-        (Nombre, cedula, telefono, fecha_nacimiento, pais, id_equipo, posicion, numero_jugador, foto_jugador,fecha_creacion,correo) 
+        (Nombre, cedula, telefono, fecha_nacimiento, pais, id_equipo, posicion, numero_jugador, foto_jugador, fecha_creacion, correo) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const values = [
@@ -404,9 +406,9 @@ app.post('/crear/jugador', upload.single('fotoJugador'), async (req, res) => {
         id_equipo,
         posicion,
         numeroJugador,
-        savedFileName, // Ruta de la foto guardada 
+        savedFileName, // Puede ser null si no hay foto
         fechaCreacion,
-        Correo
+        Correo,
       ];
 
       dbConexion.query(query, values, (error, results) => {
@@ -417,12 +419,13 @@ app.post('/crear/jugador', upload.single('fotoJugador'), async (req, res) => {
 
         res.status(200).json({ message: 'Jugador creado exitosamente', jugadorId: results.insertId });
       });
-    });
+    };
   } catch (error) {
     console.error('Error al crear jugador:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
 // app.post('/crear/jugador', upload.single('fotoJugador') ,async(req, res) => {
 //   try{
 //     const {
@@ -2003,7 +2006,6 @@ app.get('/usuario/existente/:user',(req,res) => {
 
 
   
-
 
 
 
