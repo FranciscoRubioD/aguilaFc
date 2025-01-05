@@ -1412,6 +1412,9 @@ app.get('/get/equipo', authenticateToken, (req, res) => {
   // Acceder a los equipos asignados del usuario autenticado
   const equiposAsignados = req.user.equipos;
 
+  console.log(equiposAsignados);
+
+
   if (!equiposAsignados || equiposAsignados.length === 0) {
     return res.status(403).json({ error: 'No tienes equipos asignados' });
   }

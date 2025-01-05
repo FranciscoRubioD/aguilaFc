@@ -5,6 +5,12 @@ $(document).ready(function() {
   
   let ajaxRequestInProgress = false; // Bandera para evitar solicitudes AJAX duplicadas
   let currentPage = 1;
+
+
+  // funcion modal de fechas
+  let estadoInicio = '';
+  let estadoFinal = '';
+
   // mostrar asistencias 
    // select asistencia checkmark
 
@@ -844,9 +850,6 @@ $(document).ready(function() {
 
   }
 
-  // funcion modal de fechas
-  let estadoInicio = '';
-  let estadoFinal = '';
 
   $('#amBtn').on('click', function() {
     $('#amBtn').addClass('active-btn-hr').prop('disabled', true);

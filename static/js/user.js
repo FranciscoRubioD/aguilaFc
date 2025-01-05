@@ -31,26 +31,9 @@ $(document).ready(function() {
     $('.crearUsuario-modal').hide();
   });
 
-  // trae info de usuarios
-
-  // plantilla
-  // $.ajax({
-  //   type:'GET',
-  //   url:'/get/equipo',
-  //   dataType: 'json',
-  //   success: function(response){
-
-  //   },
-  //   error: function(xhr, status, error) {
-  //     console.error('Error al obtener informacion de equipo:', error);
-  //   }
-  // });
+  
   poblarTablaUser();
 
-
-
-  
-  
 
   // trae info de equipos
   $.ajax({
