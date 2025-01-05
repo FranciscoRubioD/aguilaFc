@@ -1,9 +1,72 @@
 
 $(document).ready(function() {
 
-
+  let functionRepeater = 0;
   // mostrar asistencias 
    // select asistencia checkmark
+
+   window.generarPaginacionAsist = function (evento,totalPages,funcion){
+
+    $('.numeros-paginacion-asist').empty();
+
+    const btnAnterior = $('#btnAnteriorAsist');
+    btnAnterior.off('click');
+
+     // Configuración del botón anterior
+    if (currentPage === 1) {
+      btnAnterior.prop('disabled', true);
+    } else {
+      btnAnterior.prop('disabled', false);
+      btnAnterior.on('click', function (event) {
+        event.preventDefault();
+        if (!ajaxRequestInProgress) {
+          ajaxRequestInProgress = true;
+          currentPage--;
+          funcion(evento, currentPage); // Llamar a la función para cargar resultados
+        }
+      });
+    }
+
+
+    // Configuración del botón siguiente
+    const btnSiguiente = $('#btnSiguienteAsist');
+    btnSiguiente.off('click');
+    if (currentPage === totalPages) {
+      btnSiguiente.prop('disabled', true);
+    } else {
+      btnSiguiente.prop('disabled', false);
+      btnSiguiente.on('click', function (event) {
+        event.preventDefault();
+        if (!ajaxRequestInProgress) {
+          ajaxRequestInProgress = true;
+          currentPage++;
+          funcion(evento,currentPage); // Llamar a la función para cargar resultados
+        }
+      });
+    }
+
+    // Configuración de los botones de números de página
+    for (let i = 1; i <= totalPages; i++) {
+      const link = $('<a>').attr('href', '#').text(i);
+      if (i === currentPage) {
+        link.addClass('active');
+      }
+      (function (page) {
+        link.on('click', function (event) {
+          event.preventDefault();
+          if (currentPage !== page) {
+            currentPage = page;
+            console.log(currentPage);
+            funcion(evento,currentPage); // Llamar a la función para cargar resultados
+          }
+        });
+      })(i);
+      $('.numeros-paginacion-asist').append(link);
+    }
+
+  }
+
+
    window.modalAsistencia =  function (evento,page){
 
     $.ajax({
@@ -564,9 +627,6 @@ $(document).ready(function() {
       }
       
     }
-
-
-  let functionRepeater = 0;
     
   function eventoInfo(evento){
     $.ajax({
@@ -1337,67 +1397,6 @@ function changeLocation(id,location){
   let ajaxRequestInProgress = false; // Bandera para evitar solicitudes AJAX duplicadas
   let currentPage = 1;
 
-  
-  window.generarPaginacionAsist = function (evento,totalPages,funcion){
-
-    $('.numeros-paginacion-asist').empty();
-
-    const btnAnterior = $('#btnAnteriorAsist');
-    btnAnterior.off('click');
-
-     // Configuración del botón anterior
-    if (currentPage === 1) {
-      btnAnterior.prop('disabled', true);
-    } else {
-      btnAnterior.prop('disabled', false);
-      btnAnterior.on('click', function (event) {
-        event.preventDefault();
-        if (!ajaxRequestInProgress) {
-          ajaxRequestInProgress = true;
-          currentPage--;
-          funcion(evento, currentPage); // Llamar a la función para cargar resultados
-        }
-      });
-    }
-
-
-    // Configuración del botón siguiente
-    const btnSiguiente = $('#btnSiguienteAsist');
-    btnSiguiente.off('click');
-    if (currentPage === totalPages) {
-      btnSiguiente.prop('disabled', true);
-    } else {
-      btnSiguiente.prop('disabled', false);
-      btnSiguiente.on('click', function (event) {
-        event.preventDefault();
-        if (!ajaxRequestInProgress) {
-          ajaxRequestInProgress = true;
-          currentPage++;
-          funcion(evento,currentPage); // Llamar a la función para cargar resultados
-        }
-      });
-    }
-
-    // Configuración de los botones de números de página
-    for (let i = 1; i <= totalPages; i++) {
-      const link = $('<a>').attr('href', '#').text(i);
-      if (i === currentPage) {
-        link.addClass('active');
-      }
-      (function (page) {
-        link.on('click', function (event) {
-          event.preventDefault();
-          if (currentPage !== page) {
-            currentPage = page;
-            console.log(currentPage);
-            funcion(evento,currentPage); // Llamar a la función para cargar resultados
-          }
-        });
-      })(i);
-      $('.numeros-paginacion-asist').append(link);
-    }
-
-  }
 
 
  
