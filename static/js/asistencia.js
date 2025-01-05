@@ -6,6 +6,8 @@ $(document).ready(function() {
   let ajaxRequestInProgress = false; // Bandera para evitar solicitudes AJAX duplicadas
   let currentPage = 1;
 
+  // Obtener el token del almacenamiento local o donde lo tengas guardado
+  const token = localStorage.getItem('token'); // O el lugar donde guardas el token
 
   // funcion modal de fechas
   let estadoInicio = '';
@@ -344,13 +346,15 @@ $(document).ready(function() {
   // calendario 
   const calendar = $('#calendar');
 
+
   poblarCalendario();
 
 
   function poblarCalendario(){
 
-    // Obtener el token del almacenamiento local o donde lo tengas guardado
-    const token = localStorage.getItem('token'); // O el lugar donde guardas el token
+    
+
+    
 
     if (!token) {
         console.log("No hay token, no se puede acceder a los eventos");
@@ -525,7 +529,6 @@ $(document).ready(function() {
     autoplay: true,
     path: rutaLoadingLottie // Ruta al archivo JSON de tu animación Lottie
   });
-
 
 
   // seleccionar datos para enviar a la asistencia
