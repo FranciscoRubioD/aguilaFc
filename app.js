@@ -34,7 +34,7 @@ setInterval(regenerateLink, 2 * 60 * 60 * 1000);
 
 // llave secreta
 const secretKey = crypto.randomBytes(32).toString('hex');
-console.log(secretKey);
+
 
 const app = express();
 const port = 3000;
@@ -134,7 +134,6 @@ app.post('/regenerar/link/inscripcion',(req,res)=>{
 app.get(`/formulario/inscripcion/:uniqueLinkId`,(req,res)=>{
   
   const enlaceTemporal = req.params.uniqueLinkId;
-  console.log(enlaceTemporal);
   if(enlaceTemporal === uniqueLinkId && Date.now() < linkExpiration)  {
     res.sendFile(__dirname + '/templates/inscripcion.html');
   }else{
@@ -625,8 +624,7 @@ app.get('/get-jugadores', authenticateToken, (req, res) => {
   const user = req.user; // Usuario autenticado
   const equiposAsignados = user.equipos; // Equipos asignados al usuario
 
-  console.log('funcion');
-  console.log(equiposAsignados);
+  console.log(`equipos asignados ${equiposAsignados}`);
 
 
   if (!equiposAsignados || equiposAsignados.length === 0) {
@@ -657,7 +655,6 @@ app.get('/get-jugadores', authenticateToken, (req, res) => {
       return res.status(404).json({ message: 'No hay jugadores para los equipos asignados' });
     }
 
-    console.log(results);
     res.status(200).json(results); // Devuelve los jugadores filtrados
   });
 });
@@ -851,9 +848,6 @@ app.get('/get/jugador/asistencia', (req, res) => {
           const total = countResults[0].total; // Total de asistencias
           const totalPages = Math.ceil(total / limit); // Total de páginas
           
-          console.log(total);
-          console.log(totalPages);
-          
           res.status(200).json({
             jugadores: results,
             totalPages: totalPages,
@@ -871,7 +865,7 @@ app.get('/get/jugador/asistencia', (req, res) => {
 app.put('/modificar/asistencia', (req, res) => {
   const asistencias = req.body; // Expecting an array of records
 
-  console.log(asistencias);
+  
 
   if (!Array.isArray(asistencias) || asistencias.length === 0) {
     return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un arreglo de objetos de asistencia.' });
@@ -975,7 +969,7 @@ app.get('/buscar-jugadores', (req, res) => {
   const page = parseInt(req.query.page) || 1; // numero de pagina
   const offset = (page -1) * limit; // calcular offset
 
-  console.log(offset)
+
 
   const terminoBusqueda = req.query.termino;
  
@@ -1138,7 +1132,7 @@ app.get('/filtro-jugadores',(req,res) =>{
     if(error){
       console.error('Error al ejecutar la consulta:', error);
     }else{
-      console.log(results);
+     
       res.status(200).json(results);
     }
   })
