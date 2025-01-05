@@ -1,8 +1,6 @@
+
 let showSelect = false; // Asegúrate de declarar esta variable globalmente
 let modalAbierto = false;
-const token = localStorage.getItem('token'); // O el lugar donde guardas el token
-
-console.log(`token sacado ${token}`);
 
 $('.selectBox').on('click', (event) => {
     event.stopPropagation(); // Para evitar que el clic en el div cierre el checkbox
@@ -22,6 +20,10 @@ function showCheckbox() {
 
 // cuando cargue la pagina
 $(document).ready(function() {
+
+  const token = localStorage.getItem('token'); // O el lugar donde guardas el token
+
+  console.log(`token sacado ${token}`);
 
 
   $('#addUserbtn2').on('click',function(){
