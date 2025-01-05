@@ -1407,6 +1407,7 @@ app.get('/get/equipo', authenticateToken, (req, res) => {
 
   console.log(equiposAsignados);
 
+  console.log('Verificado Para equipo');
 
   if (!equiposAsignados || equiposAsignados.length === 0) {
     return res.status(403).json({ error: 'No tienes equipos asignados' });
