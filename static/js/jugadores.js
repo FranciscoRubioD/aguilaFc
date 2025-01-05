@@ -5,7 +5,6 @@ $(document).ready(function() {
   authToken(token);  
 
 
-
   function authToken(token){
      // Si el token está presente, realizar una solicitud para verificarlo
     $.ajax({
@@ -33,8 +32,9 @@ $(document).ready(function() {
           // asignar permisos 
           asignarPermisos(response.user.id);
 
-          
-         
+          // 
+          traerEquipos();
+
       },
       error: function(error) {
         if (error.status === 401 || error.status === 403) {

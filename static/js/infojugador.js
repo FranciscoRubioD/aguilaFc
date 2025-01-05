@@ -8,8 +8,6 @@ $(document).ready(function() {
     seleccionado.addClass('select');
   }
 
-  
-
   $('#document-section').on('click',function(){
     seleccionarOpcion($('#document-section'));
     $('.documentos').fadeIn();
@@ -23,10 +21,6 @@ $(document).ready(function() {
     $('.documentos').hide();
   })
   
-  
-  
 
-  
-  
 
 })

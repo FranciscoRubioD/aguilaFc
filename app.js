@@ -515,7 +515,6 @@ app.get('/jugadores/prueba', (req,res) =>{
 // middleware para verificar token
 app.get('/verify-token', authenticateToken, (req, res) => {
   // Verifica los datos del usuario en la consola para depuración
-
   // Si el token es válido, se envía una respuesta positiva
   res.json({
     message: 'Token verificado',

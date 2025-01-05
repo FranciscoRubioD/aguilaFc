@@ -23,7 +23,7 @@ $(document).ready(function() {
 
   const token = localStorage.getItem('token'); // O el lugar donde guardas el token
 
-  console.log(`token sacado ${token}`);
+
 
 
   $('#addUserbtn2').on('click',function(){
@@ -39,55 +39,58 @@ $(document).ready(function() {
   poblarTablaUser();
 
   // trae info de equipos
-  $.ajax({
-    type:'GET',
-    url:'/get/equipo',
-    headers: {
-        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
-    },
-    dataType:'json',
-    success: function(response){
-      
-      // una vez tenemos info de los equipos
-   
-      // creamos opciones en base a cantidad de equipo
-      response.results.forEach(function(equipo) {
-
-        const equipoLabel = $('<label>').addClass('checkmark-user');
-        const nombreLabel = $('<p>').text(equipo.nombre);
-        const inputEquipo = $('<input>').attr('type','checkbox');
-        inputEquipo.val(equipo.id);
-
-        equipoLabel.append(inputEquipo);
-        equipoLabel.append(nombreLabel);
+  window.traerEquipos = function(){
+    $.ajax({
+      type:'GET',
+      url:'/get/equipo',
+      headers: {
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+      },
+      dataType:'json',
+      success: function(response){
         
-        $('#checkBoxEquipo').append(equipoLabel);
-
-        // si ya tiene no lo agregue
-        
-
-        const inputOptionEquipo = $('<option>');
-        inputOptionEquipo.text(equipo.nombre);
-        inputOptionEquipo.val(equipo.id);
-        
-
-        $('#mySelect4').append(inputOptionEquipo);
-        
-
-      });
-      
+        // una vez tenemos info de los equipos
      
-
-      NiceSelect.bind(document.getElementById("mySelect4"), {
-      });
-    
-
-    },
-    error: function(xhr, status, error) {
-      console.error('Error al obtener informacion de equipo:', error);
-    }
-
-  });
+        // creamos opciones en base a cantidad de equipo
+        response.results.forEach(function(equipo) {
+  
+          const equipoLabel = $('<label>').addClass('checkmark-user');
+          const nombreLabel = $('<p>').text(equipo.nombre);
+          const inputEquipo = $('<input>').attr('type','checkbox');
+          inputEquipo.val(equipo.id);
+  
+          equipoLabel.append(inputEquipo);
+          equipoLabel.append(nombreLabel);
+          
+          $('#checkBoxEquipo').append(equipoLabel);
+  
+          // si ya tiene no lo agregue
+          
+  
+          const inputOptionEquipo = $('<option>');
+          inputOptionEquipo.text(equipo.nombre);
+          inputOptionEquipo.val(equipo.id);
+          
+  
+          $('#mySelect4').append(inputOptionEquipo);
+          
+  
+        });
+        
+       
+  
+        NiceSelect.bind(document.getElementById("mySelect4"), {
+        });
+      
+  
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al obtener informacion de equipo:', error);
+      }
+  
+    });
+  }
+  
 
   
   // eventos del form
