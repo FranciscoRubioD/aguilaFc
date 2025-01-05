@@ -1,45 +1,45 @@
-const token = localStorage.getItem('token'); // Obtener el token almacenado
-
-authToken(token);  
-
-function authToken(token){
-   // Si el token está presente, realizar una solicitud para verificarlo
-  $.ajax({
-    url: '/verify-token',  // Nueva ruta que puedes crear para verificar el token
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
-    },
-    success: function(response) {
-
-      localStorage.setItem('userRole', response.user.rol); // Guardar rol
-      localStorage.setItem('userName', response.user.nombre); // Guardar nombre si es necesario
-    
-      // Verifica que 'response' contiene la propiedad 'user' y 'user.username'
-      $('#nombreMostrar').text(`Hola, ${response.user.nombre}`); // Muestra el nombre de usuario
-      $('#profileSlideName').text(response.user.nombre);
-      $('#emailProfile').text(response.user.email);
-
-      $('#tusEquipos').text('Tus equipos: ');
-      
-        // Opcional: personaliza la interfaz
-        setupNavigation(response.user.rol);
-        setupFields(response.user.id);
-
-        // asignar permisos 
-        asignarPermisos(response.user.id);
-       
-    },
-    error: function(error) {
-      if (error.status === 401 || error.status === 403) {
-        alert('No estás autorizado para ver esta página');
-        window.location.href = '/login/admin'; // Redirigir si el token es inválido
-      }
-    }
-  });
-}
-
 $(document).ready(function() {
+
+  const token = localStorage.getItem('token'); // Obtener el token almacenado
+
+  authToken(token);  
+
+  function authToken(token){
+     // Si el token está presente, realizar una solicitud para verificarlo
+    $.ajax({
+      url: '/verify-token',  // Nueva ruta que puedes crear para verificar el token
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+      },
+      success: function(response) {
+
+        localStorage.setItem('userRole', response.user.rol); // Guardar rol
+        localStorage.setItem('userName', response.user.nombre); // Guardar nombre si es necesario
+      
+        // Verifica que 'response' contiene la propiedad 'user' y 'user.username'
+        $('#nombreMostrar').text(`Hola, ${response.user.nombre}`); // Muestra el nombre de usuario
+        $('#profileSlideName').text(response.user.nombre);
+        $('#emailProfile').text(response.user.email);
+
+        $('#tusEquipos').text('Tus equipos: ');
+        
+          // Opcional: personaliza la interfaz
+          setupNavigation(response.user.rol);
+          setupFields(response.user.id);
+
+          // asignar permisos 
+          asignarPermisos(response.user.id);
+         
+      },
+      error: function(error) {
+        if (error.status === 401 || error.status === 403) {
+          alert('No estás autorizado para ver esta página');
+          window.location.href = '/login/admin'; // Redirigir si el token es inválido
+        }
+      }
+    });
+  }
 
   $('#logoutButton').on('click',function(){
     logout();
