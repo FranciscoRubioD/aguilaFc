@@ -536,7 +536,7 @@ $(document).ready(function() {
       type:'GET',
       url:'/get/equipo',
       headers: {
-        'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+        'Authorization': 'Bearer' + token // Agrega el token con "Bearer"
       },
       dataType:'json',
       success: function(response){
