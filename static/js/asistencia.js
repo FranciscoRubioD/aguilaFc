@@ -352,10 +352,6 @@ $(document).ready(function() {
 
   function poblarCalendario(){
 
-    
-
-    
-
     if (!token) {
         console.log("No hay token, no se puede acceder a los eventos");
         return;
@@ -536,7 +532,7 @@ $(document).ready(function() {
       type:'GET',
       url:'/get/equipo',
       headers: {
-        'Authorization': 'Bearer' + token // Agrega el token con "Bearer"
+        'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
       },
       dataType:'json',
       success: function(response){
