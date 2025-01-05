@@ -1715,17 +1715,17 @@ function formatFechaHora(fechaUTC, hora) {
 
 
 function actualizarEstadisticas(g, e, p) {
+  // Convierte los valores a números
+  g = parseInt(g, 10);  // Utiliza parseInt para convertir a enteros
+  e = parseInt(e, 10);  // Si necesitas decimales, usa parseFloat en lugar de parseInt
+  p = parseInt(p, 10);
+
   const total = g + e + p;  // Total de partidos
 
-  console.log(total);
-
-  console.log(Math.max((g / total))
-);
-  const minWidth = 10; // Ancho mínimo en porcentaje
+  const minWidth = 5; // Ancho mínimo en porcentaje
   const porcentajeGanadas = Math.max((g / total) * 100, minWidth);
   const porcentajeEmpates = Math.max((e / total) * 100, minWidth);
   const porcentajePerdidas = Math.max((p / total) * 100, minWidth);
-
 
   // Asigna los anchos de cada segmento basado en los porcentajes
   document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
@@ -1737,6 +1737,7 @@ function actualizarEstadisticas(g, e, p) {
   document.getElementById('textoEmpates').innerText = `Empates: ${e}`;
   document.getElementById('textoPerdidas').innerText = `Perdidas: ${p}`;
 }
+
 
 // Llama a la función con los valores de ejemplo
 
