@@ -2,6 +2,9 @@
 $(document).ready(function() {
 
   let functionRepeater = 0;
+  
+  let ajaxRequestInProgress = false; // Bandera para evitar solicitudes AJAX duplicadas
+  let currentPage = 1;
   // mostrar asistencias 
    // select asistencia checkmark
 
@@ -272,13 +275,68 @@ $(document).ready(function() {
     });
   }
 
+  function toggleModalAsistencia(){
+
+    const seccion1Info = $('.asistencia-setting');
+    const seccion2Tabla  = $('.asistenciaEvento');
+    const seccion3Tabla = $('.evento-Info');
+
+    // setea visibilidad inicial
+    seccion1Info.show();
+    seccion2Tabla.hide();
+    seccion3Tabla.hide();
+    
+    
+    const toggleBtn1 = $('#toggleBtn1'); 
+    const toggleBtn2 = $('#toggleBtn2');
+    const toggleBtn3  = $('#toggleBtn3');
+
+    toggleBtn1.addClass('optSelected');
+    toggleBtn2.removeClass('optSelected');
+    toggleBtn3.removeClass('optSelected');
+
+
+    toggleBtn1.on('click',function(){
+      seccion1Info.fadeIn(200);
+      seccion2Tabla.fadeOut(200);
+      seccion3Tabla.fadeOut(200);
+ 
+
+      toggleBtn1.addClass('optSelected');
+      toggleBtn2.removeClass('optSelected');
+      toggleBtn3.removeClass('optSelected');
+    });
+
+    toggleBtn2.on('click',function(){
+      seccion1Info.fadeOut(200);
+      seccion2Tabla.fadeIn(200);
+      seccion3Tabla.fadeOut(200);
+
+      toggleBtn2.addClass('optSelected');
+      toggleBtn1.removeClass('optSelected');
+      toggleBtn3.removeClass('optSelected');
+    });
+
+    toggleBtn3.on('click',function(){
+      seccion1Info.fadeOut(200);
+      seccion2Tabla.fadeOut(200);
+      seccion3Tabla.fadeIn(200);
+
+      toggleBtn2.removeClass('optSelected');
+      toggleBtn1.removeClass('optSelected');
+      toggleBtn3.addClass('optSelected');
+    });
+
+    
+
+  }
+
+
 
 
 
   // calendario 
   const calendar = $('#calendar');
-
-  poblarCalendario();
 
   function poblarCalendario(){
 
@@ -444,62 +502,7 @@ $(document).ready(function() {
   }
 
   // toggle tool bar events. 
-  function toggleModalAsistencia(){
-
-    const seccion1Info = $('.asistencia-setting');
-    const seccion2Tabla  = $('.asistenciaEvento');
-    const seccion3Tabla = $('.evento-Info');
-
-    // setea visibilidad inicial
-    seccion1Info.show();
-    seccion2Tabla.hide();
-    seccion3Tabla.hide();
-    
-    
-    const toggleBtn1 = $('#toggleBtn1'); 
-    const toggleBtn2 = $('#toggleBtn2');
-    const toggleBtn3  = $('#toggleBtn3');
-
-    toggleBtn1.addClass('optSelected');
-    toggleBtn2.removeClass('optSelected');
-    toggleBtn3.removeClass('optSelected');
-
-
-    toggleBtn1.on('click',function(){
-      seccion1Info.fadeIn(200);
-      seccion2Tabla.fadeOut(200);
-      seccion3Tabla.fadeOut(200);
  
-
-      toggleBtn1.addClass('optSelected');
-      toggleBtn2.removeClass('optSelected');
-      toggleBtn3.removeClass('optSelected');
-    });
-
-    toggleBtn2.on('click',function(){
-      seccion1Info.fadeOut(200);
-      seccion2Tabla.fadeIn(200);
-      seccion3Tabla.fadeOut(200);
-
-      toggleBtn2.addClass('optSelected');
-      toggleBtn1.removeClass('optSelected');
-      toggleBtn3.removeClass('optSelected');
-    });
-
-    toggleBtn3.on('click',function(){
-      seccion1Info.fadeOut(200);
-      seccion2Tabla.fadeOut(200);
-      seccion3Tabla.fadeIn(200);
-
-      toggleBtn2.removeClass('optSelected');
-      toggleBtn1.removeClass('optSelected');
-      toggleBtn3.addClass('optSelected');
-    });
-
-    
-
-  }
-
   let marcarTodos = true;
   // loading lotie
   
@@ -1392,16 +1395,6 @@ function changeLocation(id,location){
 
   }
 
-
-
-  let ajaxRequestInProgress = false; // Bandera para evitar solicitudes AJAX duplicadas
-  let currentPage = 1;
-
-
-
- 
-
-
   // notas
   function showNotes(evento){
 
@@ -1574,28 +1567,28 @@ function changeLocation(id,location){
   }
 
   // mostrar asistencia
-  function determinarAMPM(horaMilitar) {
-    const hora = parseInt(horaMilitar.split(':')[0]);
-    const minutos = horaMilitar.split(':')[1];
+//   function determinarAMPM(horaMilitar) {
+//     const hora = parseInt(horaMilitar.split(':')[0]);
+//     const minutos = horaMilitar.split(':')[1];
     
-    if (hora === 0 || hora === 24) {
-        return `12:${minutos} AM`; // 00:00 y 24:00 se consideran 12:00 AM
-    } else if (hora === 12) {
-        return `12:${minutos} PM`; // 12:00 es 12:00 PM
-    } else if (hora < 12) {
-        return `${hora}:${minutos} AM`; // Horas de 1 a 11 son AM
-    } else {
-        return `${hora - 12}:${minutos} PM`; // Horas de 13 a 23 son PM
-    }
-} 
+//     if (hora === 0 || hora === 24) {
+//         return `12:${minutos} AM`; // 00:00 y 24:00 se consideran 12:00 AM
+//     } else if (hora === 12) {
+//         return `12:${minutos} PM`; // 12:00 es 12:00 PM
+//     } else if (hora < 12) {
+//         return `${hora}:${minutos} AM`; // Horas de 1 a 11 son AM
+//     } else {
+//         return `${hora - 12}:${minutos} PM`; // Horas de 13 a 23 son PM
+//     }
+// } 
 
-  // formatear fecha
-  function formatDate(fecha) {
-    const dia = fecha.getDate().toString().padStart(2, '0');
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const anio = fecha.getFullYear();
-    return `${dia}/${mes}/${anio}`;
-  }
+//   // formatear fecha
+//   function formatDate(fecha) {
+//     const dia = fecha.getDate().toString().padStart(2, '0');
+//     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+//     const anio = fecha.getFullYear();
+//     return `${dia}/${mes}/${anio}`;
+//   }
 
 })
 
@@ -1764,6 +1757,9 @@ $('#dashboardTeamView').on('change', function() {
 // sectionNav();
 
 
+poblarCalendario();
+
+
 $('.nav-btn').on('click',function(){
   
     // Ocultar todas las secciones
@@ -1806,6 +1802,8 @@ $('#goToCalendar').on('click', function() {
   const calendar = $('#calendar').fullCalendar('getCalendar'); // Cambiar según tu versión
   calendar.render();
 });
+
+
 
 
 // función side bar evento sub seccion
