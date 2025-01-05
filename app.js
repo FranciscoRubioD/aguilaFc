@@ -20,6 +20,7 @@ const { router: cargasRouter } = require("./cargas.js");
 let uniqueLinkId = uuid.v4();
 let linkExpiration = Date.now() + 2 * 60 * 60 * 1000; // El enlace es válido por 2 horas
 
+app.use(express.static('public'));
 
 
 // funcion para Generar identificador único 
