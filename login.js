@@ -454,9 +454,15 @@ router.delete('/user/equipo/:userId/:equipoId', (req, res) => {
   }
 
   function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers['Authorization'];
+
+    console.log('Authorization header:', authHeader);  // Agregar este log para verificar el encabezado
+
     const token = authHeader && authHeader.split(' ')[1];
+    
+    
   
+    
     if (!token) {
       return res.sendStatus(401); // Si no hay token, retornar error 401
     }

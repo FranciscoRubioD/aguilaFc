@@ -539,7 +539,7 @@ $(document).ready(function() {
 
 
         // eventos asistencias
-
+        
         // equipo 
         const selectEquipo = $('#equipoAsistencia');
         selectEquipo.empty();

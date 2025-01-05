@@ -4,6 +4,8 @@ $(document).ready(function() {
 
   authToken(token);  
 
+
+
   function authToken(token){
      // Si el token está presente, realizar una solicitud para verificarlo
     $.ajax({
@@ -30,6 +32,8 @@ $(document).ready(function() {
 
           // asignar permisos 
           asignarPermisos(response.user.id);
+
+          
          
       },
       error: function(error) {
@@ -42,6 +46,7 @@ $(document).ready(function() {
   }
 
   $('#logoutButton').on('click',function(){
+
     logout();
 
   });
@@ -53,6 +58,7 @@ $(document).ready(function() {
 
     // Redirigir al usuario al inicio de sesión o página de inicio
     window.location.href = '/login/admin';  
+
   }
 
  
@@ -89,7 +95,6 @@ $(document).ready(function() {
           partidoHistorial(primerEquipo.equipo_id);
           obtenerProximoPartido(primerEquipo.equipo_id);
           
-
           // asignarPermisos(equiposPermitidos);
         } else {
           console.warn('No tienes acceso a ningún equipo.');
