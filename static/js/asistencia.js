@@ -1717,12 +1717,15 @@ function formatFechaHora(fechaUTC, hora) {
 function actualizarEstadisticas(g, e, p) {
   const total = g + e + p;  // Total de partidos
 
-  
+  console.log(total);
 
-  const minWidth = 5; // Ancho mínimo en porcentaje
-  const porcentajeGanadas = Math.max((g / total) * 10, minWidth);
-  const porcentajeEmpates = Math.max((e / total) * 10, minWidth);
-  const porcentajePerdidas = Math.max((p / total) * 10, minWidth);
+  console.log(Math.max((g / total))
+);
+  const minWidth = 10; // Ancho mínimo en porcentaje
+  const porcentajeGanadas = Math.max((g / total) * 100, minWidth);
+  const porcentajeEmpates = Math.max((e / total) * 100, minWidth);
+  const porcentajePerdidas = Math.max((p / total) * 100, minWidth);
+
 
   // Asigna los anchos de cada segmento basado en los porcentajes
   document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
