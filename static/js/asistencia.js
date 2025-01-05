@@ -532,7 +532,7 @@ $(document).ready(function() {
       type:'GET',
       url:'/get/equipo',
       headers: {
-        'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
       },
       dataType:'json',
       success: function(response){
@@ -573,31 +573,7 @@ $(document).ready(function() {
         });
 
 
-        // usuarios 
-        response.results.forEach(function(equipo) {
-
-          const equipoLabel = $('<label>').addClass('checkmark-user');
-          const nombreLabel = $('<p>').text(equipo.nombre);
-          const inputEquipo = $('<input>').attr('type','checkbox');
-          inputEquipo.val(equipo.id);
-  
-          equipoLabel.append(inputEquipo);
-          equipoLabel.append(nombreLabel);
-          
-          $('#checkBoxEquipo').append(equipoLabel);
-  
-          // si ya tiene no lo agregue
-          
-  
-          const inputOptionEquipo = $('<option>');
-          inputOptionEquipo.text(equipo.nombre);
-          inputOptionEquipo.val(equipo.id);
-          
-  
-          $('#mySelect4').append(inputOptionEquipo);
-          
-  
-        });
+       
         
       }
     })
