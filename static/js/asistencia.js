@@ -1716,11 +1716,11 @@ function formatFechaHora(fechaUTC, hora) {
 
 function actualizarEstadisticas(g, e, p) {
   const total = g + e + p;  // Total de partidos
- 
-  // Calcula los porcentajes de cada tipo de resultado
-  const porcentajeGanadas = (g / total) * 1000;
-  const porcentajeEmpates = (e / total) * 1000;
-  const porcentajePerdidas = (p / total) * 1000;
+
+  const minWidth = 5; // Ancho mínimo en porcentaje
+  const porcentajeGanadas = Math.max((g / total) * 100, minWidth);
+  const porcentajeEmpates = Math.max((e / total) * 100, minWidth);
+  const porcentajePerdidas = Math.max((p / total) * 100, minWidth);
 
   // Asigna los anchos de cada segmento basado en los porcentajes
   document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
