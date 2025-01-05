@@ -31,9 +31,7 @@ $(document).ready(function() {
 
           // asignar permisos 
           asignarPermisos(response.user.id);
-
-          // 
-          traerEquipos();
+          
 
       },
       error: function(error) {
@@ -115,8 +113,61 @@ $(document).ready(function() {
     selectEquipos('id_equipo',false, userId);   
     selectEquipos('mySelect',false, userId);
     selectEquipos('equipoAsistencia',false,userId);
+    checkBoxEquipos(userId);
+
     // que le muestras al cliente
 
+
+  }
+
+  function checkBoxEquipos(userId){
+
+    $.ajax({
+      url: `/auth/equipo/${userId}`, // Ruta al backend
+      method: 'GET',
+      success: function(response) {
+        
+        response.results.forEach(function(equipo) {
+
+          const equipoLabel = $('<label>').addClass('checkmark-user');
+          const nombreLabel = $('<p>').text(equipo.nombre);
+          const inputEquipo = $('<input>').attr('type','checkbox');
+          inputEquipo.val(equipo.id);
+  
+          equipoLabel.append(inputEquipo);
+          equipoLabel.append(nombreLabel);
+          
+          $('#checkBoxEquipo').append(equipoLabel);
+  
+          // si ya tiene no lo agregue
+          
+  
+          const inputOptionEquipo = $('<option>');
+          inputOptionEquipo.text(equipo.nombre);
+          inputOptionEquipo.val(equipo.id);
+          
+  
+          $('#mySelect4').append(inputOptionEquipo);
+          
+  
+        });
+        
+       
+  
+        NiceSelect.bind(document.getElementById("mySelect4"), {
+        });
+
+
+
+      },
+      error: function(error) {
+        console.error('Error al obtener los equipos:', error);
+        // Manejar el error mostrando un mensaje al usuario
+        const select = $(`#${selectElement}`);
+        select.empty();
+        select.append('<option value="">Error al cargar equipos</option>');
+      }
+    });
 
   }
 
