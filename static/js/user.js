@@ -1,5 +1,6 @@
 let showSelect = false; // Asegúrate de declarar esta variable globalmente
 let modalAbierto = false;
+const token = localStorage.getItem('token'); // O el lugar donde guardas el token
 
 
 $('.selectBox').on('click', (event) => {
@@ -34,11 +35,13 @@ $(document).ready(function() {
   
   poblarTablaUser();
 
-
   // trae info de equipos
   $.ajax({
     type:'GET',
     url:'/get/equipo',
+    headers: {
+      'Authorization': 'Bearer ' + token // Agrega el token con "Bearer"
+    },
     dataType:'json',
     success: function(response){
       
