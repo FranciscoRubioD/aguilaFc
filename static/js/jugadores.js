@@ -113,6 +113,7 @@ $(document).ready(function() {
     selectEquipos('id_equipo',false, userId);   
     selectEquipos('mySelect',false, userId);
     selectEquipos('equipoAsistencia',false,userId);
+    selectEquipos('entrenador',false,userId);
     checkBoxEquipos(userId);
 
     // que le muestras al cliente
@@ -188,8 +189,15 @@ $(document).ready(function() {
             select.append(option);
           }
           response.results.forEach(equipo => {
-            const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
-            select.append(option);
+
+            if(selectElement != "entrenador"){
+              const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
+              select.append(option);
+            }else{
+              const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
+              select.append(option);
+            }
+            
           });
         } else {
           // Si no hay resultados, agregar una opción predeterminada

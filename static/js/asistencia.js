@@ -528,55 +528,55 @@ $(document).ready(function() {
 
 
   // seleccionar datos para enviar a la asistencia
-    $.ajax({
-      type:'GET',
-      url:'/get/equipo',
-      headers: {
-        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
-      },
-      dataType:'json',
-      success: function(response){
+    // $.ajax({
+    //   type:'GET',
+    //   url:'/get/equipo',
+    //   headers: {
+    //     'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+    //   },
+    //   dataType:'json',
+    //   success: function(response){
 
 
-        // eventos asistencias
+    //     // eventos asistencia
         
-        // equipo 
-        const selectEquipo = $('#equipoAsistencia');
-        selectEquipo.empty();
+    //     // equipo 
+    //     const selectEquipo = $('#equipoAsistencia');
+    //     selectEquipo.empty();
         
-        const opcionEquipo = $('<option>').attr('value', '').text('Selecciona equipo');
-        selectEquipo.append(opcionEquipo);
+    //     const opcionEquipo = $('<option>').attr('value', '').text('Selecciona equipo');
+    //     selectEquipo.append(opcionEquipo);
 
-        // entrenador
-        const entrenadorEquipo = $('#entrenador');
-        entrenadorEquipo.empty();
+    //     // entrenador
+    //     const entrenadorEquipo = $('#entrenador');
+    //     entrenadorEquipo.empty();
 
-        const opcionEntrenador = $('<option>').attr('value','').text('Selecciona Entrenador');
-        entrenadorEquipo.append(opcionEntrenador);
+    //     const opcionEntrenador = $('<option>').attr('value','').text('Selecciona Entrenador');
+    //     entrenadorEquipo.append(opcionEntrenador);
 
         
         
-        // Iterar sobre los equipos y agregar opciones al select
-        response.results.forEach(function(equipo) {
-          const opcionEquipo = $('<option>').attr('value', equipo.id).text(equipo.nombre);
-          selectEquipo.append(opcionEquipo);
+    //     // Iterar sobre los equipos y agregar opciones al select
+    //     response.results.forEach(function(equipo) {
+    //       const opcionEquipo = $('<option>').attr('value', equipo.id).text(equipo.nombre);
+    //       selectEquipo.append(opcionEquipo);
 
-          const opcionEntrenador = $('<option>').attr('value', equipo.entrenador).text(equipo.entrenador);
-          entrenadorEquipo.append(opcionEntrenador);
+    //       const opcionEntrenador = $('<option>').attr('value', equipo.entrenador).text(equipo.entrenador);
+    //       entrenadorEquipo.append(opcionEntrenador);
 
-        })
+    //     })
 
-        NiceSelect.bind(document.getElementById("equipoAsistencia"), {
-        });
+    //     NiceSelect.bind(document.getElementById("equipoAsistencia"), {
+    //     });
 
-        NiceSelect.bind(document.getElementById("entrenador"), {
-        });
+    //     NiceSelect.bind(document.getElementById("entrenador"), {
+    //     });
 
 
        
         
-      }
-    })
+    //   }
+    // })
 
 
 
