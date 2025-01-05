@@ -1,6 +1,217 @@
 
 $(document).ready(function() {
 
+
+  // mostrar asistencias 
+   // select asistencia checkmark
+   window.modalAsistencia =  function (evento,page){
+
+    $.ajax({
+      type: 'GET',
+      url: '/jugador/evento/asistencia',
+      data: {
+        evento: evento,
+        page: page, // Puedes ajustar esto según sea necesario
+        limit: 7 // Ajusta el límite aquí
+      },
+      dataType: 'json',
+      success: function(response) {
+        const bodytable = $('.datos-asistencia-modal');
+        const table = $('.table-asist-modal');
+        const btnTabla = $('#updateList');
+        
+        bodytable.empty(); // Limpiar la tabla antes de añadir nuevos datos
+        table.removeClass('visible');
+        $('.enviar-asist-div').removeClass('visible');
+        
+
+        console.log(`total pages: ${response.totalPages}`);
+        console.log(`total players: ${response.totalPlayers}`);
+      
+
+        // Generar la paginación
+        generarPaginacionAsist(evento,response.totalPages,modalAsistencia);
+
+        // Verificar si hay resultados
+        if (response.players.length === 0) {
+          table.hide();
+          btnTabla.hide();
+          eventExistList(evento); // Función que se debe definir para manejar la falta de datos
+        } else {
+          table.show();
+          $('.table-asist-new').hide();
+          $('#newList').hide();
+          btnTabla.show();
+          
+          // Iterar sobre los datos obtenidos y construir filas para cada jugador
+          $.each(response.players, function(index, jugador) {
+            const fila = $('<tr>').attr('data-jugador-id', jugador.id);
+    
+            // Columna para el nombre del jugador
+            const columnaNombre = $('<td>').text(jugador.Nombre);
+            fila.append(columnaNombre);
+
+            
+            // columna cedula
+            const columnaCedula = $('<td>').text(jugador.cedula);
+            fila.append(columnaCedula);
+    
+            ['presente', 'ausente', 'tardanza', 'justificado'].forEach(function(estado) {
+              const columnaEstado = $('<td>');
+              const label = $('<label>').addClass('custom-checkbox');
+              const input = $('<input>').attr({
+                type: 'checkbox',
+                name: `${estado}_${jugador.id}`, // Usar un nombre único
+                id: estado + jugador.id // Usar algún identificador único para cada checkbox
+              });
+    
+              input.addClass(estado);
+              const span = $('<span>').addClass('checkmark');
+              label.append(input, span);
+              columnaEstado.append(label);
+              fila.append(columnaEstado);
+
+              input.change(function() {
+                // Obtener la fila (tr) padre del checkbox actual
+                var fila = $(this).closest('tr');
+              
+                
+                // Desmarcar todos los checkboxes dentro de la misma fila
+                fila.find('input[type="checkbox"]').not(this).prop('checked', false);
+        
+                var estado = $(this).attr('id').replace(/\d+$/, ''); // Elimina cualquier número al final del id
+                
+                console.log('Estado seleccionado:', estado);
+              });
+
+              // marcar todos presentes
+              marcarTodosCheckBox($('.presente-all'),'.datos-asistencia-modal',`${estado}_${jugador.id}`);
+
+            });
+    
+            // Columna para el textarea de observaciones
+            const columnaObservaciones = $('<td>');
+            const textarea = $('<textarea>').attr('id', 'observaciones' + jugador.id);
+            columnaObservaciones.append(textarea);
+            fila.append(columnaObservaciones);
+
+            
+            // Agregar la fila al cuerpo de la tabla
+            bodytable.append(fila);
+    
+            // Trae estado de cada jugador
+            $.ajax({
+              type: 'GET',
+              url: '/estado/asistencia',
+              data: {
+                id_jugador: jugador.id,
+                evento: evento
+              },
+              success: function(response) {
+                const estadoJugador = response.estado;
+                const descripcionJugador = response.descripcion;
+                const nombreCheckbox = `${estadoJugador}_${jugador.id}`;
+                
+                
+    
+                // Buscar la fila correspondiente al jugador
+                const filaJugador = bodytable.find(`tr[data-jugador-id='${jugador.id}']`);
+                
+                // Marcar el checkbox en la fila correspondiente al jugador
+                filaJugador.find(`input[name='${nombreCheckbox}']`).prop('checked', true);
+    
+                // Insertar la descripción en el textarea correspondiente
+                filaJugador.find(`#observaciones${jugador.id}`).val(descripcionJugador);
+
+               // enviar asistencias
+               
+                const botonEnviar = $('.enviar-asist-btn');
+
+                botonEnviar.off('click').on('click', function(){
+                  const asistencias = [];
+                  let allSelected = true;
+
+                  $('.datos-asistencia-modal tr').each(function() {
+                    const fila = $(this);
+                    // Obtener el id del jugador desde el atributo data-jugador-id
+                    const jugadorId = fila.data('jugador-id');
+                    
+                    // Verificar todos los checkboxes de estado en esta fila
+                    let estadoSeleccionado = null;
+                    fila.find('input[type="checkbox"]:checked').each(function() {
+                      const checkboxId = $(this).attr('id');
+                      if (checkboxId) {
+                        estadoSeleccionado = checkboxId.replace(/\d+$/, ''); // Extraer el estado
+                      }
+                    });
+                
+                    const observaciones = fila.find('textarea').val();
+                
+                    if (estadoSeleccionado) {
+                      asistencias.push({
+                        id_jugador: jugadorId,
+                        id_evento: evento,
+                        estado: estadoSeleccionado,
+                        observaciones: observaciones,
+                      });
+                    } else {
+                      allSelected = false; // Si hay al menos un jugador sin estado seleccionado
+                    }
+
+                  });
+                
+
+                  if (!allSelected) {
+                    alert('Por favor, selecciona un estado para todos los jugadores.');
+                    return; // Salir si no todos los jugadores tienen un estado
+                  }
+
+                  console.log(`estas son las modificaciones, ${asistencias}`);
+
+
+                  $.ajax({
+                    type: 'PUT',
+                    url: '/modificar/asistencia',
+                    contentType: 'application/json', // Indicar que enviamos JSON
+                    data: JSON.stringify(asistencias), // Convertir el arreglo a JSON
+                    success:function(response){
+                      
+                      console.log('Respuesta del servidor:', response);
+
+                      alert('Asistencia guardad con éxito');
+                      // $('.modal-asistencia').hide();
+                      btnTabla.show();
+                    },
+                    error: function(xhr, status, error) {
+                      console.error('Error al guardar la asistencia:', error);
+                      alert('Hubo un error al guardar la asistencia. Por favor, inténtalo de nuevo.');
+                      // Habilitar nuevamente el botón en caso de error
+                      $('#enviarAsistBtn').prop('disabled', false);
+                    }
+                  })
+
+
+                });
+
+
+
+              },
+              error: function(xhr, status, error) {
+                console.error('Error al obtener el estado del jugador:', error);
+              }
+            });
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al obtener la asistencia de los jugadores:', error);
+      }
+    });
+  }
+
+
+
+
   // calendario 
   const calendar = $('#calendar');
 
@@ -1188,212 +1399,6 @@ function changeLocation(id,location){
 
   }
 
-
-  // select asistencia checkmark
-  window.modalAsistencia =  function (evento,page){
-
-    $.ajax({
-      type: 'GET',
-      url: '/jugador/evento/asistencia',
-      data: {
-        evento: evento,
-        page: page, // Puedes ajustar esto según sea necesario
-        limit: 7 // Ajusta el límite aquí
-      },
-      dataType: 'json',
-      success: function(response) {
-        const bodytable = $('.datos-asistencia-modal');
-        const table = $('.table-asist-modal');
-        const btnTabla = $('#updateList');
-        
-        bodytable.empty(); // Limpiar la tabla antes de añadir nuevos datos
-        table.removeClass('visible');
-        $('.enviar-asist-div').removeClass('visible');
-        
-
-        console.log(`total pages: ${response.totalPages}`);
-        console.log(`total players: ${response.totalPlayers}`);
-      
-
-        // Generar la paginación
-        generarPaginacionAsist(evento,response.totalPages,modalAsistencia);
-
-        // Verificar si hay resultados
-        if (response.players.length === 0) {
-          table.hide();
-          btnTabla.hide();
-          eventExistList(evento); // Función que se debe definir para manejar la falta de datos
-        } else {
-          table.show();
-          $('.table-asist-new').hide();
-          $('#newList').hide();
-          btnTabla.show();
-          
-          // Iterar sobre los datos obtenidos y construir filas para cada jugador
-          $.each(response.players, function(index, jugador) {
-            const fila = $('<tr>').attr('data-jugador-id', jugador.id);
-    
-            // Columna para el nombre del jugador
-            const columnaNombre = $('<td>').text(jugador.Nombre);
-            fila.append(columnaNombre);
-
-            
-            // columna cedula
-            const columnaCedula = $('<td>').text(jugador.cedula);
-            fila.append(columnaCedula);
-    
-            ['presente', 'ausente', 'tardanza', 'justificado'].forEach(function(estado) {
-              const columnaEstado = $('<td>');
-              const label = $('<label>').addClass('custom-checkbox');
-              const input = $('<input>').attr({
-                type: 'checkbox',
-                name: `${estado}_${jugador.id}`, // Usar un nombre único
-                id: estado + jugador.id // Usar algún identificador único para cada checkbox
-              });
-    
-              input.addClass(estado);
-              const span = $('<span>').addClass('checkmark');
-              label.append(input, span);
-              columnaEstado.append(label);
-              fila.append(columnaEstado);
-
-              input.change(function() {
-                // Obtener la fila (tr) padre del checkbox actual
-                var fila = $(this).closest('tr');
-              
-                
-                // Desmarcar todos los checkboxes dentro de la misma fila
-                fila.find('input[type="checkbox"]').not(this).prop('checked', false);
-        
-                var estado = $(this).attr('id').replace(/\d+$/, ''); // Elimina cualquier número al final del id
-                
-                console.log('Estado seleccionado:', estado);
-              });
-
-              // marcar todos presentes
-              marcarTodosCheckBox($('.presente-all'),'.datos-asistencia-modal',`${estado}_${jugador.id}`);
-
-            });
-    
-            // Columna para el textarea de observaciones
-            const columnaObservaciones = $('<td>');
-            const textarea = $('<textarea>').attr('id', 'observaciones' + jugador.id);
-            columnaObservaciones.append(textarea);
-            fila.append(columnaObservaciones);
-
-            
-            // Agregar la fila al cuerpo de la tabla
-            bodytable.append(fila);
-    
-            // Trae estado de cada jugador
-            $.ajax({
-              type: 'GET',
-              url: '/estado/asistencia',
-              data: {
-                id_jugador: jugador.id,
-                evento: evento
-              },
-              success: function(response) {
-                const estadoJugador = response.estado;
-                const descripcionJugador = response.descripcion;
-                const nombreCheckbox = `${estadoJugador}_${jugador.id}`;
-                
-                
-    
-                // Buscar la fila correspondiente al jugador
-                const filaJugador = bodytable.find(`tr[data-jugador-id='${jugador.id}']`);
-                
-                // Marcar el checkbox en la fila correspondiente al jugador
-                filaJugador.find(`input[name='${nombreCheckbox}']`).prop('checked', true);
-    
-                // Insertar la descripción en el textarea correspondiente
-                filaJugador.find(`#observaciones${jugador.id}`).val(descripcionJugador);
-
-               // enviar asistencias
-               
-                const botonEnviar = $('.enviar-asist-btn');
-
-                botonEnviar.off('click').on('click', function(){
-                  const asistencias = [];
-                  let allSelected = true;
-
-                  $('.datos-asistencia-modal tr').each(function() {
-                    const fila = $(this);
-                    // Obtener el id del jugador desde el atributo data-jugador-id
-                    const jugadorId = fila.data('jugador-id');
-                    
-                    // Verificar todos los checkboxes de estado en esta fila
-                    let estadoSeleccionado = null;
-                    fila.find('input[type="checkbox"]:checked').each(function() {
-                      const checkboxId = $(this).attr('id');
-                      if (checkboxId) {
-                        estadoSeleccionado = checkboxId.replace(/\d+$/, ''); // Extraer el estado
-                      }
-                    });
-                
-                    const observaciones = fila.find('textarea').val();
-                
-                    if (estadoSeleccionado) {
-                      asistencias.push({
-                        id_jugador: jugadorId,
-                        id_evento: evento,
-                        estado: estadoSeleccionado,
-                        observaciones: observaciones,
-                      });
-                    } else {
-                      allSelected = false; // Si hay al menos un jugador sin estado seleccionado
-                    }
-
-                  });
-                
-
-                  if (!allSelected) {
-                    alert('Por favor, selecciona un estado para todos los jugadores.');
-                    return; // Salir si no todos los jugadores tienen un estado
-                  }
-
-                  console.log(`estas son las modificaciones, ${asistencias}`);
-
-
-                  $.ajax({
-                    type: 'PUT',
-                    url: '/modificar/asistencia',
-                    contentType: 'application/json', // Indicar que enviamos JSON
-                    data: JSON.stringify(asistencias), // Convertir el arreglo a JSON
-                    success:function(response){
-                      
-                      console.log('Respuesta del servidor:', response);
-
-                      alert('Asistencia guardad con éxito');
-                      // $('.modal-asistencia').hide();
-                      btnTabla.show();
-                    },
-                    error: function(xhr, status, error) {
-                      console.error('Error al guardar la asistencia:', error);
-                      alert('Hubo un error al guardar la asistencia. Por favor, inténtalo de nuevo.');
-                      // Habilitar nuevamente el botón en caso de error
-                      $('#enviarAsistBtn').prop('disabled', false);
-                    }
-                  })
-
-
-                });
-
-
-
-              },
-              error: function(xhr, status, error) {
-                console.error('Error al obtener el estado del jugador:', error);
-              }
-            });
-          });
-        }
-      },
-      error: function(xhr, status, error) {
-        console.error('Error al obtener la asistencia de los jugadores:', error);
-      }
-    });
-  }
 
  
 
