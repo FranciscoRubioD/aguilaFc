@@ -537,6 +537,9 @@ $(document).ready(function() {
       dataType:'json',
       success: function(response){
 
+
+        // eventos asistencias
+
         // equipo 
         const selectEquipo = $('#equipoAsistencia');
         selectEquipo.empty();
@@ -568,6 +571,34 @@ $(document).ready(function() {
 
         NiceSelect.bind(document.getElementById("entrenador"), {
         });
+
+
+        // usuarios 
+        response.results.forEach(function(equipo) {
+
+          const equipoLabel = $('<label>').addClass('checkmark-user');
+          const nombreLabel = $('<p>').text(equipo.nombre);
+          const inputEquipo = $('<input>').attr('type','checkbox');
+          inputEquipo.val(equipo.id);
+  
+          equipoLabel.append(inputEquipo);
+          equipoLabel.append(nombreLabel);
+          
+          $('#checkBoxEquipo').append(equipoLabel);
+  
+          // si ya tiene no lo agregue
+          
+  
+          const inputOptionEquipo = $('<option>');
+          inputOptionEquipo.text(equipo.nombre);
+          inputOptionEquipo.val(equipo.id);
+          
+  
+          $('#mySelect4').append(inputOptionEquipo);
+          
+  
+        });
+        
       }
     })
 
