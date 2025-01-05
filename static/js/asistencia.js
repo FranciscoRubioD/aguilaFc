@@ -338,6 +338,9 @@ $(document).ready(function() {
   // calendario 
   const calendar = $('#calendar');
 
+  poblarCalendario();
+
+
   function poblarCalendario(){
 
     // Obtener el token del almacenamiento local o donde lo tengas guardado
@@ -1757,7 +1760,6 @@ $('#dashboardTeamView').on('change', function() {
 // sectionNav();
 
 
-poblarCalendario();
 
 
 $('.nav-btn').on('click',function(){
