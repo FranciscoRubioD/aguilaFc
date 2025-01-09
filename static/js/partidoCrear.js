@@ -7,6 +7,14 @@ $(document).ready(function() {
     const btnSiguienteFormPartido =  $('.btn-sig-partido');
     const btnAnteriorFormPartido = $('.btn-ant-partido');
 
+    $('.closeCrearPartido').on('click', ()=>{
+
+      $('.modalCrearPartido').hide();
+      
+
+
+    });
+
     btnSiguienteFormPartido.on('click',function(){
 
       // hide current page

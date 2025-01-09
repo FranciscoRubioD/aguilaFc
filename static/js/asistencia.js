@@ -1832,7 +1832,26 @@ $('.nav-btn').on('click',function(){
   
 });
 
+followLink('goToCalendar');
+followLink('goToCalendarPartido');
 
+function followLink(link){
+  $(`#${link}`).on('click', function() {
+    // Oculta todas las secciones y remueve la clase activo
+    $('.seccion').removeClass('activo');
+    
+    // Muestra la sección del calendario (eventos)
+    $('#eventos').addClass('activo');
+    
+    // Actualiza el estado del botón en el menú de navegación
+    $('.nav-btn').removeClass('activeOpt');
+    $('.nav-btn[data-seccion="eventos"]').addClass('activeOpt');
+    
+    // Asegúrate de renderizar correctamente el calendario si es necesario
+    const calendar = $('#calendar').fullCalendar('getCalendar'); // Cambiar según tu versión
+    calendar.render();
+  });
+}
 
 $('#goToCalendar').on('click', function() {
   // Oculta todas las secciones y remueve la clase activo
