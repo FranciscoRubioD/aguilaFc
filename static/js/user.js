@@ -354,7 +354,6 @@ function poblarTablaUser() {
   }
 
   // Realiza la solicitud AJAX después de 3 segundos
-  setTimeout(() => {
     $.ajax({
       type: 'GET',
       url: '/get/user',
@@ -418,7 +417,6 @@ function poblarTablaUser() {
         console.error('Error al obtener información de equipo:', error);
       }
     });
-  }, 3000); // 3 segundos de retraso antes de cargar el contenido real
 }
 
 

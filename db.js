@@ -10,6 +10,9 @@ const dbConexion = mysql.createConnection({
   port: 26491,  // Asegúrate de que el puerto sea el correcto
 });
 
+
+
+
 // manejo de error BD
 dbConexion.connect((error)=>{
   if(error){
