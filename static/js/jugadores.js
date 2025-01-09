@@ -159,8 +159,6 @@ $(document).ready(function() {
         NiceSelect.bind(document.getElementById("mySelect4"), {
         });
 
-
-
       },
       error: function(error) {
         console.error('Error al obtener los equipos:', error);
@@ -191,10 +189,14 @@ $(document).ready(function() {
           }
           response.results.forEach(equipo => {
 
-            if(selectElement != "entrenador" || selectElement != "mySelect2"){
+            if(selectElement != "entrenador"){
               const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
               select.append(option);
-            }else{
+            }else if(selectElement === "mySelect2"){
+              const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
+              select.append(option);
+            }
+            else{
               const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
               select.append(option);
             }
