@@ -1473,21 +1473,21 @@ app.get('/fechas', (req, res) => {
 });
 
 
-app.get('/rango/edad',(req,res)=>{
-  const sql = 'SELECT MIN(edad) AS min_edad, MAX(edad) AS max_edad FROM jugadores';
+// app.get('/rango/edad',(req,res)=>{
+//   const sql = 'SELECT MIN(edad) AS min_edad, MAX(edad) AS max_edad FROM jugadores';
 
-    dbConexion.query(sql, (err, result) => {
-        if (err) {
-            console.error('Error al obtener el rango de edad:', err);
-            res.status(500).json({ error: 'Error al obtener el rango de edad' });
-        } else {
+//     dbConexion.query(sql, (err, result) => {
+//         if (err) {
+//             console.error('Error al obtener el rango de edad:', err);
+//             res.status(500).json({ error: 'Error al obtener el rango de edad' });
+//         } else {
             
-            const minEdad = result[0].min_edad;
-            const maxEdad = result[0].max_edad;
-            res.status(200).json({ minEdad: minEdad, maxEdad: maxEdad });
-        }
-    });
-})
+//             const minEdad = result[0].min_edad;
+//             const maxEdad = result[0].max_edad;
+//             res.status(200).json({ minEdad: minEdad, maxEdad: maxEdad });
+//         }
+//     });
+// })
 
 
 // ASISTENCIA

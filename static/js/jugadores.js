@@ -707,7 +707,7 @@ $(document).ready(function() {
   // filtrar por estado de salud
   filtrarTabla('#filtroSalud','.secundary-filter-list-salud');
   // filtrar por rango de edad
-  filtrarTabla('#filtroEdad','.secundary-filter-list-edad');
+  // filtrarTabla('#filtroEdad','.secundary-filter-list-edad');
   // filtrar por posicion
   filtrarTabla('#filtroPosicion','.secundary-filter-list');
 
