@@ -987,26 +987,22 @@ function ocultarLottie() {
     $('.tabla-jugadores .row-data').empty();
 
 
-    for (let i = 0; i < 5; i++) {
-      const skeletonRow = $('<tr>').addClass('row-data skeleton-row');
+    // for (let i = 0; i < 5; i++) {
+    //   const skeletonRow = $('<tr>').addClass('row-data skeleton-row');
   
-      // Agregar celdas vacías con la clase skeleton
-      for (let j = 0; j < 8; j++) { // Asume que tu tabla tiene 8 columnas
-        const skeletonCell = $('<td>').addClass('skeleton-cell');
-        skeletonRow.append(skeletonCell);
-      }
+    //   // Agregar celdas vacías con la clase skeleton
+    //   for (let j = 0; j < 8; j++) { // Asume que tu tabla tiene 8 columnas
+    //     const skeletonCell = $('<td>').addClass('skeleton-cell');
+    //     skeletonRow.append(skeletonCell);
+    //   }
   
-      $('.tabla-jugadores').append(skeletonRow);
-    }
+    //   $('.tabla-jugadores').append(skeletonRow);
+    // }
 
     // Mostrar animación Lottie antes de cargar los datos
-    // mostrarLottie();
+    mostrarLottie();
 
     setTimeout(() => {
-
-    // Reemplaza los skeleton loaders con los datos reales
-    $('.tabla-jugadores .skeleton-row').remove();
-
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
