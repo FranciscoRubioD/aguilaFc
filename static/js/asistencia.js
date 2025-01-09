@@ -13,16 +13,6 @@ $(document).ready(function() {
   let estadoInicio = '';
   let estadoFinal = '';
 
-
-  // lottie loading 
-  const loadingAnimationCount = lottie.loadAnimation({
-    container: document.getElementById('lottieAnimationCount'), // El contenedor de la animación
-    renderer: 'svg', // Renderizar como SVG
-    loop: true, // Animación en bucle
-    autoplay: false, // No reproducir automáticamente
-    path: '/lottie/cargar.json' // Ruta al archivo JSON de Lottie
-  });
-
   // mostrar asistencias 
    // select asistencia checkmark
 
@@ -1752,6 +1742,14 @@ function actualizarEstadisticas(g, e, p) {
 
 
 // Llama a la función con los valores de ejemplo
+ // lottie loading 
+ const loadingAnimationCount = lottie.loadAnimation({
+  container: document.getElementById('lottieAnimationCount'), // El contenedor de la animación
+  renderer: 'svg', // Renderizar como SVG
+  loop: true, // Animación en bucle
+  autoplay: false, // No reproducir automáticamente
+  path: '/lottie/cargar.json' // Ruta al archivo JSON de Lottie
+});
 
 window.obtenerResultados = function (id_equipo){
   
