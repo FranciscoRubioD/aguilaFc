@@ -668,6 +668,7 @@ $(document).ready(function() {
      // Si ya hay una solicitud en curso, no hacer nada
     if (ajaxRequestInProgress) return;
 
+
     if(termino){
       buscarJugadores(termino);
     }else{
@@ -988,13 +989,13 @@ window.ocultarLottie = function (idLottie, variable) {
   function cargarRowData(response){
 
     // Mostrar animación Lottie antes de cargar los datos
-    mostrarLottie('loadingLottie',loadingAnimation);
+    // mostrarLottie('loadingLottie',loadingAnimation);
 
     $('.tabla-jugadores .row-data').empty();
 
     setTimeout(() => {
 
-    ocultarLottie('loadingLottie',loadingAnimation);
+    // ocultarLottie('loadingLottie',loadingAnimation);
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
