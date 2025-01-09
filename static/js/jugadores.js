@@ -989,13 +989,13 @@ window.ocultarLottie = function (idLottie, variable) {
   function cargarRowData(response){
 
     // Mostrar animación Lottie antes de cargar los datos
-    // mostrarLottie('loadingLottie',loadingAnimation);
+    mostrarLottie('loadingLottie',loadingAnimation);
 
     $('.tabla-jugadores .row-data').empty();
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
-    // ocultarLottie('loadingLottie',loadingAnimation);
+
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
@@ -1237,8 +1237,8 @@ window.ocultarLottie = function (idLottie, variable) {
     // Ocultar animación Lottie después de cargar los datos
     // ocultarLottie();
 
-    
-    },1000);
+    ocultarLottie('loadingLottie',loadingAnimation);
+    // },1000);
   }
 
 
