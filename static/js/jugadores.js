@@ -189,14 +189,10 @@ $(document).ready(function() {
           }
           response.results.forEach(equipo => {
 
-            if(selectElement != "entrenador"){
+            if(selectElement != "entrenador" || selectElement != "mySelect2"){
               const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
               select.append(option);
-            }else if(selectElement === "mySelect2"){
-              const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
-              select.append(option);
-            }
-            else{
+            } else{
               const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
               select.append(option);
             }
