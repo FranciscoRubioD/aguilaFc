@@ -41,6 +41,16 @@ header h1{
   display: block;
 }
 
+#lottieAnimationCount{
+  width: 50px; 
+  height: 50px; 
+  margin: 0; 
+  background-color: red; 
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
 /* barra de herramientas */
 .tool-bar{
   width: 15%;
