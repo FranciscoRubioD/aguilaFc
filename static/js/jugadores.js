@@ -297,6 +297,7 @@ $(document).ready(function() {
   let currentPage =1;
 
   let ajaxRequestInProgress = false;
+  let debounceTimeout;
 
 
   function generarPaginacion(totalPages, funcion,params){
@@ -668,36 +669,41 @@ $(document).ready(function() {
      // Si ya hay una solicitud en curso, no hacer nada
     if (ajaxRequestInProgress) return;
 
+    // Limpiar el timeout anterior
+    clearTimeout(debounceTimeout);
 
-    if(termino){
-      buscarJugadores(termino);
-    }else{
-      getJugadores();
-    }
+    debounceTimeout = setTimeout(() => {
+      if (termino) {
+        buscarJugadores(termino);
+      } else {
+        getJugadores();
+      }
+    }, 500); // 500ms de retardo antes de realizar la búsqueda
     
-    function buscarJugadores(termino){
-      $.ajax({
-        type: 'GET',
-        url: `/buscar-jugadores?page=${currentPage}`,
-        data: { termino },
-        success: function(response){
-          console.log(response);
-          $('.tabla-jugadores .row-data').remove();
-
-
-          cargarRowData(response.results);
-          
-          const totalPages = Math.ceil(response.totalResults / limit);
-          generarPaginacion(totalPages,buscarJugadores);
-          ajaxRequestInProgress = false;
-  
-        },error: function(error) {
-          console.error('Error al obtener jugador:', error);
-        }
-      });
-    }
     
-  })
+  });
+
+  function buscarJugadores(termino){
+    $.ajax({
+      type: 'GET',
+      url: `/buscar-jugadores?page=${currentPage}`,
+      data: { termino },
+      success: function(response){
+        console.log(response);
+        $('.tabla-jugadores .row-data').remove();
+
+
+        cargarRowData(response.results);
+        
+        const totalPages = Math.ceil(response.totalResults / limit);
+        generarPaginacion(totalPages,buscarJugadores);
+        ajaxRequestInProgress = false;
+
+      },error: function(error) {
+        console.error('Error al obtener jugador:', error);
+      }
+    });
+  }
 
 
   // SECCION IMPORTANTE DEL CODIGO 
@@ -993,9 +999,9 @@ window.ocultarLottie = function (idLottie, variable) {
 
     $('.tabla-jugadores .row-data').empty();
 
-    // setTimeout(() => {
+    setTimeout(() => {
 
-
+    ocultarLottie('loadingLottie',loadingAnimation);
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
@@ -1237,8 +1243,8 @@ window.ocultarLottie = function (idLottie, variable) {
     // Ocultar animación Lottie después de cargar los datos
     // ocultarLottie();
 
-    ocultarLottie('loadingLottie',loadingAnimation);
-    // },1000);
+    
+    },1000);
   }
 
 
