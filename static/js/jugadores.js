@@ -114,6 +114,7 @@ $(document).ready(function() {
     selectEquipos('mySelect',false, userId);
     selectEquipos('equipoAsistencia',false,userId);
     selectEquipos('entrenador',false,userId);
+    selectEquipos('mySelect2',false,userId);
     checkBoxEquipos(userId);
 
     // que le muestras al cliente
