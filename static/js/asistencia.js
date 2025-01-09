@@ -1762,7 +1762,13 @@ window.obtenerResultados = function (id_equipo){
   setTimeout(() => {
 
     ocultarLottie('lottieAnimationCount',loadingAnimationCount);
-    $('#pjAmount').show();
+
+
+    setTimeout(() => {
+      $('#pjAmount').show();
+    },500);
+    
+
     $.ajax({
       url: '/obtener-estadisticas', // Cambia esto por la ruta de tu backend
       type: 'POST',
