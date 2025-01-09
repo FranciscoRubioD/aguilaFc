@@ -1754,7 +1754,9 @@ function actualizarEstadisticas(g, e, p) {
 window.obtenerResultados = function (id_equipo){
   
   // Mostrar animación Lottie antes de cargar los datos
+  $('#pjAmount').hide();
   mostrarLottie('lottieAnimationCount',loadingAnimationCount);
+
   $('#pjAmount').empty();
 
   setTimeout(() => {
@@ -1766,6 +1768,7 @@ window.obtenerResultados = function (id_equipo){
       type: 'POST',
       data: { id_equipo: id_equipo },
       success: function(response) {
+          $('#pjAmount').show();
           // 'response' debería contener los resultados de la consulta SQL 
           actualizarEstadisticas(response.victorias,response.empates, response.derrotas)
           $('#pjAmount').text(response.partidos_jugados);
