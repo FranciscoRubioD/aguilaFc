@@ -814,7 +814,7 @@ function rangoEdad(){
   })
 }
 
-rangoEdad();
+// rangoEdad();
 // esta funcion realiza los filtros en la tabla
   function filtrarTabla(filtro, opciones){
     $(`${filtro}`).on('mouseover',function(){
@@ -980,7 +980,6 @@ window.ocultarLottie = function (idLottie, variable) {
   $(`#${idLottie}`).fadeOut(); // Oculta el contenedor
 }
 
-
 // formato para agregar data al row y usar sus funciones editar y eso
   function cargarRowData(response){
 
@@ -988,8 +987,6 @@ window.ocultarLottie = function (idLottie, variable) {
     mostrarLottie('lottieAnimation',loadingAnimation);
 
     $('.tabla-jugadores .row-data').empty();
-
-    
 
     setTimeout(() => {
 
