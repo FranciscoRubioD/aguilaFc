@@ -189,6 +189,7 @@ $(document).ready(function() {
           }
           response.results.forEach(equipo => {
 
+            console.log(selectElement);
             if(selectElement != "entrenador" || selectElement != "mySelect2"){
               const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
               select.append(option);
