@@ -1439,7 +1439,7 @@ app.get('/auth/equipo/:userId', (req, res) => {
   const userId = req.params.userId;
 
   const query = `
-    SELECT e.id, e.nombre
+    SELECT e.id, e.nombre, e.entrenador
     FROM usuario_equipos ue
     JOIN equipo e ON ue.equipo_id = e.id
     WHERE ue.usuario_id = ?
