@@ -724,38 +724,6 @@ $(document).ready(function() {
 
   // filtrar tabla por equipo
 
-  // buscar los equipos disponibles
-  $.ajax({
-    type:'GET',
-    url:'/get/equipo',
-    dataType:'json',
-    success: function(response){
-
-     
-
-      response.results.forEach(function(equipo) {
-     
-        const opcion = $('<div>').addClass('filter-field-secundary').attr('data-opcion', equipo.id);
-
-        const nombreEquipo = opcion.attr('data-nombre',equipo.nombre);
-
-        const opcionP = $('<p>').text(equipo.nombre);
-        
-        opcion.append(opcionP);
-        $('#opcionContainer').append(opcion);
-        filtrar();
-
-        // reponsive
-        if($('#selectEquipo').length >0){
-          const opcion = $('<option>').attr('value', equipo.id).text(equipo.nombre);
-          $('#selectEquipo').append(opcion);
-        
-        }
-        
-      });
-    }
-  })
-
 filtrarTabla('#filtroEquipo', '.secundary-filter-list-equipo');
 
 
@@ -1010,6 +978,7 @@ window.ocultarLottie = function (idLottie, variable) {
       const toolDiv = $('<div>');
       toolDiv.addClass('tool-div');
 
+
       // icono editar
       const configurarJugadorIcon = $('<i>');
       configurarJugadorIcon.addClass('fa-solid fa-gear');
@@ -1231,7 +1200,7 @@ window.ocultarLottie = function (idLottie, variable) {
             }
 
             // Agregar la celda (td) a la fila (fila)
-            fila.append(td);
+            fila.append(td,toolDiv);
           }
         }
       }
