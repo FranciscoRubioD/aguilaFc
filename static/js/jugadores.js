@@ -969,7 +969,7 @@ const loadingAnimation = lottie.loadAnimation({
 });
 
 // Función para mostrar el Lottie
-window.mostrarLottie(idLottie, variable) = function () {
+window.mostrarLottie = function (idLottie, variable) {
   $(`#${idLottie}`).fadeIn(); // Muestra el contenedor
   variable.play(); // Reproduce la animación
 }
