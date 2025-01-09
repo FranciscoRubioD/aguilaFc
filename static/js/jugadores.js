@@ -107,14 +107,14 @@ $(document).ready(function() {
   function asignarPermisos(userId){
 
     // filtrar jugadores por el select
-    selectEquipos('dashboardTeamView',false, userId);
-    selectEquipos('dashboardTeamViewJugadores',true,userId);
-    selectEquipos('teamViewCrearJugadores',false, userId);
-    selectEquipos('id_equipo',false, userId);   
-    selectEquipos('mySelect',false, userId);
-    selectEquipos('equipoAsistencia',false,userId);
-    selectEquipos('entrenador',false,userId);
-    selectEquipos('mySelect2',false,userId);
+    selectEquipos('dashboardTeamView',false,"equipo" ,userId);
+    selectEquipos('dashboardTeamViewJugadores',true,"equipo",userId);
+    selectEquipos('teamViewCrearJugadores',false,"equipo", userId);
+    selectEquipos('id_equipo',false,"equipo", userId);   
+    selectEquipos('mySelect',false,"equipo", userId);
+    selectEquipos('equipoAsistencia',false,"equipo", userId);
+    selectEquipos('entrenador',false,"entrenador",userId);
+    selectEquipos('mySelect2',false,"entrenador",userId);
     checkBoxEquipos(userId);
 
     // que le muestras al cliente
@@ -171,7 +171,7 @@ $(document).ready(function() {
 
   }
 
-  function selectEquipos(selectElement,all,userId){
+  function selectEquipos(selectElement,all,data,userId){
 
     $.ajax({
       url: `/auth/equipo/${userId}`, // Ruta al backend
@@ -189,11 +189,10 @@ $(document).ready(function() {
           }
           response.results.forEach(equipo => {
 
-            console.log(selectElement);
-            if(selectElement != "entrenador" || selectElement != "mySelect2"){
+            if(data === "equipo"){
               const option = `<option value="${equipo.id}">${equipo.nombre}</option>`;
               select.append(option);
-            } else{
+            } else if (data === "entrenador"){
               const option = `<option value="${equipo.entrenador}">${equipo.entrenador}</option>`;
               select.append(option);
             }
