@@ -34,8 +34,9 @@ p{
 }
 
 #partidoEvento{
-  width: 60%;
-  height: 60%;
+  width: 40%;
+  height: 90%;
+  margin-top: 2%;
   background-color: white;
   /* background-color: lightgrey; */
   overflow: hidden;
