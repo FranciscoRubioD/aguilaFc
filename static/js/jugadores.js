@@ -181,8 +181,6 @@ $(document).ready(function() {
         // Limpiar el select antes de agregar nuevas opciones
         const select = $(`#${selectElement}`);
         select.empty();
-
-        console.log(response);
   
         // Iterar sobre los resultados y poblar el select
         if (response.results && response.results.length > 0) {
