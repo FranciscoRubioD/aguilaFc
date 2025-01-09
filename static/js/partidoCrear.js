@@ -148,14 +148,14 @@ $(document).ready(function() {
   // trae categorias disponibles
 
 
-  // get usuarios
-  NiceSelect.bind(document.getElementById("mySelect2"), {
-  });
+  // // get usuarios
+  // NiceSelect.bind(document.getElementById("mySelect2"), {
+  // });
   
 
-  // cargar select de plugin
-  NiceSelect.bind(document.getElementById("mySelect"), {
-  });
+  // // cargar select de plugin
+  // NiceSelect.bind(document.getElementById("mySelect"), {
+  // });
 
 
   // step: Al completar form, desaparecer y pasar siguiente div
