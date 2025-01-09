@@ -1762,8 +1762,7 @@ window.obtenerResultados = function (id_equipo){
   setTimeout(() => {
 
     ocultarLottie('lottieAnimationCount',loadingAnimationCount);
-
-
+    
     setTimeout(() => {
       $('#pjAmount').show();
     },500);
