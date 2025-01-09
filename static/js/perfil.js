@@ -1,6 +1,10 @@
 $(document).ready(function() {
 
   let currentPage = 1;
+
+  // 
+
+
   // pop up 
   // Mostrar el popup con animación rápida
 $('.picProfile').on('click', function() {
@@ -24,6 +28,7 @@ $(document).on('click', function(event) {
     // $('.asistenciaQuick').fadeOut(); // Cierra el popup con animación rápida
   }
 });
+
 
 
 // fecha 

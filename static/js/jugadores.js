@@ -43,11 +43,25 @@ $(document).ready(function() {
     });
   }
 
+  // controlar perfil opciones rapidas
+
+
+
   $('#logoutButton').on('click',function(){
 
     logout();
 
   });
+
+  $('#crearPartidoPerfil').on('click',function(){
+
+    $('.modalCrearPartido').show();
+
+  });
+
+  // funciones de perfil pop up 
+  
+
 
   function logout(){
     // Eliminar token del almacenamiento local
