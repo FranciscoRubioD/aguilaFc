@@ -34,7 +34,7 @@ p{
 }
 
 #partidoEvento{
-  width: 30%;
+  width: 40%;
   height: 90%;
   margin-top: 2%;
   background-color: white;
@@ -56,11 +56,11 @@ p{
 
 .form-part-col1,.form-part-col2{
   margin-top: 0%;
-  width: 50%;
+  width: 80%;
   height: 40%;
   display: flex;
   flex-direction: column;
-  gap: 5%;
+  gap: 3%;
 }
 
 .form-part-col1 label, .form-part-col2 label{
