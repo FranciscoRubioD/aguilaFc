@@ -665,13 +665,16 @@ $(document).ready(function() {
   $('#jugadorBuscar').on('input',function(){
     const termino = $(this).val();
     
+     // Si ya hay una solicitud en curso, no hacer nada
+    if (ajaxRequestInProgress) return;
+
     if(termino){
-      buscarJugadores();
+      buscarJugadores(termino);
     }else{
       getJugadores();
     }
     
-    function buscarJugadores(){
+    function buscarJugadores(termino){
       $.ajax({
         type: 'GET',
         url: `/buscar-jugadores?page=${currentPage}`,
@@ -679,6 +682,8 @@ $(document).ready(function() {
         success: function(response){
           console.log(response);
           $('.tabla-jugadores .row-data').remove();
+
+
           cargarRowData(response.results);
           
           const totalPages = Math.ceil(response.totalResults / limit);
