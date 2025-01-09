@@ -146,45 +146,15 @@ $(document).ready(function() {
   })
 
   // trae categorias disponibles
-  $.ajax({
-    type:'GET',
-    url:'/get/equipo',
-    dataType:'json',
-    success: function(response){
-      
-      // una vez tenemos info de los equipos
-
-      // creamos opciones en base a cantidad de equipo
-      response.results.forEach(function(equipo) {
 
 
-        // subdivision ------------- section crear partido-------------------
-        const opcion = $('<option>');
-        // const nombreEquipo = opcion.attr('data-nombre',equipo.nombre);
-        opcion.text(equipo.nombre);
-        opcion.val(equipo.id);
-        $('#mySelect').append(opcion);
+  // get usuarios
+  NiceSelect.bind(document.getElementById("mySelect2"), {
+  });
+  
 
-        
-      });
-
-      // get usuarios
-      NiceSelect.bind(document.getElementById("mySelect2"), {
-      });
-      
-
-      // cargar select de plugin
-      NiceSelect.bind(document.getElementById("mySelect"), {
-      });
-
-   ;
-
-
-    },
-    error: function(xhr, status, error) {
-      console.error('Error al obtener informacion de equipo:', error);
-    }
-
+  // cargar select de plugin
+  NiceSelect.bind(document.getElementById("mySelect"), {
   });
 
 
