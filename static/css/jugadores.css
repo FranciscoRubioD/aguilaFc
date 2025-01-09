@@ -43,7 +43,7 @@ header h1{
 
 #lottieAnimationCount{
   width: 50px; 
-  height: 20px; 
+  height: 100%; 
   margin: 0; 
   display: flex;
   align-items: start;
