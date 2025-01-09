@@ -62,11 +62,10 @@ $(document).ready(function() {
       
     $('.modalCrearPartido').fadeIn();
 
+
   });
 
   // funciones de perfil pop up 
-  
-
 
   function logout(){
     // Eliminar token del almacenamiento local
@@ -981,10 +980,11 @@ window.ocultarLottie = function (idLottie, variable) {
 // formato para agregar data al row y usar sus funciones editar y eso
   function cargarRowData(response){
 
+    $('.tabla-jugadores .row-data').empty();
     // Mostrar animación Lottie antes de cargar los datos
     mostrarLottie('loadingLottie',loadingAnimation);
 
-    $('.tabla-jugadores .row-data').empty();
+    // $('.tabla-jugadores .row-data').empty();
 
     setTimeout(() => {
 
