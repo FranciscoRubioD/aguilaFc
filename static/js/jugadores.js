@@ -983,13 +983,13 @@ window.ocultarLottie = function (idLottie, variable) {
   function cargarRowData(response){
 
     // Mostrar animación Lottie antes de cargar los datos
-    mostrarLottie('lottieAnimation',loadingAnimation);
+    mostrarLottie('loadingLottie',loadingAnimation);
 
     $('.tabla-jugadores .row-data').empty();
 
     setTimeout(() => {
 
-    ocultarLottie('lottieAnimation',loadingAnimation);
+    ocultarLottie('loadingLottie',loadingAnimation);
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
