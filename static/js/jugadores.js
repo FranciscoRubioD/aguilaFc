@@ -969,15 +969,15 @@ const loadingAnimation = lottie.loadAnimation({
 });
 
 // Función para mostrar el Lottie
-function mostrarLottie() {
-  $('#loadingLottie').fadeIn(); // Muestra el contenedor
-  loadingAnimation.play(); // Reproduce la animación
+window.mostrarLottie(idLottie, variable) = function () {
+  $(`#${idLottie}`).fadeIn(); // Muestra el contenedor
+  variable.play(); // Reproduce la animación
 }
 
 // Función para ocultar el Lottie
-function ocultarLottie() {
-  loadingAnimation.stop(); // Detiene la animación
-  $('#loadingLottie').fadeOut(); // Oculta el contenedor
+window.ocultarLottie = function (idLottie, variable) {
+  variable.stop(); // Detiene la animación
+  $(`#${idLottie}`).fadeOut(); // Oculta el contenedor
 }
 
 
@@ -985,7 +985,7 @@ function ocultarLottie() {
   function cargarRowData(response){
 
     // Mostrar animación Lottie antes de cargar los datos
-    mostrarLottie();
+    mostrarLottie('lottieAnimation',loadingAnimation);
 
     $('.tabla-jugadores .row-data').empty();
 
@@ -993,7 +993,7 @@ function ocultarLottie() {
 
     setTimeout(() => {
 
-    ocultarLottie();
+    ocultarLottie('lottieAnimation',loadingAnimation);
     
     $.each(response,function(index,elemento){
       const fila = $('<tr>').addClass('row-data');
@@ -1236,7 +1236,7 @@ function ocultarLottie() {
     // ocultarLottie();
 
     
-    },2000);
+    },1000);
   }
 
 

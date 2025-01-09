@@ -13,6 +13,16 @@ $(document).ready(function() {
   let estadoInicio = '';
   let estadoFinal = '';
 
+
+  // lottie loading 
+  const loadingAnimationCount = lottie.loadAnimation({
+    container: document.getElementById('lottieAnimationCount'), // El contenedor de la animación
+    renderer: 'svg', // Renderizar como SVG
+    loop: true, // Animación en bucle
+    autoplay: false, // No reproducir automáticamente
+    path: '/lottie/cargar.json' // Ruta al archivo JSON de Lottie
+  });
+
   // mostrar asistencias 
    // select asistencia checkmark
 
@@ -76,6 +86,9 @@ $(document).ready(function() {
     }
 
   }
+
+
+
 
 
    window.modalAsistencia =  function (evento,page){
@@ -1741,8 +1754,16 @@ function actualizarEstadisticas(g, e, p) {
 // Llama a la función con los valores de ejemplo
 
 window.obtenerResultados = function (id_equipo){
+  
+  // Mostrar animación Lottie antes de cargar los datos
+  mostrarLottie('lottieAnimationCount',loadingAnimationCount);
   $('#pjAmount').empty();
-  $.ajax({
+
+  setTimeout(() => {
+
+    ocultarLottie('lottieAnimationCount',loadingAnimationCount);
+
+    $.ajax({
       url: '/obtener-estadisticas', // Cambia esto por la ruta de tu backend
       type: 'POST',
       data: { id_equipo: id_equipo },
@@ -1755,6 +1776,10 @@ window.obtenerResultados = function (id_equipo){
           console.error("Error en la consulta: ", err);
       }
   });
+
+  },1000)
+
+  
 }
 
 
