@@ -1762,13 +1762,13 @@ window.obtenerResultados = function (id_equipo){
   setTimeout(() => {
 
     ocultarLottie('lottieAnimationCount',loadingAnimationCount);
-
+    $('#pjAmount').show();
     $.ajax({
       url: '/obtener-estadisticas', // Cambia esto por la ruta de tu backend
       type: 'POST',
       data: { id_equipo: id_equipo },
       success: function(response) {
-          $('#pjAmount').show();
+          
           // 'response' debería contener los resultados de la consulta SQL 
           actualizarEstadisticas(response.victorias,response.empates, response.derrotas)
           $('#pjAmount').text(response.partidos_jugados);
