@@ -53,9 +53,14 @@ $(document).ready(function() {
 
   });
 
+
   $('#crearPartidoPerfil').on('click',function(){
 
-    $('.modalCrearPartido').show();
+    var $popup = $('.popUp-profile');  
+    // Alterna entre mostrar y ocultar con animación rápida
+    $popup.slideUp(200); // Oculta con animación rápida
+      
+    $('.modalCrearPartido').fadeIn();
 
   });
 
