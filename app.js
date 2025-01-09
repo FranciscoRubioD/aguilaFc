@@ -1450,6 +1450,7 @@ app.get('/auth/equipo/:userId', (req, res) => {
       console.error('Error al obtener los equipos:', error);
       res.status(500).json({ error: 'Error al obtener los equipos' });
     } else {
+      console.log(results);
       res.status(200).json({ results });
     }
   });
