@@ -43,7 +43,7 @@ header h1{
 
 #lottieAnimationCount{
   width: 50px; 
-  height: 50px; 
+  height: 20px; 
   margin: 0; 
   background-color: red; 
   display: flex;
