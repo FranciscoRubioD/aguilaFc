@@ -68,7 +68,7 @@ window.anteriorPartido = function(id_Equipo){
     type:'GET',
     url: `/partido-anterior/${id_Equipo}`, // Ruta al backend
     success:function(response){
-      console.log(response);
+      console.log(`partido fetch ${response}`);
     }
   })
 }
@@ -143,8 +143,8 @@ window.partidoHistorial = function (id_equipo){
     }
   });
         // Muestra los resultados
-        console.log('Próximo partido:', proximoPartido);
-        console.log('Último partido:', ultimoPartido);
+        // console.log('Próximo partido:', proximoPartido);
+        // console.log('Último partido:', ultimoPartido);
         
 
         // dom for proximo partido 
