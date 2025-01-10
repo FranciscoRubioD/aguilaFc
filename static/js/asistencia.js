@@ -692,6 +692,7 @@ $(document).ready(function() {
         const fecha = $('#fechaShow');
         const hora = $('#horaShow');
         const equipoRival = $('#rival-show');
+        const entrenadorEvento = $('#entrenadorEvento');
       
         
 
@@ -718,6 +719,9 @@ $(document).ready(function() {
         ubicacion.text('');
         fecha.text('');
         hora.text('');
+        entrenadorEvento.text('');
+
+        entrenadorEvento.text(response.encargado);
 
         if(response.ubicacion){
           ubicacion.text(response.ubicacion);
