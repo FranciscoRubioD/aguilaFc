@@ -312,7 +312,7 @@ $(document).ready(function() {
   $('#mensajeDisponible').hide();
 
   // controlamos la paginacion
-  const limit = 10;
+  const limit = 50;
   let currentPage =1;
 
   let ajaxRequestInProgress = false;
@@ -390,7 +390,6 @@ $(document).ready(function() {
   // SECCION IMPORTANTE DEL CODIGO
   // aqui traemos todos los jugadores y hacemos la logica con ello 
   getJugadores();
-
   console.log(`Este es el token: ${token}`);
   function getJugadores(){
 
@@ -440,6 +439,7 @@ $(document).ready(function() {
         })
 
 
+        // generar paginacion total 
         $.ajax({
           type: 'GET',
           url: '/get-total-jugadores',
