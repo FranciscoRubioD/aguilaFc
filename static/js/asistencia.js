@@ -1792,7 +1792,7 @@ $('#dashboardTeamView').on('change', function() {
   obtenerResultados(id_equipo);
   obtenerProximoPartido(id_equipo);
   partidoHistorial(id_equipo);
-  
+  anteriorPartido(id_equipo);
   
 
 });

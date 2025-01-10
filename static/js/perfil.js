@@ -63,6 +63,16 @@ $('.opcionesJuego').on('click', function (e) {
 });
 
 
+window.anteriorPartido = function(id_Equipo){
+  $.ajax({
+    type:'GET',
+    url: `/partido-anterior/${id_equipo}`, // Ruta al backend
+    success:function(response){
+      console.log(response);
+    }
+  })
+}
+
 
 window.partidoHistorial = function (id_equipo){
   $.ajax({
@@ -96,15 +106,21 @@ window.partidoHistorial = function (id_equipo){
       }
 
 
-      if (evento.estado.toLowerCase() === 'terminado') {
-        // Asignar el último partido independientemente de su estado
-        if (fechaEvento < ahora) {
-          if (!ultimoPartido || fechaEvento > new Date(ultimoPartido.fecha)) {
-            ultimoPartido = evento;
+       if (evento.estado.toLowerCase() === 'pendiente') {
+        // Verificar si el evento es posterior a la fecha actual
+        if (fechaEvento > ahora) {
+          if (!proximoPartido || fechaEvento < new Date(proximoPartido.fecha)) {
+            proximoPartido = evento;
           }
         }
       }
-      
+
+      // Asignar el último partido independientemente de su estado
+      if (fechaEvento < ahora) {
+        if (!ultimoPartido || fechaEvento > new Date(ultimoPartido.fecha)) {
+          ultimoPartido = evento;
+        }
+      }
     }
 
     // Si el evento es un entrenamiento

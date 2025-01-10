@@ -109,6 +109,7 @@ $(document).ready(function() {
           const primerEquipo = response.equipos[0];
           obtenerResultados(primerEquipo.equipo_id);
           partidoHistorial(primerEquipo.equipo_id);
+          anteriorPartido(primerEquipo.equipo_id);
           obtenerProximoPartido(primerEquipo.equipo_id);
           
           // asignarPermisos(equiposPermitidos);
