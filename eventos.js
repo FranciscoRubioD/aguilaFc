@@ -141,6 +141,37 @@ router.get('/proximo-partido/:id_equipo', (req, res) => {
   });
 });
 
+router.get('/partido-anterior/:id_equipo', (req, res) => {
+  const { id_equipo } = req.params;
+
+  // Consulta SQL para obtener el partido anterior
+  const query = `
+      SELECT *
+      FROM evento
+      WHERE id_equipo = ?
+        AND evento = 'Partido'
+        AND estado = 'Terminado'
+        AND fecha < NOW()  -- Solo partidos en el pasado
+      ORDER BY fecha DESC
+      LIMIT 1;
+  `;
+
+  dbConexion.query(query, [id_equipo], (err, results) => {
+      if (err) {
+          console.error("Error al obtener el partido anterior:", err);
+          return res.status(500).json({ error: "Error al obtener el partido anterior" });
+      }
+      
+      // Si no hay partido anterior, envía un mensaje adecuado
+      if (results.length === 0) {
+          return res.status(404).json({ message: "No hay partidos anteriores terminados" });
+      }
+
+      // Devuelve el partido anterior como respuesta en formato JSON
+      res.json(results[0]); // Devuelve el primer (y único) resultado
+  });
+});
+
 
 
 

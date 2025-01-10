@@ -1637,6 +1637,7 @@ window.marcarTodosCheckBox = function (obj, tableBody,nombreInput){
 }
 
 
+
 window.obtenerProximoPartido = function (id_equipo) {
   $('#proximoPartidoInfo').text('');
   $('#proximoPartidoEquipo').text('');
@@ -1681,6 +1682,8 @@ window.obtenerProximoPartido = function (id_equipo) {
 
   
 }
+
+
 
 
 

@@ -72,122 +72,124 @@ window.partidoHistorial = function (id_equipo){
     success:function(response){
       const ahora = new Date(); // Fecha y hora actuales
 
-let proximoPartido = null;
-let ultimoPartido = null;
+  let proximoPartido = null;
+  let ultimoPartido = null;
 
-let proximoEntrenamiento = null;
-let ultimoEntrenamiento  = null;
+  let proximoEntrenamiento = null;
+  let ultimoEntrenamiento  = null;
 
-// Filtramos los eventos para obtener el próximo y el último partido
-response.forEach(evento => {
-  const fechaEvento = new Date(evento.fecha); // Suponiendo que 'fecha' es el campo de fecha del evento
-  
-  // Si el evento es un partido
-  if (evento.evento.toLowerCase().includes('partido')) {  
+  // Filtramos los eventos para obtener el próximo y el último partido
+  response.forEach(evento => {
+    const fechaEvento = new Date(evento.fecha); // Suponiendo que 'fecha' es el campo de fecha del evento
     
-    // Filtrar el próximo partido solo si está pendiente
-    if (evento.estado.toLowerCase() === 'pendiente') {
-      // Verificar si el evento es posterior a la fecha actual
+    // Si el evento es un partido
+    if (evento.evento.toLowerCase().includes('partido')) {  
+      
+      // Filtrar el próximo partido solo si está pendiente
+      if (evento.estado.toLowerCase() === 'pendiente') {
+        // Verificar si el evento es posterior a la fecha actual
+        if (fechaEvento > ahora) {
+          if (!proximoPartido || fechaEvento < new Date(proximoPartido.fecha)) {
+            proximoPartido = evento;
+          }
+        }
+      }
+
+
+      if (evento.estado.toLowerCase() === 'terminado') {
+        // Asignar el último partido independientemente de su estado
+        if (fechaEvento < ahora) {
+          if (!ultimoPartido || fechaEvento > new Date(ultimoPartido.fecha)) {
+            ultimoPartido = evento;
+          }
+        }
+      }
+      
+    }
+
+    // Si el evento es un entrenamiento
+    if (evento.evento.toLowerCase().includes('entrenamiento')) { 
+
+      // Filtrar el próximo entrenamiento solo si está pendiente (opcional)
+      // Si no te importa el estado, puedes omitir este bloque
       if (fechaEvento > ahora) {
-        if (!proximoPartido || fechaEvento < new Date(proximoPartido.fecha)) {
-          proximoPartido = evento;
+        if (!proximoEntrenamiento || fechaEvento < new Date(proximoEntrenamiento.fecha)) {
+          proximoEntrenamiento = evento;
+        }
+      }
+
+      // Asignar el último entrenamiento independientemente de su estado
+      if (fechaEvento < ahora) {
+        if (!ultimoEntrenamiento || fechaEvento > new Date(ultimoEntrenamiento.fecha)) {
+          ultimoEntrenamiento = evento;
         }
       }
     }
+  });
+        // Muestra los resultados
+        console.log('Próximo partido:', proximoPartido);
+        console.log('Último partido:', ultimoPartido);
+        
 
-    // Asignar el último partido independientemente de su estado
-    if (fechaEvento < ahora) {
-      if (!ultimoPartido || fechaEvento > new Date(ultimoPartido.fecha)) {
-        ultimoPartido = evento;
-      }
-    }
-  }
+        // dom for proximo partido 
+        if (proximoPartido) {
+          $('#rivalProximo').text(`Aguila FC vs ${proximoPartido.equipo_rival}`);
+          $('#horaProximo').text(`${formatTime(proximoPartido.hora)} - ${formatTime(proximoPartido.hora_final)}`);
+          $('#fechaProximo').text(formatDatePartido(proximoPartido.fecha));
 
-  // Si el evento es un entrenamiento
-  if (evento.evento.toLowerCase().includes('entrenamiento')) { 
+          $('#listaPartido').css({
+            'pointer-events': 'auto', // Reactiva clics
+            'opacity': '1'            // Restaura el aspecto visual
+          })
 
-    // Filtrar el próximo entrenamiento solo si está pendiente (opcional)
-    // Si no te importa el estado, puedes omitir este bloque
-    if (fechaEvento > ahora) {
-      if (!proximoEntrenamiento || fechaEvento < new Date(proximoEntrenamiento.fecha)) {
-        proximoEntrenamiento = evento;
-      }
-    }
+          // mostrar asistencia
+          // menu next eventos
+          $('#listaPartido').off('click').on('click', function(){
+            $('.asistenciaQuick').fadeIn();
+            $('.tareas-acciones').hide();
+            console.log(`hicimos click y abrimos ${proximoPartido.id}`);
+            modalAsistenciaQuick(proximoPartido.id);
 
-    // Asignar el último entrenamiento independientemente de su estado
-    if (fechaEvento < ahora) {
-      if (!ultimoEntrenamiento || fechaEvento > new Date(ultimoEntrenamiento.fecha)) {
-        ultimoEntrenamiento = evento;
-      }
-    }
-  }
-});
-      
+          });
+        }else if(!proximoPartido){
+          $('#rivalProximo').text('No hay partido próximos');
+          $('#horaProximo').text('');
+          $('#fechaProximo').text('');
 
-      // Muestra los resultados
-      console.log('Próximo partido:', proximoPartido);
-      console.log('Último partido:', ultimoPartido);
-      
+          $('#listaPartido').css({
+            'pointer-events': 'none', // Deshabilita clics
+            'opacity': '0.5'          // Cambia el aspecto visual para indicar que está desactivado
+          });
 
-      // dom for proximo partido 
-      if (proximoPartido) {
-        $('#rivalProximo').text(`Aguila FC vs ${proximoPartido.equipo_rival}`);
-        $('#horaProximo').text(`${formatTime(proximoPartido.hora)} - ${formatTime(proximoPartido.hora_final)}`);
-        $('#fechaProximo').text(formatDatePartido(proximoPartido.fecha));
+        }
 
-        $('#listaPartido').css({
-          'pointer-events': 'auto', // Reactiva clics
-          'opacity': '1'            // Restaura el aspecto visual
-        })
+        if (ultimoPartido) {
+          $('#rivalAnterior').text(`Aguila FC vs ${ultimoPartido.equipo_rival}`);
+          $('#horaAnterior').text(`${formatTime(ultimoPartido.hora)} - ${formatTime(ultimoPartido.hora_final)}`);
+          $('#fechaAnterior').text(formatDatePartido(ultimoPartido.fecha));
 
-        // mostrar asistencia
-        // menu next eventos
-        $('#listaPartido').off('click').on('click', function(){
-          $('.asistenciaQuick').fadeIn();
-          $('.tareas-acciones').hide();
-          console.log(`hicimos click y abrimos ${proximoPartido.id}`);
-          modalAsistenciaQuick(proximoPartido.id);
-
-        });
-      }else if(!proximoPartido){
-        $('#rivalProximo').text('No hay partido próximos');
-        $('#horaProximo').text('');
-        $('#fechaProximo').text('');
-
-        $('#listaPartido').css({
-          'pointer-events': 'none', // Deshabilita clics
-          'opacity': '0.5'          // Cambia el aspecto visual para indicar que está desactivado
-        });
-
-      }
-
-      if (ultimoPartido) {
-        $('#rivalAnterior').text(`Aguila FC vs ${ultimoPartido.equipo_rival}`);
-        $('#horaAnterior').text(`${formatTime(ultimoPartido.hora)} - ${formatTime(ultimoPartido.hora_final)}`);
-        $('#fechaAnterior').text(formatDatePartido(ultimoPartido.fecha));
-
-        $('#listaPartidoAnterior').css({
-          'pointer-events': 'auto', // Reactiva clics
-          'opacity': '1'            // Restaura el aspecto visual
-        })
+          $('#listaPartidoAnterior').css({
+            'pointer-events': 'auto', // Reactiva clics
+            'opacity': '1'            // Restaura el aspecto visual
+          })
 
 
-        $('#listaPartidoAnterior').on('click', function(){
-          $('.asistenciaQuick').fadeIn();
-          $('.tareas-acciones').hide();
-          modalAsistenciaQuick(ultimoPartido.id);
+          $('#listaPartidoAnterior').on('click', function(){
+            $('.asistenciaQuick').fadeIn();
+            $('.tareas-acciones').hide();
+            modalAsistenciaQuick(ultimoPartido.id);
 
-        });
-      }else if(!ultimoPartido){
-        $('#rivalAnterior').text('No hay partidos jugados');
-        $('#horaAnterior').text('');
-        $('#fechaAnterior').text('');
+          });
+        }else if(!ultimoPartido){
+          $('#rivalAnterior').text('No hay partidos jugados');
+          $('#horaAnterior').text('');
+          $('#fechaAnterior').text('');
 
-        $('#listaPartidoAnterior').off('click'); // Elimina cualquier evento asignado
-        $('#listaPartidoAnterior').css({
-          'pointer-events': 'none', // Deshabilita clics
-          'opacity': '0.5'          // Cambia el aspecto visual para indicar que está desactivado
-        });
+          $('#listaPartidoAnterior').off('click'); // Elimina cualquier evento asignado
+          $('#listaPartidoAnterior').css({
+            'pointer-events': 'none', // Deshabilita clics
+            'opacity': '0.5'          // Cambia el aspecto visual para indicar que está desactivado
+          });
 
       }
 
