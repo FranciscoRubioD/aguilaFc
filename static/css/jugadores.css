@@ -64,6 +64,9 @@ header h1{
   position: relative;
 }
 
+.tool-div{
+  overflow-x: scroll;
+}
 
 /* tool bar mouseover */
 .eventos-options{
