@@ -632,7 +632,7 @@ app.get('/get-jugadores', authenticateToken, (req, res) => {
 
 
   const page = parseInt(req.query.page) || 1; // Número de página (por defecto 1)
-  const limit = 10; // Número de resultados por página
+  const limit = 50; // Número de resultados por página
   const offset = (page - 1) * limit; // Calcular el offset basado en la página solicitada
 
   // Consulta SQL para traer los jugadores filtrados por los equipos asignados
