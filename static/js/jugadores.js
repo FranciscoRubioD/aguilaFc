@@ -1204,11 +1204,12 @@ window.ocultarLottie = function (idLottie, variable) {
 
             // Si el valor es vacío, asignar "Por asignar" y color
             if (elemento[key] === "") {
-              td.text('Por asignar');
               td.css({
                 'color': 'lightgreen',  // Color para "Por asignar"
                 'font-weight': 'bold'
               });
+              td.text('n/a');
+              
             } else if (key === "Nombre") {
               td.text(elemento[key]);
             } else if (key === "edad") {
