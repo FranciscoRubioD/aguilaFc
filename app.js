@@ -1138,115 +1138,133 @@ app.get('/filtro-jugadores',(req,res) =>{
 })
 
 // borrar usuario y jugador
+app.delete('/eliminar/jugador/:id', (req,res) =>{
 
-app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
   const idJugador = req.params.id;
-  const userId = req.params.userid;
+  const queryEliminarJugador = 'DELETE FROM jugadores WHERE id = ?';
 
-  // Iniciar transacción
-  dbConexion.beginTransaction((err) => {
-    if (err) {
-      console.error('Error al iniciar la transacción:', err);
-      return res.status(500).send({ message: 'Error al iniciar la transacción' });
-    }
-
-    // 1. Obtener las fotos del jugador
-    const queryFotosJugador = 'SELECT foto_jugador, foto_cedula FROM jugadores WHERE id = ?';
-    dbConexion.query(queryFotosJugador, [idJugador], (error, results) => {
+  dbConexion.query(queryEliminarJugador, [idJugador], (error) => {
       if (error) {
         return dbConexion.rollback(() => {
-          console.error('Error al obtener las fotos del jugador:', error);
-          res.status(500).send({ message: 'Error al obtener las fotos del jugador' });
+          console.error('Error al eliminar al jugador:', error);
+          res.status(500).send({ message: 'Error al eliminar al jugador' });
         });
       }
 
-      if (results.length === 0) {
-        return dbConexion.rollback(() => {
-          console.error('Jugador no encontrado');
-          res.status(404).send({ message: 'Jugador no encontrado' });
-        });
-      }
+      res.send({ message: 'Jugador eliminado correctamente' });
 
-      const { foto_jugador, foto_cedula } = results[0];
-      const filePathJugador = foto_jugador ? path.join(uploadFinalPath, foto_jugador) : null;
-      const filePathCedula = foto_cedula ? path.join(uploadFinalPath, foto_cedula) : null;
-
-      // Función para eliminar un archivo del servidor
-      const deleteFile = (filePath, callback) => {
-        if (filePath) {
-          fs.unlink(filePath, (err) => {
-            if (err) {
-              return dbConexion.rollback(() => {
-                console.error('Error al eliminar archivo del servidor:', err);
-                res.status(500).send({ message: 'Error al eliminar archivo del servidor' });
-              });
-            }
-            callback();
-          });
-        } else {
-          callback(); // Si no hay archivo, continuar
-        }
-      };
-
-      // 2. Eliminar las fotos del servidor
-      deleteFile(filePathJugador, () => {
-        deleteFile(filePathCedula, () => {
-          // 3. Eliminar al jugador de la tabla jugadores
-          const queryEliminarJugador = 'DELETE FROM jugadores WHERE id = ?';
-          dbConexion.query(queryEliminarJugador, [idJugador], (error) => {
-            if (error) {
-              return dbConexion.rollback(() => {
-                console.error('Error al eliminar al jugador:', error);
-                res.status(500).send({ message: 'Error al eliminar al jugador' });
-              });
-            }
-
-            // 4. Obtener la foto del usuario
-            const queryFotoUsuario = 'SELECT foto_perfil FROM usuarios WHERE id = ?';
-            dbConexion.query(queryFotoUsuario, [userId], (error, results) => {
-              if (error) {
-                return dbConexion.rollback(() => {
-                  console.error('Error al obtener la foto del usuario:', error);
-                  res.status(500).send({ message: 'Error al obtener la foto del usuario' });
-                });
-              }
-
-              const fotoPerfil = results.length > 0 ? results[0].foto_perfil : null;
-              const filePathUsuario = fotoPerfil ? path.join(uploadFinalPath, fotoPerfil) : null;
-
-              // 5. Eliminar la foto del usuario
-              deleteFile(filePathUsuario, () => {
-                // 6. Eliminar al usuario de la tabla usuarios
-                const queryEliminarUsuario = 'DELETE FROM usuarios WHERE id = ?';
-                dbConexion.query(queryEliminarUsuario, [userId], (error) => {
-                  if (error) {
-                    return dbConexion.rollback(() => {
-                      console.error('Error al eliminar al usuario:', error);
-                      res.status(500).send({ message: 'Error al eliminar al usuario' });
-                    });
-                  }
-
-                  // 7. Confirmar la transacción
-                  dbConexion.commit((err) => {
-                    if (err) {
-                      return dbConexion.rollback(() => {
-                        console.error('Error al confirmar la transacción:', err);
-                        res.status(500).send({ message: 'Error al confirmar la transacción' });
-                      });
-                    }
-
-                    console.log('Jugador y usuario eliminados correctamente, incluyendo archivos');
-                    res.send({ message: 'Jugador y usuario eliminados correctamente' });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
   });
 });
+
+
+// app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
+//   const idJugador = req.params.id;
+//   const userId = req.params.userid;
+
+//   // Iniciar transacción
+//   dbConexion.beginTransaction((err) => {
+//     if (err) {
+//       console.error('Error al iniciar la transacción:', err);
+//       return res.status(500).send({ message: 'Error al iniciar la transacción' });
+//     }
+
+//     // 1. Obtener las fotos del jugador
+//     const queryFotosJugador = 'SELECT foto_jugador, foto_cedula FROM jugadores WHERE id = ?';
+//     dbConexion.query(queryFotosJugador, [idJugador], (error, results) => {
+//       if (error) {
+//         return dbConexion.rollback(() => {
+//           console.error('Error al obtener las fotos del jugador:', error);
+//           res.status(500).send({ message: 'Error al obtener las fotos del jugador' });
+//         });
+//       }
+
+//       if (results.length === 0) {
+//         return dbConexion.rollback(() => {
+//           console.error('Jugador no encontrado');
+//           res.status(404).send({ message: 'Jugador no encontrado' });
+//         });
+//       }
+
+//       const { foto_jugador, foto_cedula } = results[0];
+//       const filePathJugador = foto_jugador ? path.join(uploadFinalPath, foto_jugador) : null;
+//       const filePathCedula = foto_cedula ? path.join(uploadFinalPath, foto_cedula) : null;
+
+//       // Función para eliminar un archivo del servidor
+//       const deleteFile = (filePath, callback) => {
+//         if (filePath) {
+//           fs.unlink(filePath, (err) => {
+//             if (err) {
+//               return dbConexion.rollback(() => {
+//                 console.error('Error al eliminar archivo del servidor:', err);
+//                 res.status(500).send({ message: 'Error al eliminar archivo del servidor' });
+//               });
+//             }
+//             callback();
+//           });
+//         } else {
+//           callback(); // Si no hay archivo, continuar
+//         }
+//       };
+
+//       // 2. Eliminar las fotos del servidor
+//       deleteFile(filePathJugador, () => {
+//         deleteFile(filePathCedula, () => {
+//           // 3. Eliminar al jugador de la tabla jugadores
+//           const queryEliminarJugador = 'DELETE FROM jugadores WHERE id = ?';
+//           dbConexion.query(queryEliminarJugador, [idJugador], (error) => {
+//             if (error) {
+//               return dbConexion.rollback(() => {
+//                 console.error('Error al eliminar al jugador:', error);
+//                 res.status(500).send({ message: 'Error al eliminar al jugador' });
+//               });
+//             }
+
+//             // 4. Obtener la foto del usuario
+//             const queryFotoUsuario = 'SELECT foto_perfil FROM usuarios WHERE id = ?';
+//             dbConexion.query(queryFotoUsuario, [userId], (error, results) => {
+//               if (error) {
+//                 return dbConexion.rollback(() => {
+//                   console.error('Error al obtener la foto del usuario:', error);
+//                   res.status(500).send({ message: 'Error al obtener la foto del usuario' });
+//                 });
+//               }
+
+//               const fotoPerfil = results.length > 0 ? results[0].foto_perfil : null;
+//               const filePathUsuario = fotoPerfil ? path.join(uploadFinalPath, fotoPerfil) : null;
+
+//               // 5. Eliminar la foto del usuario
+//               deleteFile(filePathUsuario, () => {
+//                 // 6. Eliminar al usuario de la tabla usuarios
+//                 const queryEliminarUsuario = 'DELETE FROM usuarios WHERE id = ?';
+//                 dbConexion.query(queryEliminarUsuario, [userId], (error) => {
+//                   if (error) {
+//                     return dbConexion.rollback(() => {
+//                       console.error('Error al eliminar al usuario:', error);
+//                       res.status(500).send({ message: 'Error al eliminar al usuario' });
+//                     });
+//                   }
+
+//                   // 7. Confirmar la transacción
+//                   dbConexion.commit((err) => {
+//                     if (err) {
+//                       return dbConexion.rollback(() => {
+//                         console.error('Error al confirmar la transacción:', err);
+//                         res.status(500).send({ message: 'Error al confirmar la transacción' });
+//                       });
+//                     }
+
+//                     console.log('Jugador y usuario eliminados correctamente, incluyendo archivos');
+//                     res.send({ message: 'Jugador y usuario eliminados correctamente' });
+//                   });
+//                 });
+//               });
+//             });
+//           });
+//         });
+//       });
+//     });
+//   });
+// });
 
 // app.delete('/eliminar/jugador/:id/:userid', (req, res) => {
 //   const idjugador = req.params.id;

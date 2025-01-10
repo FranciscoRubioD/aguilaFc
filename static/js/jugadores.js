@@ -1157,7 +1157,7 @@ window.ocultarLottie = function (idLottie, variable) {
 
           $.ajax({
             type:'DELETE',
-            url:`/eliminar/jugador/${idJugador}/${idUsuario}`,
+            url:`/eliminar/jugador/${idJugador}`,
             success:function(response){
               $('.delete-mssg').hide();
               $('.deleted').show();
