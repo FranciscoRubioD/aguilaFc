@@ -94,7 +94,7 @@ const finalizarSubida = (fileName, fileBuffer, callback) => {
 
 
 // limite paginacion
-const limit = 10;
+const limit = 50;
 
 
 // Middleware para analizar application/x-www-form-urlencoded
