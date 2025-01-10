@@ -1209,7 +1209,7 @@ window.ocultarLottie = function (idLottie, variable) {
             if (elemento[key] === "") {
               td.css({
                'color': 'green',  // Color para "Por asignar"
-                'font-size':'6px'
+                'font-size':'10px'
               });
               td.text('sin asignar');
               

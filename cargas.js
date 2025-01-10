@@ -42,9 +42,7 @@ router.post('/import-jugadores', upload.single('file'), (req, res) => {
   // Insert data into the 'jugadores' table
   const values = data.map(row => {
 
-    if (!validPositions.includes(row.posicion)) {
-      row.posicion = 'Por asignar';
-    }
+   
 
       // Regular expression for a valid phone number format with optional hyphens
     const phonePattern = /^[0-9]{4}-[0-9]{4}$/;
