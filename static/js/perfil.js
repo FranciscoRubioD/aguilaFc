@@ -66,7 +66,7 @@ $('.opcionesJuego').on('click', function (e) {
 window.anteriorPartido = function(id_Equipo){
   $.ajax({
     type:'GET',
-    url: `/partido-anterior/${id_equipo}`, // Ruta al backend
+    url: `/partido-anterior/${id_Equipo}`, // Ruta al backend
     success:function(response){
       console.log(response);
     }
