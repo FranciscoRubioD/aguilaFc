@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   authToken(token);  
 
+  
 
   function authToken(token){
      // Si el token está presente, realizar una solicitud para verificarlo
@@ -17,6 +18,8 @@ $(document).ready(function() {
 
         localStorage.setItem('userRole', response.user.rol); // Guardar rol
         localStorage.setItem('userName', response.user.nombre); // Guardar nombre si es necesario
+        // Almacenar el ID del usuario en localStorage
+        localStorage.setItem('userId', response.user.id);
       
         // Verifica que 'response' contiene la propiedad 'user' y 'user.username'
         $('#nombreMostrar').text(`Hola, ${response.user.nombre}`); // Muestra el nombre de usuario

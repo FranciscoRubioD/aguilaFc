@@ -1409,7 +1409,7 @@ function changeLocation(id,location){
   }
 
   // notas
-  function showNotes(evento){
+  function showNotes(evento,id_usuario){
 
     $.ajax({
       type: 'GET',
@@ -1542,9 +1542,13 @@ function changeLocation(id,location){
 
     $('#enviarNota').off('click').on('click',function(){
 
+      const storedUserId = localStorage.getItem('userId');
+      console.log(`stored id: ${storedUserId}`);
+
+
       const id_evento = evento;
       const notas = $('#notaCrear').val();
-      const id_usuario = 74;
+      const id_usuario = storedUserId;
 
       const enviarBtn = $('#enviarNota');
       enviarBtn.prop('disabled',true);
