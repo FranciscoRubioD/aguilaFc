@@ -168,6 +168,7 @@ router.get('/partido-anterior/:id_equipo', (req, res) => {
       }
 
       // Devuelve el partido anterior como respuesta en formato JSON
+      console.log(`ultimo partido jugado: ${results[0]}`)
       res.json(results[0]); // Devuelve el primer (y único) resultado
   });
 });
