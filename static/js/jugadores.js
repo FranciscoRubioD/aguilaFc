@@ -1200,7 +1200,7 @@ window.ocultarLottie = function (idLottie, variable) {
       const fechaCreacion = new Date(fechaISO);
       const fechaFormateadaCreacion = formatDate(fechaCreacion);
 
-      const propiedadesMostradas = ['Nombre', 'cedula', 'telefono','edad','posicion','numero_jugador','estado_salud','fecha_creacion','nombre_division'];
+      const propiedadesMostradas = ['Nombre', 'cedula', 'telefono','edad','posicion','numero_jugador','estado_salud','fecha_creacion','correo','nombre_division'];
 
       for (const key in elemento) {
         if (Object.hasOwnProperty.call(elemento, key)) {
