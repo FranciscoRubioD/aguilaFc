@@ -77,10 +77,6 @@ $(document).ready(function() {
 
   }
 
-
-
-
-
    window.modalAsistencia =  function (evento,page){
 
     $.ajax({
@@ -455,7 +451,7 @@ $(document).ready(function() {
       right: 'month,agendaWeek,agendaDay'
     },
     height:650,
-    defaultDate: '2024-11-02', // Fecha de inicio
+    defaultDate: new Date().toISOString().split('T')[0], // Fecha actual como fecha de inicio
     navLinks: true, // Puede hacer clic en los días/semana para navegar
     // editable: true, // Hacer eventos editables
     eventLimit: true, // Permitir "más" link cuando hay demasiados eventos

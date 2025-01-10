@@ -63,6 +63,8 @@ router.post('/evento/configurar', (req, res) => {
     WHERE id = ?
   `;
 
+  
+
   dbConexion.query(query, [resolucion, ganador, golFavor, golContra, idEvento], (err, results) => {
     if (err) {
       console.error('Error al actualizar la configuración del partido:', err);
