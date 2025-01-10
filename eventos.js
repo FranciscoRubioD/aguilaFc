@@ -22,6 +22,7 @@ router.post('/crear/partido', (req,res) =>{
     dataForm.golFavor,
     dataForm.golContra,
     'Pendiente',
+    null,
     dataForm.rivalNombre,
     dataForm.tipoPartido,
     dataForm.encargado]
@@ -29,7 +30,7 @@ router.post('/crear/partido', (req,res) =>{
 
   console.log(valuesForm);
 
-  const queryEvento = 'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion, gol_local, gol_visita, estado, equipo_rival, tipo_partido, encargado) VALUES ?';
+  const queryEvento = 'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion, gol_local, gol_visita, estado,resultado ,equipo_rival, tipo_partido, encargado) VALUES ?';
 
   dbConexion.query(queryEvento, [valuesForm], (error, resultsEvento) => {
 

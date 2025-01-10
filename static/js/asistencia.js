@@ -884,8 +884,6 @@ $(document).ready(function() {
       estadoFinal = 'PM';
   });
 
-
-
   // funcion configurar partido resoluciones y eso
   function configPartido(id,golFavor,golContra){
 

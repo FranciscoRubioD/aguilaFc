@@ -7,11 +7,9 @@ $(document).ready(function() {
     const btnSiguienteFormPartido =  $('.btn-sig-partido');
     const btnAnteriorFormPartido = $('.btn-ant-partido');
 
+
     $('.closeCrearPartido').on('click', ()=>{
-
       $('.modalCrearPartido').hide();
-      
-
 
     });
 
@@ -120,7 +118,6 @@ $(document).ready(function() {
             $('.partidoCreado').show();
 
             $('#aceptResetForm').on('click',function(){
-
 
               document.getElementById('formPartido').reset();
 
