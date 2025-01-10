@@ -1043,8 +1043,11 @@ window.ocultarLottie = function (idLottie, variable) {
         if(elemento.posicion){
           $('#posicion-m').text(elemento.posicion);
         }else{
-          $('#posicion-m').text('POR ASIGNAR');
-          $('#posicion-m').addClass('asignar');
+          $('#posicion-m').text('sin asignar');
+          $('#posicion-m').css({
+            'color': 'green',  // Color para "Por asignar"
+            'font-size':'6px'
+          });
         }
         
         
@@ -1205,10 +1208,10 @@ window.ocultarLottie = function (idLottie, variable) {
             // Si el valor es vacío, asignar "Por asignar" y color
             if (elemento[key] === "") {
               td.css({
-                'color': 'lightgreen',  // Color para "Por asignar"
-                'font-weight': 'bold'
+               'color': 'green',  // Color para "Por asignar"
+                'font-size':'6px'
               });
-              td.text('n/a');
+              td.text('sin asignar');
               
             } else if (key === "Nombre") {
               td.text(elemento[key]);
