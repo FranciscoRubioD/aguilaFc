@@ -68,7 +68,7 @@ window.anteriorPartido = function(id_Equipo){
     type:'GET',
     url: `/partido-anterior/${id_Equipo}`, // Ruta al backend
     success:function(response){
-      console.log(`partido fetch ${response}`);
+      console.log(`partido fetch ${response.fecha}`);
     }
   })
 }
