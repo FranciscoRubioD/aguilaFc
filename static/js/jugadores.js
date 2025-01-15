@@ -752,7 +752,7 @@ filtrarTabla('#filtroEquipo', '.secundary-filter-list-equipo');
   // manejar filtros de fecha 
 filtrarTabla('#filtroFecha', '.secundary-filter-list-fecha');
 
-fechaFiltro()
+// fechaFiltro()
 function fechaFiltro(){
   $.ajax({
     type:'GET',
