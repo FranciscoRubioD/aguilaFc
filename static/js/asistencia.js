@@ -1924,20 +1924,20 @@ function subSection() {
   btnCalendario.on('click', function () {
     sectionCalendario.show();
     sectionCrearEvento.hide();
-    sectionCrearPartido.hide();
+    // sectionCrearPartido.hide();
   });
 
   // Para abrir creador de evento
   btnCrearEvento.on('click', function () {
     sectionCalendario.hide();
     sectionCrearEvento.show();
-    sectionCrearPartido.hide();
+    // sectionCrearPartido.hide();
   });
 
   // Para abrir creador de partido
   btnCrearPartido.on('click', function () {
     sectionCalendario.hide();
     sectionCrearEvento.hide();
-    sectionCrearPartido.show();
+    // sectionCrearPartido.show();
   });
 }
