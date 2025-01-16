@@ -258,15 +258,17 @@ header h1{
 
 .team-selector{
   width: 95%;
-  height: 50px;
-  margin: auto;
+  /* height: 30px; */
+  margin-left: 10%;
   display: flex;
   align-items: center;
+  justify-content: end;
   margin-bottom: 10px;
   /* background-color: red; */
 }
 .teamViewJugadores{
   width: 20%;
+  height: 100%;
 }
 
 .equipoMostrando{
@@ -524,7 +526,7 @@ header h1{
 }
 
 .titulo-seccion-jugadores p{
-  font-size: 30px;
+  font-size: 12px;
   margin: 0;
 }
 
@@ -537,9 +539,8 @@ header h1{
   /* align-items: center; */
 }
 
-.titulo-seccion-jugadores p{
-  font-weight: bold;
-}
+
+
 
 /* dashboard */
 .dashboard-jugadores{
@@ -589,7 +590,7 @@ header h1{
 .herramientas{
   height:8%;
   width: 95%;
-  margin-top: 2%;
+  /* margin-top: 2%; */
   /* background-color: red; */
   display: flex;
   align-items: center;
@@ -905,45 +906,47 @@ header h1{
 
 /* Estilos para la tabla */
 .tablaJugadores-div{
-  width: 95%;
-  height:500px;
+  width: 100%;
+  /* height:500px; */
   margin: auto;
   overflow-y: auto;
   /* background-color: red; */
 }
 .tabla-jugadores {
   border-collapse: collapse;
-  width: 100%; /* Ancho completo */
+  width: 95%; /* Ancho completo */
   border: none;
   background-color: white;
-
-  margin-top: 10px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  border-radius: 6px;
+  /* margin-top: 10px; */
   overflow: hidden;
+
 }
 
 .body-tabla-jugadores{
-
-  
 }
 
 /* Estilos para las filas de encabezado */
 .row-encabezado th {
   padding: 14px; 
   text-align: center; /* Alineación del texto a la izquierda */
-  /* font-weight: 400; */
+  font-weight: 400;
   background-color: white;
   color: grey;
   border-top: 1px solid #ddd; 
   font-size: 12px;
+  border-right: 1px solid #ddd;
 }
 
 /* Estilos para las filas de datos */
 .row-data td {
-  font-size: 14px;
+  font-size: 12px;
   padding: 10px; /* Espaciado interno */
   text-align: center;
   color: grey;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
   cursor: pointer;
 }
 

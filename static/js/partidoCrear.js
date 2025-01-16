@@ -119,6 +119,8 @@ $(document).ready(function() {
 
             $('#aceptResetForm').on('click',function(){
 
+              $('.modalCrearPartido').hide();
+
               document.getElementById('formPartido').reset();
 
               // cerrar modal, volver a form
@@ -134,6 +136,7 @@ $(document).ready(function() {
               golContra.attr('required','false');
               vuelta = false;
 
+              
               btnSiguienteFormPartido.text('Siguiente');
             });
             

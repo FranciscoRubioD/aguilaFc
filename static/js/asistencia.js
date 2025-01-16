@@ -339,108 +339,102 @@ $(document).ready(function() {
   }
 
 
-
-
-
   // calendario 
   const calendar = $('#calendar');
 
-
   poblarCalendario();
-
 
   function poblarCalendario(){
 
-    if (!token) {
-        console.log("No hay token, no se puede acceder a los eventos");
-        return;
-    }
+      if (!token) {
+          console.log("No hay token, no se puede acceder a los eventos");
+          return;
+      }
 
-    $.ajax({
-      type: 'GET',
-      url: '/eventos',
-      headers: {
-        'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
-      },
-      dataType: 'json',
-      success: function(response) {
-        
-        // Aquí puedes manejar la respuesta y actualizar la interfaz de usuario
-        // Por ejemplo, mostrar los eventos en una lista o tabla en tu página HTML
-        
-         // Limpia los eventos existentes en el calendario
-        calendar.fullCalendar('removeEvents');
-
-        // Define colores para los tipos de eventos
-        const colores = {
-          'Entrenamiento': '#ff4800',   // Color para entrenamiento
-          'Partido': '#6faad1',          // Color para partido
-          'Reunion': '#b442ed'           // Color para reunión
-        };
-
-        // Define colores adicionales para los resultados del partido
-        const coloresResultado = {
-          'W': '#4CAF50',  // Ganado (verde)
-          'L': '#F44336',  // Perdido (rojo)
-          'D': '#FFC107'   // Empate (amarillo)
-        };
-
-
-        // Itera sobre la respuesta y añade cada evento al calendario
-        response.forEach(evento => {
-
-          // Toma la fecha y la hora del evento y combina en formato ISO
-          const fechaISO = evento.fecha.split('T')[0]; // Obtiene solo la parte de la fecha
-          const fechaHoraISO = `${fechaISO}T${evento.hora}`;
-
-          const fechaISOFinal = evento.fecha.split('T')[0];
-          const fechaHoraISOFinal = `${fechaISOFinal}T${evento.hora_final}`;
+      $.ajax({
+        type: 'GET',
+        url: '/eventos',
+        headers: {
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado
+        },
+        dataType: 'json',
+        success: function(response) {
           
-          // Asigna un color basado en el tipo de evento
-          let color;
+          // Aquí puedes manejar la respuesta y actualizar la interfaz de usuario
+          // Por ejemplo, mostrar los eventos en una lista o tabla en tu página HTML
           
-          // si esta terminado y estado
-          if (evento.estado === 'Terminado') {
-            const resultado = evento.resultado; // Suponiendo que 'resultado' es 'W', 'L' o 'D'
-            color = coloresResultado[resultado] || color; // Asigna color según resultado
-          
-          } else if(evento.estado === "Pendiente"){
-            color = colores[evento.evento] || 'gray'; // Color por defecto si no coincide
+          // Limpia los eventos existentes en el calendario
+          calendar.fullCalendar('removeEvents');
+
+          // Define colores para los tipos de eventos
+          const colores = {
+            'Entrenamiento': '#ff4800',   // Color para entrenamiento
+            'Partido': '#6faad1',          // Color para partido
+            'Reunion': '#b442ed'           // Color para reunión
+          };
+
+          // Define colores adicionales para los resultados del partido
+          const coloresResultado = {
+            'W': '#4CAF50',  // Ganado (verde)
+            'L': '#F44336',  // Perdido (rojo)
+            'D': '#FFC107'   // Empate (amarillo)
+          };
+
+          // Itera sobre la respuesta y añade cada evento al calendario
+          response.forEach(evento => {
+
+            // Toma la fecha y la hora del evento y combina en formato ISO
+            const fechaISO = evento.fecha.split('T')[0]; // Obtiene solo la parte de la fecha
+            const fechaHoraISO = `${fechaISO}T${evento.hora}`;
+
+            const fechaISOFinal = evento.fecha.split('T')[0];
+            const fechaHoraISOFinal = `${fechaISOFinal}T${evento.hora_final}`;
+            
+            // Asigna un color basado en el tipo de evento
+            let color;
+            
+            // si esta terminado y estado
+            if (evento.estado === 'Terminado') {
+              const resultado = evento.resultado; // Suponiendo que 'resultado' es 'W', 'L' o 'D'
+              color = coloresResultado[resultado] || color; // Asigna color según resultado
+            
+            } else if(evento.estado === "Pendiente"){
+              color = colores[evento.evento] || 'gray'; // Color por defecto si no coincide
+            }
+
+
+
+          let tituloEvento;
+
+          // Verifica si el evento es entrenamiento o no
+          if (evento.evento.toLowerCase() === 'entrenamiento') {
+            tituloEvento = 'Entrenamiento'; // Título para entrenamiento
+          }else if(evento.evento.toLowerCase() === "reunion"){
+            tituloEvento = "Reunión";
+          } 
+          else {
+            tituloEvento = `${evento.evento} vs ${evento.equipo_rival}`; // Título para otros eventos
           }
 
-
-
-         let tituloEvento;
-
-        // Verifica si el evento es entrenamiento o no
-        if (evento.evento.toLowerCase() === 'entrenamiento') {
-          tituloEvento = 'Entrenamiento'; // Título para entrenamiento
-        }else if(evento.evento.toLowerCase() === "reunion"){
-          tituloEvento = "Reunión";
-        } 
-        else {
-          tituloEvento = `${evento.evento} vs ${evento.equipo_rival}`; // Título para otros eventos
+    
+            $('#calendar').fullCalendar('renderEvent', {
+              id: evento.id,
+              idEquipo : evento.id_equipo,
+              ubicacion: evento.ubicacion,
+              title: tituloEvento ,
+              start: fechaHoraISO,
+              end: fechaHoraISOFinal,
+              description: evento.descripcion,
+              color: color // Asigna el color al evento
+            }, true); // stick? = true
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al obtener eventos:', error);
+          // Aquí maneja el error según tus necesidades, por ejemplo, mostrar un mensaje de error al usuario
+          alert('Hubo un error al obtener los eventos. Por favor, inténtalo de nuevo.');
         }
-
-  
-          $('#calendar').fullCalendar('renderEvent', {
-            id: evento.id,
-            idEquipo : evento.id_equipo,
-            ubicacion: evento.ubicacion,
-            title: tituloEvento ,
-            start: fechaHoraISO,
-            end: fechaHoraISOFinal,
-            description: evento.descripcion,
-            color: color // Asigna el color al evento
-          }, true); // stick? = true
-        });
-      },
-      error: function(xhr, status, error) {
-        console.error('Error al obtener eventos:', error);
-        // Aquí maneja el error según tus necesidades, por ejemplo, mostrar un mensaje de error al usuario
-        alert('Hubo un error al obtener los eventos. Por favor, inténtalo de nuevo.');
-      }
-    });
+      });
   }
 
   calendar.fullCalendar({
@@ -1832,6 +1826,7 @@ $('.nav-btn').on('click',function(){
      // Si es la sección del calendario, actualiza su tamaño
      if (seccion === 'eventos') {
       const calendar = $('#calendar').fullCalendar('getCalendar'); // Reemplazar según versión
+      
       calendar.render(); // Para FullCalendar v5+
     }
   
@@ -1840,8 +1835,13 @@ $('.nav-btn').on('click',function(){
 followLink('goToCalendar');
 followLink('goToCalendarPartido');
 
+
+
 function followLink(link){
   $(`#${link}`).on('click', function() {
+
+    $('.modalCrearPartido').hide();
+    
     // Oculta todas las secciones y remueve la clase activo
     $('.seccion').removeClass('activo');
     

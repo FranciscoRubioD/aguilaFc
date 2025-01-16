@@ -54,13 +54,15 @@ const upload = multer({ storage:storage });
 const uploadFinalPath = path.join(__dirname, 'uploads');  
 
 
-const finalizarSubida = (fileName, fileBuffer, callback) => {
+const finalizarSubida = async (fileName, fileBuffer, callback) => {
   // Verificar si el fileBuffer es un Buffer válido
   if (!Buffer.isBuffer(fileBuffer)) {
-    callback(new Error('fileBuffer is not a Buffer'));
-    return;
+    throw new Error('fileBuffer is not a valid Buffer');
   }
 
+   if (!fileName || typeof fileName !== 'string') {
+    throw new Error('fileName is invalid');
+  }
   // Función para verificar si el archivo ya existe en el servidor y guardarlo
   const verificarExistenciaYGuardar = (rutaCompleta, intentos = 1) => {
     // Verificar si el archivo ya existe
@@ -425,6 +427,66 @@ app.post('/crear/jugador', upload.single('fotoJugador'), async (req, res) => {
   }
 });
 
+
+app.post('/jugador/foto', upload.single('fotoJugador'), async (req, res) => {
+  try {
+    const { id_jugador } = req.body; // ID del jugador al que se actualizará la foto
+
+    console.log(id_jugador);
+    console.log(req.file.originalname);
+
+    if (!id_jugador) {
+      return res.status(400).json({ error: 'ID del jugador es requerido.' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'Archivo de foto es requerido.' });
+    }
+
+    // Procesar la foto subida
+    const fileName = req.file.originalname;
+    const fileBuffer = req.file.buffer;
+
+    finalizarSubida(fileName, fileBuffer, async (err, savedPath) => {
+      if (err) {
+        console.error('Error al guardar la imagen:', err);
+        return res.status(500).json({ error: 'Error al guardar la imagen.' });
+      }
+
+      const savedFileName = path.basename(savedPath); // Nombre del archivo guardado
+
+      // Actualizar el registro del jugador con la nueva foto
+      const query = `
+        UPDATE jugadores
+        SET foto_jugador = ?
+        WHERE id = ?
+      `;
+      const values = [savedFileName, id_jugador];
+
+      dbConexion.query(query, values, (error, results) => {
+        if (error) {
+          console.error('Error al actualizar la foto del jugador:', error);
+          return res.status(500).json({ error: 'Error al actualizar la foto en la base de datos.' });
+        }
+
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ error: 'Jugador no encontrado.' });
+        }
+
+        // Enviar respuesta con el nombre del archivo actualizado
+        res.status(200).json({
+          message: 'Foto actualizada exitosamente.',
+          fileName: savedFileName, // Incluir el nombre del archivo en la respuesta
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Error al actualizar la foto del jugador:', error);
+    res.status(500).json({ error: 'Error en el servidor.' });
+  }
+});
+
+
 // app.post('/crear/jugador', upload.single('fotoJugador') ,async(req, res) => {
 //   try{
 //     const {
@@ -546,19 +608,17 @@ app.get('/info/jugadores/:id',(req,res)=>{
 app.get('/archivo/:file',(req,res)=>{
   const fileName = req.params.file;
   const filePath  = path.join(__dirname, 'uploads', fileName);
-
   
   // Verificar si el archivo existe en el servidor
   if (fs.existsSync(filePath)) {
     // Si existe, enviar el archivo como respuesta
-    
     res.sendFile(filePath);
   } else {
     // Si no existe, enviar respuesta de archivo no encontrado
     res.status(404).send({ message: 'Archivo no encontrado' });
   }
 
-})
+});
 
 // JUGADORES SECCION 
 
@@ -623,7 +683,7 @@ app.get('/get-jugadores', authenticateToken, (req, res) => {
   const user = req.user; // Usuario autenticado
   const equiposAsignados = user.equipos; // Equipos asignados al usuario
 
-  console.log(`equipos asignados ${equiposAsignados}`);
+  
 
 
   if (!equiposAsignados || equiposAsignados.length === 0) {
@@ -1422,9 +1482,6 @@ app.get('/get/equipo', authenticateToken, (req, res) => {
   // Acceder a los equipos asignados del usuario autenticado
   const equiposAsignados = req.user.equipos;
 
-  console.log(equiposAsignados);
-
-  console.log('Verificado Para equipo');
 
   if (!equiposAsignados || equiposAsignados.length === 0) {
     return res.status(403).json({ error: 'No tienes equipos asignados' });
@@ -1468,7 +1525,7 @@ app.get('/auth/equipo/:userId', (req, res) => {
       console.error('Error al obtener los equipos:', error);
       res.status(500).json({ error: 'Error al obtener los equipos' });
     } else {
-      console.log(results);
+      
       res.status(200).json({ results });
     }
   });
@@ -1557,8 +1614,7 @@ app.post('/evento/existente/guardar', (req,res) => {
   const {asistencias, evento} = req.body;
   // const evento = req.query.evento;
 
-  console.log(asistencias);
-  console.log(evento);
+  
 
   // Paso 1: Query 
   const queryAsistencia = 'INSERT INTO asistencias (id_jugador, estado, descripcion_asist, id_evento) VALUES ?';
@@ -1865,7 +1921,7 @@ app.post('/signup',(req,res)=>{
     'jugador'
   ]
 
-  console.log(values);
+ 
   const query = "INSERT INTO usuarios(nombre_usuario,contrasena,email,rol) VALUES(?,?,?,?)";
 
   dbConexion.query(query,values,(error,results) =>{

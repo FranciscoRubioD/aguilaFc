@@ -220,24 +220,39 @@ p{
 
 @media screen and (max-width: 768px) {
 
+
+  #partidoEvento{
+    width: 90%;
+    height: 60%;
+    margin-top: 20px;
+  }
+
   .instruccion-partido{
     width: 70%;
-    margin-top: 10%;
+    margin-top: 2%;
   }
+
+
   .instruccion-partido h1{
     font-size: 25px;
   }
   .instruccion-partido p{
     font-size: 12px;
+    margin: 0;
   }
 
+
   .partidoForm{
-    height: 100%;
+    height: 85%;
+   
     overflow: auto;
   }
 
+
+
   .form-part-col2, .form-part-col1{
-    width: 70%;
+    width: 90%;
+    margin-top: 10px;
   }
 
   .partidoVuelta input{
@@ -253,7 +268,7 @@ p{
   }
 
   .btn-partido1{
-    height: 10%;
+    height: 20%;
   }
 
   /* accept */
@@ -267,6 +282,10 @@ p{
   }
   .colCreadoPartido p{
     font-size: 12px;
+  }
+
+  .form-part-col1 label{
+    margin: 0;
   }
 
 

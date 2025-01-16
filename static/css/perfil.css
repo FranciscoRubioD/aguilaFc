@@ -18,20 +18,28 @@
   display: grid;
   margin-bottom: 10px;
   grid-template-columns: 1fr 1fr;
+  /* overflow: hidden; */
   /* background-color: white; */
 }
 
 .welcome-p{
   display: flex;
   gap:5%;
-  align-items: end;
+  align-items: center;
   /* background-color: green; */
 }
 
+
+
 .teamViewDiv{
-  width: 20%;
+  width: 50%;
+  /* overflow: hidden;} */
   /* gap: 10px; */
   /* background-color: red; */
+}
+
+.teamViewDiv select{
+  background-color: red;
 }
 
 .teamViewDiv label{
@@ -40,7 +48,7 @@
 
 .welcome-p p{
   margin: 0;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 p{
@@ -51,7 +59,7 @@ p{
 /* dashboard */
 .dashboard-main{
   width: 90%;
-  height: 90%;
+  height: 90vh;
   /* background-color: white; */
 }
 
@@ -66,14 +74,13 @@ p{
   grid-template-rows: 1fr 2fr;
 }
 
+
 .dashboard-top,.dashboard-bottom{
   display: grid;
   grid-template-columns: 1fr 1fr;
   /* border-style: solid; */
   overflow: hidden;
 }
-
-
 
 .next-game-div,.win-vs-loss{
   overflow: hidden;
@@ -97,7 +104,7 @@ p{
   display: grid;
   grid-template-rows: 1fr 1fr 2fr;
   overflow: hidden;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .col-games{
@@ -439,10 +446,10 @@ p{
 }
 
 .profileInfo{
-  width: 40%;
+  width: 100%;
   height: 100%;
   display: flex;
-  align-items: end;
+  align-items: center;
   /* justify-content: center; */
   /* align-items: center; */
   /* background-color: blue; */
@@ -453,6 +460,7 @@ p{
 .picProfile{
   width: 40px;
   height: 40px;
+  margin: 0;
   border-radius: 50%;
   background-color: rgb(202, 202, 202);
   cursor: pointer;
@@ -465,7 +473,7 @@ p{
   width: 300px;
   height: 300px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  top: 75px;
+  top: 65px;
   border-radius: 5px;
   z-index:5000;
   background-color: white;
@@ -541,17 +549,21 @@ p{
   height: 80%;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  /* align-items: center; */
-  justify-content: center;
+  align-items: start;
+  /* justify-content: start; */
   margin-left: 5px;
   /* background-color: pink; */
 }
+
 
 .welcomeLegend p:first-child{
   font-size: 14px;
   font-weight: 400;
   color: black;
-  margin-top: 12px;
+  
+  /* background-color: red; */
+  margin: 0;
+  margin-top: 20px;
 }
 
 .welcomeLegend p{
@@ -613,4 +625,75 @@ p{
 }
 
 
+@media screen and (max-width: 768px){
+
+  .welcomeLegend p{
+
+  }
+
+  #nombreMostrar{
+    font-size: 12px;
+  }
+
+  .welcome-p p{
+    font-size: 10px;
+  }
+
+  .dashboard-top,.dashboard-bottom{
+    grid-template-columns: 1fr; /* Cambia a una sola columna */
+    grid-template-rows: repeat(auto-fit, minmax(100px, auto)); /* Configura las filas */
+    height: 40vh;
+  }
+
+.gamesDiv{
+  height: 80%;
+  width: 95%;
+  border-radius: 5px;
+}
+
+.header-games p{
+  font-size: 12px;
+}
+
+.col-shield{
+  font-size: 12px;
+}
+
+#messageNoGames{
+  font-size: 14px;
+}
+
+
+.vsShield p{
+  font-size: 15px;
+}
+
+.dashboard-main h2{
+  font-size: 16px;
+}
+
+
+.win-vs-loss{
+  align-items: start;
+}
+
+.gamesDiv{
+  margin-top: 5px;
+}
+
+
+/* upcoming matches */
+.upcoming-left{
+  height: 100%;
+  font-size: 14px;
+}
+
+
+.statusMatch p{
+  font-size: 8px;
+  
+}
+
+
+}
 

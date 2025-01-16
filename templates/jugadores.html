@@ -6,7 +6,7 @@
   
   <!-- Opción para PNG -->
   <link rel="icon" type="image/png" href="/logos/aguilaFcmini.png">
-  <title>Aguil Admin</title>
+  <title>Aguila Admin</title>
 
 
   <!-- Incluir jQuery -->
@@ -433,9 +433,10 @@
                 </div>
 
                 <div class="tablaAsistBtn" >
-                  <button id="reiniciarLista" style="display: none;">Reiniciar Lista</button>
+                  <button class="enviar-asist-btn" id="enviarAsistQuick" style="background-color: rgb(88, 206, 88); color: white;">Enviar</button>
+                  <button id="reiniciarLista" style="display: none; background-color: rgb(252, 84, 84); color: white;">Reiniciar Lista</button>
                   <button class="presente-all" id="marcarTodosQuick" style="display: none;">Marcar Presente todos</button>
-                  <button class="enviar-asist-btn" id="enviarAsistQuick">Enviar</button>
+                  
                 </div>
 
                 
@@ -452,7 +453,7 @@
           <div class="dashboard-bottom">
 
             <div class="upcoming-left">
-                <div>
+                <div style="display: flex; align-items: end;">
                   <p style="margin: 0; margin-left: 15px;">Partidos</p>
                 </div>
 
@@ -540,7 +541,7 @@
             </div>
 
             <div class="upcoming-left">
-              <div>
+              <div style="display: flex; align-items: end;">
                 <p style="margin: 0; margin-left: 15px;">Entramientos</p>
               </div>
 
@@ -644,7 +645,21 @@
     <section class="seccion" id="jugadores">
       
       <div class="titulo-seccion-jugadores">
-        <p>Jugadores </p>
+        <h1>Jugadores </h1>
+
+        <div class="team-selector">
+
+          <div class="equipoMostrando">
+            <p>Equipo: </p>
+          </div>
+         
+          <div class="teamViewJugadores">
+            <select id="dashboardTeamViewJugadores" name="dashboardTeamViewJugadores"  required>
+              
+            </select>
+          </div>
+        </div>
+
       </div>
 
       <!-- modal jugador manual -->
@@ -735,20 +750,9 @@
           </div>
         </div>
 
-      <div class="team-selector">
+     
 
-        <div class="equipoMostrando">
-          <p>Equipo: </p>
-        </div>
-       
-        <div class="teamViewJugadores">
-          <select id="dashboardTeamViewJugadores" name="dashboardTeamViewJugadores"  required>
-            
-          </select>
-        </div>
-      </div>
-
-      <div class="dashboard-jugadores">
+      <div class="dashboard-jugadores" style =" display:none">
         <div class="jugadores-totales">
          <div class="icon-dashboard">
           
@@ -834,7 +838,7 @@
             </div>
           </div>
           
-          <i class="fa-solid fa-rotate-right"></i>
+          <i class="fa-solid fa-rotate-right refreshPlayers"></i>
         </div>
         
       </div>
@@ -1646,7 +1650,7 @@
 
         <div class="instruccion-partido">
           <h1>Crear Partido</h1>
-          <p>Completa el formulario para poder agendar un partido</p>
+          <p>Completa el formulario</p>
         </div>
   
         <div class="partidoCreado" style="display: none;">
@@ -2209,82 +2213,90 @@
   
   <!-- seccion imporante informacion total del jugador -->
 
-  <div class="modal-jugador" style="display: none;">
+  <div class="modal-jugador" style="display:none;"> 
     <div class="modal-content-jugador">
-
-      <div class="modal-jugador-header">
-        <i class="fa-solid fa-xmark closePlayer"></i>
-      </div>
       
       <div class="modal-jugador-profile">
+        <i class="fa-solid fa-xmark closePlayer"></i>
         <div class="section-1-profile">
+          
           <div class="foto-perfil">
             <div class="foto-perfil-container">
+
+              <div class="perfilSubir" style="display: none;">
+                <i class="fa-solid fa-camera cambiarFotoIcon"></i>
+                <input type="file" class="profil-pic-jugador" id="changeProfilePic" name="fotoJugador" style="display: none;"  accept="image/png, image/jpeg, image/jpg">
+              </div>
+
+
               <img src="" alt="" id="fotoPerfilJugador">
             </div>
           </div>
 
           <div class="info-perfil">
             <div class="info-perfil-nombre">
-              <p id="nombre-m">Francisco Rubio</p>
+              <p id="nombre-m">Francisco</p>
             </div>
 
             <div class="info-perfil-1">
-              <div class="info-perfil-2">
-                <div class="info-perfil-col-1">
-                  <div class="info-perfil-data">
-                    <div>
-                      <i class="fa-regular fa-address-card"></i>
-                    </div>
-                    <div>
-                      <p id="cedula-m"></p>
-                    </div>
+                 
+
+              <div class="sideperfil">
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">Cedula</p>
+                    <p id="cedula-m" style="text-align: end;">4838234</p>
                   </div>
-  
-                  <div class="info-perfil-data">
-                    <i class="fa-solid fa-mobile-screen"></i>
-                    <p id="telefono-m"></p>
-                  </div>
-            
-                  <div class="info-perfil-data">
-                    <i class="fa-solid fa-weight-scale"></i>
-                    <p></p>
-                  </div>
-  
                   
                 </div>
-  
-                <div class="info-perfil-col-2">
-                  
-  
-                  <div class="info-perfil-data">
-                    <p style="color: rgb(21, 21, 21);">Edad:</p>
-                    <p id="edad-m"></p>
-                  </div>
-  
-                  <div class="info-perfil-data">
-                    <i class="fa-solid fa-baby-carriage"></i>
-                    <p id="fechaNacimiento-m"></p>
+              
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">telefono</p>
+                    <p id="telefono-m" style="text-align: end;">tele</p>
                   </div>
                   
-                  <div class="info-perfil-data">
-                    <i class="fa-solid fa-ruler-vertical"></i>
-                    <p></p>
+                </div>
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">edad</p>
+                    <p id="edad-m" style="text-align: end;"></p>
                   </div>
+                  
                 </div>
               </div>
 
-              <div class="aditional-info">
-                <div class="socials-info">
-                  <i class="fa-regular fa-envelope"></i>
-                  <p id="email-m"></p>
-                </div>
-                <div class="socials-info">
-                  <i class="fa-brands fa-instagram"></i>
-                  <p id="instagram-m"></p>
-                </div>
+              <div class="sideperfil">
                 
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">fecha nacimiento</p>
+                    <p id="fechaNacimiento-m" style="text-align: end;"></p>
+                  </div>
+                 
+                </div>
+                    
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">Correo</p>
+                    <p id="email-m" style="text-align: end;"></p>
+                  </div>
+                  
+                </div>
+                <div class="data-jugador">
+                  <div class="inner-data-profile">
+                    <p class="labelPerfil">instagram</p>
+                    <p id="instagram-m" style="text-align: end;"></p>
+                  </div>
+                 
+                </div>
               </div>
+
+              
+  
+              
+                
+            
             </div>
             
 

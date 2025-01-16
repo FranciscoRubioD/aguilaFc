@@ -10,6 +10,15 @@ const dbConexion = mysql.createConnection({
   port: 26491,  // Asegúrate de que el puerto sea el correcto
 });
 
+// const dbConexion = mysql.createConnection({
+//   host:'localhost',
+//   user:'root',
+//   password:'',
+//   database:'aguilafc',
+//   port: 3306,  // Asegúrate de que el puerto sea el correcto
+// });
+
+
 
 
 

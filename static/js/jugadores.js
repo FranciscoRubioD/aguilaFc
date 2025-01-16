@@ -322,6 +322,83 @@ $(document).ready(function() {
   let debounceTimeout;
 
 
+  // cambiar foto de perfil jugador
+  // cambiar de foto de perfil
+  // Mostrar el input de archivo al hacer clic en el contenedor
+  $('.cambiarFotoIcon').on('click', function() {
+   cambiarFoto();
+  });
+
+  $('.foto-perfil-container').on('mouseover',function(){
+    $('.perfilSubir').show();
+  });
+  
+
+  // refresh player 
+  $('.refreshPlayers').on('click',function(){
+    getJugadores();
+  });
+
+
+  function cambiarFoto(){
+    $('#changeProfilePic').click();
+
+    $('#changeProfilePic').off('change').on('change', function () {
+          
+      const idJugador = $(this).data('id-jugador'); // Obtener el id desde el input de foto
+   
+      if (!idJugador) {
+        alert('No se ha seleccionado un jugador.');
+        return;
+      }
+  
+      const formData = new FormData();
+      const fileInput = $('#changeProfilePic')[0].files[0];
+    
+      if (!fileInput) {
+        alert('Por favor selecciona una foto para actualizar.');
+        return;
+      }
+    
+     // Añadir el archivo y el id del jugador al FormData
+      formData.append('fotoJugador', fileInput);
+      formData.append('id_jugador', idJugador);
+  
+      $.ajax({
+        url: '/jugador/foto',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          alert('Foto actualizada exitosamente.');
+
+          const fotoPerfil = response.fileName;
+
+          getJugadores();
+          $('.modal-jugador').hide();
+        },
+        error: function (xhr) {
+          if (xhr.status == 404) {
+            console.error('Error 404: Recurso no encontrado');
+          } else {
+            console.error('Error AJAX:', error);
+          }
+        },
+      });
+  
+  
+    });
+  }
+ 
+
+  $('.foto-perfil-container').on('mouseout',function(){
+    $('.perfilSubir').hide(); 
+  });
+
+
+
+
   function generarPaginacion(totalPages, funcion,params){
     $('.numeros-paginacion').empty();
 
@@ -981,14 +1058,20 @@ window.ocultarLottie = function (idLottie, variable) {
   $(`#${idLottie}`).fadeOut(); // Oculta el contenedor
 }
 
+
 // formato para agregar data al row y usar sus funciones editar y eso
   function cargarRowData(response){
 
     $('.tabla-jugadores .row-data').empty();
+
+    
     // Mostrar animación Lottie antes de cargar los datos
     mostrarLottie('loadingLottie',loadingAnimation);
 
     // $('.tabla-jugadores .row-data').empty();
+
+     // cambiar foto de perfil 
+    
 
     setTimeout(() => {
 
@@ -1000,7 +1083,6 @@ window.ocultarLottie = function (idLottie, variable) {
 
       const toolDiv = $('<div>');
       toolDiv.addClass('tool-div');
-
 
       // icono editar
       const configurarJugadorIcon = $('<i>');
@@ -1018,11 +1100,15 @@ window.ocultarLottie = function (idLottie, variable) {
       verJugadorIcon.addClass('fa-solid fa-eye');
       verJugadorIcon.data('id-jugador',elemento.id);
 
-      // abrir modal
 
+      // abrir modal
       verJugadorIcon.on('click',function(){
         const idJugador = $(this).data('id-jugador');
         console.log('click en fila',idJugador);
+
+        idJugadorSeleccionado = idJugador; // Almacenar el id del jugador seleccionado
+
+        $('#changeProfilePic').data('id-jugador',idJugador);
 
         const edad = calcularEdad(elemento.fecha_nacimiento);
 
@@ -1071,16 +1157,16 @@ window.ocultarLottie = function (idLottie, variable) {
           success:function(response){
             console.log(response);
             $('#fotoPerfilJugador').attr('src', '/archivos/' + fotoPerfil);
-
           },
           error: function(xhr, status, error) {
             console.error('Error al obtener la imagen de perfil:', error);
             $('#fotoPerfilJugador').attr('src', '/archivos/' + 'default_profile.png');
             // Manejar errores si es necesario
           }
-        })
+        });
 
         // descargar cedula
+        
         $('#doc-download').one('click',function(){
           // URL del archivo que quieres descargar desde el servidor
           var urlArchivo = '/archivos/' + elemento.foto_cedula;

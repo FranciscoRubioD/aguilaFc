@@ -417,7 +417,7 @@ router.delete('/user/equipo/:userId/:equipoId', (req, res) => {
     });
   });
   
-  
+
 
   router.get('/protected', authenticateToken, (req, res) => {
     res.json({ message: 'Welcome to the protected route!', user: req.user });

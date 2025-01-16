@@ -329,11 +329,6 @@ function formatTime(hora) {
 
 
 
-// eventExistList(31);
-
-
-
-
 // mimic table
 function modalAsistenciaQuick(evento,page){
 
@@ -366,12 +361,13 @@ function modalAsistenciaQuick(evento,page){
       // borrar asistencia
       deleteAsistencia(evento,'reiniciarLista');
 
-
       // cerrar modal
       $('.quick-asist-x').on('click',function(){
           $('.asistenciaQuick').fadeOut();
           $('#quickTable').hide();
           $('.table-asist-new').hide();
+        
+
       });
 
       // Verificar si hay resultados
@@ -381,15 +377,16 @@ function modalAsistenciaQuick(evento,page){
         $('#reiniciarLista').hide();
         $('#marcarTodosQuick').hide();
 
-
         table.hide();
         btnTabla.hide();
-        
         eventExistList(evento); // Función que se debe definir para manejar la falta de datos
-      } else {
 
+      } else {
         $('#reiniciarLista').show();
         $('#marcarTodosQuick').show();
+
+        $('.table-asist-new').hide();
+
         table.show();
         // $('.table-asist-new').hide();
         // $('#newList').hide();
@@ -530,7 +527,7 @@ function modalAsistenciaQuick(evento,page){
                     
                     console.log('Respuesta del servidor:', response);
 
-                    alert('Asistencia guardad con éxito');
+                   
                     // $('.modal-asistencia').hide();
                     btnTabla.show();
                     // Rehabilitar el botón y restablecer el texto
