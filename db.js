@@ -5,10 +5,11 @@ const mysql = require('mysql2');
 const dbConexion = mysql.createConnection({
   host:'viaduct.proxy.rlwy.net',
   user:'root',
-  password:'cjiVOjnNolZkWwWUQKnBdcWFouXjkzpt',
+  password:'OMNpyPoCjMQJaNVbpdHRVCHIuxHKDvDZ',
   database:'railway',
-  port: 26491,  // Asegúrate de que el puerto sea el correcto
+  port: 48234,  // Asegúrate de que el puerto sea el correcto
 });
+
 
 // const dbConexion = mysql.createConnection({
 //   host:'localhost',
