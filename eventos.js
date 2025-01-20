@@ -53,6 +53,10 @@ router.post('/crear/partido', (req,res) =>{
 router.post('/evento/configurar', (req, res) => {
   const { idEvento, resolucion, ganador, golFavor, golContra } = req.body;
 
+  
+  // Convertir el valor vacío a NULL si no se seleccionó nada
+  const resultado = ganador === "" ? null : ganador;
+
   const query = `
     UPDATE evento 
     SET 
@@ -63,9 +67,8 @@ router.post('/evento/configurar', (req, res) => {
     WHERE id = ?
   `;
 
-  
 
-  dbConexion.query(query, [resolucion, ganador, golFavor, golContra, idEvento], (err, results) => {
+  dbConexion.query(query, [resolucion,resultado, golFavor, golContra, idEvento], (err, results) => {
     if (err) {
       console.error('Error al actualizar la configuración del partido:', err);
       return res.status(500).json({ message: 'Error al actualizar el evento' });

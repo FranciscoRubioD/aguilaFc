@@ -1666,7 +1666,7 @@ window.obtenerProximoPartido = function (id_equipo) {
           
           $('#proximoPartidoEquipo').text(data.equipo_rival); // Ejemplo de cómo mostrar el rival
       
-      },
+      },ñ
       error: function(xhr) {
           // Muestra un mensaje de error si no hay partido próximo
           if (xhr.status === 404) {
