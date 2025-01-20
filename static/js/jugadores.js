@@ -497,10 +497,6 @@ $(document).ready(function() {
         cargarRowData(response);
         $('.crear-jugador-modal').hide();
 
-        // cargar jugadores
-        $('#crearJugadorBtn').on('click',function(){
-          $('.crear-jugador-modal').show();
-        });
 
         $('.crear-jugador-x').on('click',function(){
           $('.crear-jugador-modal').hide();
@@ -690,6 +686,8 @@ $(document).ready(function() {
     cargarJugador();
   });
 
+
+
   const crearJugadorBtn = $('#crearJugadorManual');
   crearJugadorBtn.off('click').on('click',function(){
     crearJugador();
@@ -698,6 +696,7 @@ $(document).ready(function() {
 
   // seccion crear jugador manual
   function crearJugador(){
+    $('.crear-jugador-modal').show();
     $('.modal-crear-jugador').fadeIn();
     $('.crear-jugador-modal').hide();
   }
