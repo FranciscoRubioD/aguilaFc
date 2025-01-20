@@ -508,16 +508,7 @@ $(document).ready(function() {
           $('.subir-jugadores').hide();
         });
      
-        const cargarJugadoresBtn = $('#cargarJugadores');
-        cargarJugadoresBtn.off('click').on('click', function(){
-          cargarJugador();
-        });
-
-        const crearJugadorBtn = $('#crearJugadorManual');
-        crearJugadorBtn.off('click').on('click',function(){
-          crearJugador();
-        })
-
+      
 
         // generar paginacion total 
         $.ajax({
@@ -692,6 +683,17 @@ $(document).ready(function() {
      });
 
   });
+
+
+  const cargarJugadoresBtn = $('#cargarJugadores');
+  cargarJugadoresBtn.off('click').on('click', function(){
+    cargarJugador();
+  });
+
+  const crearJugadorBtn = $('#crearJugadorManual');
+  crearJugadorBtn.off('click').on('click',function(){
+    crearJugador();
+  })
 
 
   // seccion crear jugador manual
