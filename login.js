@@ -166,7 +166,7 @@
 
       dbConexion.query(query,(error,results) => {
         if(error){
-          console.error('Error al traer usuarios', err);
+          console.error('Error al traer usuarios', error);
           res.status(500).json({ error: 'Error al traer usuarios' });
         }else{
           res.status(200).json({ results });
