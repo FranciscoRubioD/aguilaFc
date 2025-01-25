@@ -263,6 +263,7 @@ header h1{
   display: flex;
   align-items: center;
   justify-content: end;
+
   margin-bottom: 10px;
   /* background-color: red; */
 }
@@ -275,6 +276,7 @@ header h1{
   height: 100%;
   width: 5%;
   display: flex;
+  margin-right: 5%;
   /* justify-content: center; */
   align-items: center;
   /* background-color: red; */
@@ -942,6 +944,7 @@ header h1{
 /* Estilos para las filas de datos */
 .row-data td {
   font-size: 12px;
+  
   padding: 10px; /* Espaciado interno */
   text-align: center;
   color: grey;

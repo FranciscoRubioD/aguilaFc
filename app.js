@@ -683,9 +683,6 @@ app.get('/get-jugadores', authenticateToken, (req, res) => {
   const user = req.user; // Usuario autenticado
   const equiposAsignados = user.equipos; // Equipos asignados al usuario
 
-  
-
-
   if (!equiposAsignados || equiposAsignados.length === 0) {
     return res.status(403).json({ error: 'No tienes equipos asignados' });
   }
