@@ -1659,40 +1659,55 @@ app.get('/fechas', (req, res) => {
 app.post('/asistencia/guardar', (req, res) => {
   const { eventos } = req.body; // Se espera un objeto con los datos del evento
 
-  // Iniciar la transacción
-  dbConexion.beginTransaction((err) => {
+  // Obtener una conexión del pool
+  dbConexion.getConnection((err, connection) => {
     if (err) {
-      console.error('Error al iniciar la transacción:', err);
-      return res.status(500).json({ message: 'Error al guardar el evento' });
+      console.error('Error al obtener la conexión del pool:', err);
+      return res.status(500).json({ message: 'Error al conectar con la base de datos' });
     }
 
-    // Paso 1: Insertar el evento
-    const valuesEvento = [
-      [eventos.evento, eventos.equipoId, eventos.fecha, eventos.hora, eventos.horaFinalizacion, eventos.descripcion, eventos.ubicacion]
-    ];
+    // Iniciar la transacción
+    connection.beginTransaction((err) => {
+      if (err) {
+        console.error('Error al iniciar la transacción:', err);
+        connection.release(); // Liberar la conexión
+        return res.status(500).json({ message: 'Error al guardar el evento' });
+      }
 
-    const queryEvento = 'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion) VALUES ?';
+      // Paso 1: Insertar el evento
+      const valuesEvento = [
+        [eventos.evento, eventos.equipoId, eventos.fecha, eventos.hora, eventos.horaFinalizacion, eventos.descripcion, eventos.ubicacion],
+      ];
 
-    dbConexion.query(queryEvento, [valuesEvento], (errorEventos, resultsEvento) => {
-      if (errorEventos) {
-        dbConexion.rollback(() => {
-          console.error('Error al insertar el evento:', errorEventos);
-          return res.status(500).json({ message: 'Error al guardar el evento' });
-        });
-      } else {
+      const queryEvento =
+        'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion) VALUES ?';
+
+      connection.query(queryEvento, [valuesEvento], (errorEventos, resultsEvento) => {
+        if (errorEventos) {
+          // Rollback si hay un error
+          return connection.rollback(() => {
+            connection.release(); // Liberar la conexión
+            console.error('Error al insertar el evento:', errorEventos);
+            return res.status(500).json({ message: 'Error al guardar el evento' });
+          });
+        }
+
         // Si el evento se ha insertado correctamente, hacer commit
-        dbConexion.commit((err) => {
+        connection.commit((err) => {
           if (err) {
-            dbConexion.rollback(() => {
+            return connection.rollback(() => {
+              connection.release(); // Liberar la conexión
               console.error('Error al hacer commit de la transacción:', err);
               res.status(500).json({ message: 'Error al guardar el evento' });
             });
-          } else {
-            console.log('Evento guardado correctamente');
-            res.status(200).json({ message: 'Evento guardado correctamente' });
           }
+
+          // Liberar la conexión y responder al cliente
+          connection.release();
+          console.log('Evento guardado correctamente');
+          res.status(200).json({ message: 'Evento guardado correctamente' });
         });
-      }
+      });
     });
   });
 });
