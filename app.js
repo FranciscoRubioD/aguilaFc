@@ -1211,6 +1211,7 @@ app.get('/buscar-jugadores', (req, res) => {
       // Si id_equipo es 0, filtra solo los equipos asignados al usuario
       if (equiposAsignados && equiposAsignados.length > 0) {
         // No usamos map si equiposAsignados ya es un arreglo de IDs
+        console.log(equiposAsignados);
         sql += ` AND id_equipo IN (${equiposAsignados})`;
       } else {
         return res.status(403).json({ error: 'No tienes equipos asignados' });
