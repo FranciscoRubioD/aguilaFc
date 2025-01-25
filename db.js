@@ -2,22 +2,13 @@ const mysql = require('mysql2');
 
 
 // conexion a la base de datos
-// const dbConexion = mysql.createConnection({
- 
-// });
-
-const dbConexion = mysql.createPool({
+const dbConexion = mysql.createConnection({
   host:'viaduct.proxy.rlwy.net',
   user:'root',
   password:'OMNpyPoCjMQJaNVbpdHRVCHIuxHKDvDZ',
   database:'railway',
   port: 48234,  // Asegúrate de que el puerto sea el correcto
-  connectionLimit: 10, // Número máximo de conexiones
-  waitForConnections: true, // Esperar si no hay conexiones disponibles
-  queueLimit: 0, // No limitar la cola de conexiones
-  acquireTimeout: 30000, // Tiempo máximo para adquirir una conexión (30 segundos)
 });
-
 
 
 
