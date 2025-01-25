@@ -776,88 +776,177 @@ app.get('/jugador/evento/asistencia', (req, res) => {
   const offset = (page - 1) * limit;
 
   // Inicia una transacción
-  dbConexion.beginTransaction((error) => {
-    if (error) {
-      console.error('Error al iniciar la transacción:', error);
-      return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  dbConexion.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error al obtener la conexión del pool:', err);
+      return res.status(500).json({ error: 'Error en el servidor' });
     }
-
-    // Verifica si el evento existe
-    const queryEvento = 'SELECT id FROM evento WHERE id = ?';
-    dbConexion.query(queryEvento, [evento], (error, results) => {
+  
+    // Iniciar la transacción
+    connection.beginTransaction((error) => {
       if (error) {
-        return dbConexion.rollback(() => {
-          console.error('Error al verificar el evento:', error);
-          res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
-        });
+        console.error('Error al iniciar la transacción:', error);
+        connection.release();
+        return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
       }
-
-      if (results.length === 0) {
-        return dbConexion.rollback(() => {
-          res.status(404).json({ error: 'Evento no encontrado' });
-        });
-      }
-
-      const query = `
-        SELECT j.id, j.Nombre, j.cedula
-        FROM jugadores j
-        JOIN asistencias a ON j.id = a.id_jugador
-        WHERE a.id_evento = ?
-        LIMIT ? OFFSET ?
-      `;
-      const params = [evento, limit, offset];
-
-      dbConexion.query(query, params, (error, results) => {
+  
+      // Verifica si el evento existe
+      const queryEvento = 'SELECT id FROM evento WHERE id = ?';
+      connection.query(queryEvento, [evento], (error, results) => {
         if (error) {
-          return dbConexion.rollback(() => {
-            console.error('Error al ejecutar la consulta para traer jugadores:', error);
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error al verificar el evento:', error);
             res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
           });
         }
-
-
-        // paginacion 
-        const totalQuery = 'SELECT COUNT(*) AS total FROM asistencias WHERE id_evento = ?';
-        dbConexion.query(totalQuery, [evento], (error, countResults) => {
-
-
+  
+        if (results.length === 0) {
+          return connection.rollback(() => {
+            connection.release();
+            res.status(404).json({ error: 'Evento no encontrado' });
+          });
+        }
+  
+        const query = `
+          SELECT j.id, j.Nombre, j.cedula
+          FROM jugadores j
+          JOIN asistencias a ON j.id = a.id_jugador
+          WHERE a.id_evento = ?
+          LIMIT ? OFFSET ?
+        `;
+        const params = [evento, limit, offset];
+  
+        connection.query(query, params, (error, results) => {
           if (error) {
-            return dbConexion.rollback(() => {
-              console.error('Error al contar asistencias:', error);
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error al ejecutar la consulta para traer jugadores:', error);
               res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
             });
           }
-
-
-          const total = countResults[0].total; // Total de asistencias
-          const totalPages = Math.ceil(total / limit); // Total de páginas
-
-           // Commit de la transacción
-          dbConexion.commit((error) => {
+  
+          // Paginación
+          const totalQuery = 'SELECT COUNT(*) AS total FROM asistencias WHERE id_evento = ?';
+          connection.query(totalQuery, [evento], (error, countResults) => {
             if (error) {
-              return dbConexion.rollback(() => {
-                console.error('Error al realizar el commit de la transacción:', error);
+              return connection.rollback(() => {
+                connection.release();
+                console.error('Error al contar asistencias:', error);
                 res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
               });
             }
-
-            // Enviar la respuesta con los resultados
-           
-            // Enviar la respuesta con los resultados y la paginación
-            res.status(200).json({
-              players: results,
-              totalPages: totalPages,
-              currentPage: page,
-              totalPlayers: total
-            });
-
-        });
-      })
-
   
+            const total = countResults[0].total; // Total de asistencias
+            const totalPages = Math.ceil(total / limit); // Total de páginas
+  
+            // Commit de la transacción
+            connection.commit((error) => {
+              if (error) {
+                return connection.rollback(() => {
+                  connection.release();
+                  console.error('Error al realizar el commit de la transacción:', error);
+                  res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+                });
+              }
+  
+              // Liberar la conexión y enviar la respuesta con los resultados
+              connection.release();
+              res.status(200).json({
+                players: results,
+                totalPages: totalPages,
+                currentPage: page,
+                totalPlayers: total,
+              });
+            });
+          });
+        });
       });
     });
   });
+  
+  // dbConexion.beginTransaction((error) => {
+  //   if (error) {
+  //     console.error('Error al iniciar la transacción:', error);
+  //     return res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  //   }
+
+  //   // Verifica si el evento existe
+  //   const queryEvento = 'SELECT id FROM evento WHERE id = ?';
+  //   dbConexion.query(queryEvento, [evento], (error, results) => {
+  //     if (error) {
+  //       return dbConexion.rollback(() => {
+  //         console.error('Error al verificar el evento:', error);
+  //         res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  //       });
+  //     }
+
+  //     if (results.length === 0) {
+  //       return dbConexion.rollback(() => {
+  //         res.status(404).json({ error: 'Evento no encontrado' });
+  //       });
+  //     }
+
+  //     const query = `
+  //       SELECT j.id, j.Nombre, j.cedula
+  //       FROM jugadores j
+  //       JOIN asistencias a ON j.id = a.id_jugador
+  //       WHERE a.id_evento = ?
+  //       LIMIT ? OFFSET ?
+  //     `;
+  //     const params = [evento, limit, offset];
+
+  //     dbConexion.query(query, params, (error, results) => {
+  //       if (error) {
+  //         return dbConexion.rollback(() => {
+  //           console.error('Error al ejecutar la consulta para traer jugadores:', error);
+  //           res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  //         });
+  //       }
+
+
+  //       // paginacion 
+  //       const totalQuery = 'SELECT COUNT(*) AS total FROM asistencias WHERE id_evento = ?';
+  //       dbConexion.query(totalQuery, [evento], (error, countResults) => {
+
+
+  //         if (error) {
+  //           return dbConexion.rollback(() => {
+  //             console.error('Error al contar asistencias:', error);
+  //             res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  //           });
+  //         }
+
+
+  //         const total = countResults[0].total; // Total de asistencias
+  //         const totalPages = Math.ceil(total / limit); // Total de páginas
+
+  //          // Commit de la transacción
+  //         dbConexion.commit((error) => {
+  //           if (error) {
+  //             return dbConexion.rollback(() => {
+  //               console.error('Error al realizar el commit de la transacción:', error);
+  //               res.status(500).json({ error: 'Ha ocurrido un error en el servidor' });
+  //             });
+  //           }
+
+  //           // Enviar la respuesta con los resultados
+           
+  //           // Enviar la respuesta con los resultados y la paginación
+  //           res.status(200).json({
+  //             players: results,
+  //             totalPages: totalPages,
+  //             currentPage: page,
+  //             totalPlayers: total
+  //           });
+
+  //       });
+  //     })
+
+  
+  //     });
+  //   });
+  // });
 });
 
 // TRAE JUGADORES EN BASE ASISTENCIA
