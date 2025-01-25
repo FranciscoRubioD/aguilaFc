@@ -22,11 +22,11 @@ const dbConexion = mysql.createPool({
 // });
 
 // pool
-pool.on('connection', () => {
+dbConexion.on('connection', () => {
   console.log('Nueva conexión establecida con el pool');
 });
 
-pool.on('error', (err) => {
+dbConexion.on('error', (err) => {
   console.error('Error en la conexión del pool:', err);
 });
 
