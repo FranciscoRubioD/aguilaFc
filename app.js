@@ -1674,11 +1674,11 @@ app.post('/asistencia/guardar', (req, res) => {
 
       // Paso 1: Insertar el evento
       const valuesEvento = [
-        [eventos.evento, eventos.equipoId, eventos.fecha, eventos.hora, eventos.horaFinalizacion, eventos.descripcion, eventos.ubicacion],
+        [eventos.evento, eventos.equipoId, eventos.fecha, eventos.hora, eventos.horaFinalizacion, eventos.descripcion, eventos.ubicacion, 'Pendiente'],
       ];
 
       const queryEvento =
-        'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion) VALUES ?';
+        'INSERT INTO evento (evento, id_equipo, fecha, hora, hora_final, descripcion, ubicacion, estado) VALUES ?';
 
       connection.query(queryEvento, [valuesEvento], (errorEventos, resultsEvento) => {
         if (errorEventos) {
