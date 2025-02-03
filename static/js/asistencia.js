@@ -248,10 +248,8 @@ $(document).ready(function() {
                     contentType: 'application/json', // Indicar que enviamos JSON
                     data: JSON.stringify(asistencias), // Convertir el arreglo a JSON
                     success:function(response){
-                      
-                      console.log('Respuesta del servidor:', response);
-
-                      alert('Asistencia guardad con éxito');
+                    
+                      success('Asistencia guardada con éxito!');
                       // $('.modal-asistencia').hide();
                       btnTabla.show();
                     },
@@ -368,7 +366,7 @@ $(document).ready(function() {
 
           // Define colores para los tipos de eventos
           const colores = {
-            'Entrenamiento': '#ff4800',   // Color para entrenamiento
+            'Entrenamiento': '#fb9d77',   // Color para entrenamiento
             'Partido': '#6faad1',          // Color para partido
             'Reunion': '#b442ed'           // Color para reunión
           };
@@ -403,17 +401,17 @@ $(document).ready(function() {
             }
 
 
-
           let tituloEvento;
+
 
           // Verifica si el evento es entrenamiento o no
           if (evento.evento.toLowerCase() === 'entrenamiento') {
-            tituloEvento = 'Entrenamiento'; // Título para entrenamiento
+            tituloEvento = `Entrenamiento ${evento.nombre_equipo}`; // Título para entrenamiento
           }else if(evento.evento.toLowerCase() === "reunion"){
-            tituloEvento = "Reunión";
+            tituloEvento = `Reunion ${evento.nombre_equipo}`;
           } 
           else {
-            tituloEvento = `${evento.evento} vs ${evento.equipo_rival}`; // Título para otros eventos
+            tituloEvento = `${evento.evento} vs ${evento.equipo_rival} | ${evento.nombre_equipo}`; // Título para otros eventos
           }
 
     
@@ -616,7 +614,8 @@ $(document).ready(function() {
           }),
           success: function(response){
             console.log(response);
-            alert('Evento guardado con éxito');
+            success('Evento guardado con éxito!');
+          
             
 
             $('#equipoAsistencia').val('');
@@ -915,7 +914,8 @@ $(document).ready(function() {
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: function (response) {
-          alert('Evento configurado correctamente');
+          success('Evento configurado correctamente')
+         
           eventoInfo(id);
           poblarCalendario();
           $('.modal-change-date').hide();
@@ -1292,7 +1292,8 @@ function changeLocation(id,location){
                   evento: evento
                 }),
                 success:function(response){
-                  alert('Asistencia guardad con éxito');
+                  
+                  success('Asistencia guardada con éxito');
                   newTable.hide();
                   $('.modal-asistencia').hide();
                   botonEnviar.prop('disabled', false).text('Enviar');
@@ -1364,7 +1365,8 @@ function changeLocation(id,location){
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function(response){
-              alert('Partido actualizado');
+              success('Partido actualizado');
+              
               eventoInfo(evento);
             },
             error: function(xhr, status, error) {
@@ -1718,26 +1720,34 @@ function formatFechaHora(fechaUTC, hora) {
 
 function actualizarEstadisticas(g, e, p) {
   // Convierte los valores a números
-  g = parseInt(g, 10);  // Utiliza parseInt para convertir a enteros
-  e = parseInt(e, 10);  // Si necesitas decimales, usa parseFloat en lugar de parseInt
-  p = parseInt(p, 10);
+  g = parseInt(g, 10) || 0;  
+  e = parseInt(e, 10) || 0;  
+  p = parseInt(p, 10) || 0;  
 
   const total = g + e + p;  // Total de partidos
 
-  const porcentajeGanadas = Math.max((g / total) * 100);
-  const porcentajeEmpates = Math.max((e / total) * 100);
-  const porcentajePerdidas = Math.max((p / total) * 100);
+  // Si el total es 0, oculta las barras
+  if (total === 0) {
+    document.getElementById('ganadas').style.width = '0%';
+    document.getElementById('empates').style.width = '0%';
+    document.getElementById('perdidas').style.width = '0%';
+  } else {
+    const porcentajeGanadas = (g / total) * 100;
+    const porcentajeEmpates = (e / total) * 100;
+    const porcentajePerdidas = (p / total) * 100;
 
-  // Asigna los anchos de cada segmento basado en los porcentajes
-  document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
-  document.getElementById('empates').style.width = porcentajeEmpates + '%';
-  document.getElementById('perdidas').style.width = porcentajePerdidas + '%';
+    // Asigna los anchos de cada segmento basado en los porcentajes
+    document.getElementById('ganadas').style.width = porcentajeGanadas + '%';
+    document.getElementById('empates').style.width = porcentajeEmpates + '%';
+    document.getElementById('perdidas').style.width = porcentajePerdidas + '%';
+  }
 
   // Actualiza las etiquetas de texto
   document.getElementById('textoGanadas').innerText = `Ganadas: ${g}`;
   document.getElementById('textoEmpates').innerText = `Empates: ${e}`;
   document.getElementById('textoPerdidas').innerText = `Perdidas: ${p}`;
 }
+
 
 
 // Llama a la función con los valores de ejemplo

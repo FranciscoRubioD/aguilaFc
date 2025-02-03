@@ -371,7 +371,7 @@ $(document).ready(function() {
         processData: false,
         contentType: false,
         success: function (response) {
-          alert('Foto actualizada exitosamente.');
+          success('Foto actualizada exitosamente.');
 
           const fotoPerfil = response.fileName;
 
@@ -663,7 +663,7 @@ $(document).ready(function() {
       processData: false, // Evitar procesamiento de datos
       contentType: false, // Evitar encabezado predeterminado
       success: function (response) {
-          alert("Jugador creado exitosamente.");
+          success("Jugador creado exitosamente.");
           // Aquí puedes limpiar el formulario o redirigir a otra página si es necesario
           $("#formCrearJugador")[0].reset();
           $("#posicionCrearJugadores, #numeroJugador").prop("disabled", true);
@@ -748,7 +748,7 @@ $(document).ready(function() {
             contentType: false, // Required for FormData
             processData: false, // Required for FormData
             success: function(response) {
-                alert('Archivo cargado exitosamente');
+                success('Archivo cargado exitosamente');
                 // Reset the file input for a fresh selection next time
                 cargarJugadoresInput.val('');
                 getJugadores();

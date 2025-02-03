@@ -1743,7 +1743,7 @@ app.post('/evento/existente/guardar', (req,res) => {
 
 
 })
-+
+
 
 // EVENTOS ------- SECCION-EVENTO
 // traer eventos
@@ -1753,33 +1753,38 @@ app.get('/eventos', authenticateToken, (req, res) => {
   const equiposAsignados = user.equipos; // Equipos asignados al usuario
   const id_equipo = req.query.id_equipo; // Parámetro de id_equipo enviado en la solicitud
 
-  // Construir la consulta base
-  let query = "SELECT * FROM evento";
+  // Construir la consulta base con JOIN para incluir el nombre del equipo
+  let query = `
+    SELECT evento.*, equipo.division AS nombre_equipo
+    FROM evento
+    INNER JOIN equipo ON evento.id_equipo = equipo.id
+  `;
+
   const params = [];
 
   // Filtrar los eventos según el id_equipo si se proporciona y no es '0'
   if (id_equipo && id_equipo !== '0') {
-    query += ' WHERE id_equipo = ?';
+    query += ' WHERE evento.id_equipo = ?';
     params.push(id_equipo);
   } else {
     // Si id_equipo es '0', filtrar solo por los equipos asignados al usuario
     if (equiposAsignados && equiposAsignados.length > 0) {
-      query += ` WHERE id_equipo IN (${equiposAsignados})`;
+      query += ` WHERE evento.id_equipo IN (${equiposAsignados.map(() => '?').join(', ')})`;
+      params.push(...equiposAsignados);
     } else {
       return res.status(403).json({ error: 'No tienes equipos asignados' });
     }
   }
 
-  // Ejecutar la consulta
   dbConexion.query(query, params, (error, results) => {
     if (error) {
       console.error('Error al obtener eventos:', error);
-      return res.status(500).json({ message: 'Error al obtener eventos' });
+      return res.status(500).json({ error: 'Error al obtener eventos' });
     }
-
-    res.status(200).json(results);
+    res.json(results);
   });
 });
+
 
 // evento-division
 app.get('/eventos/divison', (req, res) => {

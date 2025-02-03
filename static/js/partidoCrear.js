@@ -139,9 +139,6 @@ $(document).ready(function() {
               
               btnSiguienteFormPartido.text('Siguiente');
             });
-            
-
-
 
           },
           error: function(xhr, status, error) {

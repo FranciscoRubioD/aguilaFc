@@ -139,7 +139,7 @@ $(document).ready(function() {
       contentType: 'application/json', // Especifica el tipo de contenido JSON
       success: function(response) {
           console.log('Usuario creado:', response);
-          alert(response.message); // Muestra un mensaje de éxito
+          success(response.message);
 
           // Limpiar el formulario después de la creación exitosa
           formUsuarios[0].reset();
@@ -202,7 +202,7 @@ function editUser(id){
             }),
             contentType: 'application/json',
             success: function(response) {
-              alert(response.message); // Mensaje de éxito si la actualización fue correcta
+              success(response.message); // Mensaje de éxito si la actualización fue correcta
               poblarTablaUser();
             },
             error: function(xhr) {
@@ -229,7 +229,6 @@ function editUser(id){
             url:'/user/equipo/'+id,
             dataType: 'json',
             success: function(response){
-            
 
               if (response.results.length === 0) {
                 // Si no hay registros, muestra un mensaje
@@ -286,7 +285,7 @@ function editUser(id){
               url: '/user/equipo/' + idUsuario + '/' + idEquipo, // Separar los parámetros con '/'
               success: function(response) {
                   console.log('Relación eliminada:', response.message);
-                  alert('Relación eliminada correctamente');
+                  success('Relación eliminada correctamente');
                   poblarEtiquetas();
               },
               error: function(xhr, status, error) {
@@ -317,7 +316,7 @@ function editUser(id){
             data: JSON.stringify({ usuario_id: usuario_id, equipo_id: equipo_id }),
             contentType: 'application/json',
             success: function(response) {
-              alert(response.message); // Mensaje de éxito si el equipo fue asignado correctamente
+              success(response.message); // Mensaje de éxito si el equipo fue asignado correctamente
               poblarEtiquetas();
             },
             error: function(xhr) {

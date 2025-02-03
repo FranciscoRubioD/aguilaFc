@@ -1,7 +1,7 @@
 #dashboard{
   width: 100%;
   height: 100vh;
-  background-color: white;
+  background-color: rgb(246, 246, 246);
   flex-direction: column;
   justify-content: center;
   align-items: center; 
@@ -59,7 +59,7 @@ p{
 /* dashboard */
 .dashboard-main{
   width: 90%;
-  height: 90vh;
+  height: 100vh;
   /* background-color: white; */
 }
 
@@ -68,10 +68,6 @@ p{
 }
 
 .dashboard-inner{
-  /* background-color: red; */
-  height: 90%;
-  display: grid;
-  grid-template-rows: 1fr 2fr;
 }
 
 
@@ -79,7 +75,7 @@ p{
   display: grid;
   grid-template-columns: 1fr 1fr;
   /* border-style: solid; */
-  overflow: hidden;
+ 
 }
 
 .next-game-div,.win-vs-loss{
@@ -96,9 +92,10 @@ p{
 
 .gamesDiv{
   background-color: rgb(255, 255, 255);
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 2px 1px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
+  padding: 10px;
   width: 95%;
   height:80%;
   display: grid;
@@ -273,6 +270,10 @@ p{
 
 .PJ-div{
   width: 70%;
+  height: 70px;
+  padding: 5px;
+  background-color: rgb(246, 248, 255);
+  border-radius: 10px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -325,10 +326,10 @@ p{
 
 .upcoming-left{
   width: 95%;
-  height: 50%;
+  height: 200px;
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
-  background-color: rgb(247, 247, 247);
+  background-color: rgb(255, 255, 255);
   margin-left: auto;
   margin-right: auto;
   border-radius: 3px;
@@ -406,11 +407,10 @@ p{
   width: 150px;
   height: 100px;
   right: 0;
-  
   background-color: white;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   border-radius: 4px;
-  z-index: 200;
+  z-index: 500;
   position: absolute;
   display: grid;
   top: 45px;
@@ -433,7 +433,8 @@ p{
 
 
 .dashboard-bottom{
-  /* background-color: green; */
+  /* height: 500px; */
+  
 }
 
 
@@ -625,14 +626,133 @@ p{
 }
 
 
+/* configurar partido */
+.configPartido{
+  width: 100%;
+  height: 100%; /* Asegúrate de que la altura sea del 100% de la pantalla */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(61, 59, 59, 0.529);
+  display: flex; /* Para centrar el contenido dentro del modal, si lo deseas */
+  /* align-items: center; Centrar verticalmente el contenido */
+  justify-content: center; /* Centrar horizontalmente el contenido */
+}
+
+.configPartido-content{
+  width: 30%;
+  max-height: 80%;
+  margin-top: 2%;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.configPartido-inner{
+  width: 80%;
+  height: 90%;
+  overflow: auto;
+}
+
+.form-config{
+  width: 100%;
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+  /* background-color: red; */
+  padding-bottom: 10px;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+.form-config label{
+  font-size: 10px;
+  margin: 0;
+}
+
+.form-config input{
+  border: 1px solid lightgrey;
+  padding: 5px;
+  border-radius: 2px;
+  font-size: 12px;
+  
+}
+
+.configOption{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* gap:5px; */
+}
+
+.configOption button{
+  width: 50%;
+  border: none;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(95, 152, 250);
+  color: white;
+  outline: none;
+}
+#actualizarConfig{
+  background-color: rgb(90, 143, 25);
+  width: 100%;
+  margin-top: 10px;
+}
+
+#cancelarConfigPerfil{
+  background-color: grey;
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+#configGolE, #configGolR{
+  width: 15%;
+}
+
+
 @media screen and (max-width: 768px){
 
-  .welcomeLegend p{
+  .popUp-profile{
+    top: 75px;
+  }
 
+  .PJ-div{
+    width: 50%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    height: 70px;
+  }
+
+  .profile-view{
+    width: 90%;
+  }
+
+
+
+  #tusEquipos{
+    display: none;
   }
 
   #nombreMostrar{
     font-size: 12px;
+  }
+
+  
+
+  .welcome-p select{
+    width: 10px;
   }
 
   .welcome-p p{
@@ -642,11 +762,12 @@ p{
   .dashboard-top,.dashboard-bottom{
     grid-template-columns: 1fr; /* Cambia a una sola columna */
     grid-template-rows: repeat(auto-fit, minmax(100px, auto)); /* Configura las filas */
-    height: 40vh;
+    height: 400px;
+    gap: 2%;
   }
 
 .gamesDiv{
-  height: 80%;
+  height: 90%;
   width: 95%;
   border-radius: 5px;
 }

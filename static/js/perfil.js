@@ -159,13 +159,20 @@ window.partidoHistorial = function (id_equipo){
           })
 
           // mostrar asistencia
+          $('#configurarPartido').off('click').on('click',function(){
+
+            $('.configPartido').fadeIn();
+            $('.form-config').data('id',proximoPartido.id);
+            $('.tareas-acciones').hide();
+
+          });
+
           // menu next eventos
           $('#listaPartido').off('click').on('click', function(){
             $('.asistenciaQuick').fadeIn();
             $('.tareas-acciones').hide();
             console.log(`hicimos click y abrimos ${proximoPartido.id}`);
             modalAsistenciaQuick(proximoPartido.id);
-
           });
         }else if(!proximoPartido){
           $('#rivalProximo').text('No hay partido próximos');
@@ -188,6 +195,15 @@ window.partidoHistorial = function (id_equipo){
             'pointer-events': 'auto', // Reactiva clics
             'opacity': '1'            // Restaura el aspecto visual
           })
+
+
+          $('#configurarPartidoAnterior').off('click').on('click',function(){
+
+            $('.configPartido').fadeIn();
+            $('.form-config').data('id',ultimoPartido.id);
+            $('.tareas-acciones').hide();
+
+          });
 
 
           $('#listaPartidoAnterior').on('click', function(){
@@ -582,7 +598,7 @@ function deleteAsistencia(evento,btnDelete){
       data: JSON.stringify({ id_evento: evento }), // El id_evento que quieres eliminar
       success: function(response) {
         console.log(response.message);
-        alert('asistencia borrada exitosamente');
+        success('Asistencia borrada exitosamente!');
         modalAsistenciaQuick(evento);
         
       },
@@ -594,6 +610,92 @@ function deleteAsistencia(evento,btnDelete){
   });
 
 }
+
+
+// configurar partido 
+  $("#btnConfigDate").on("click", function(event) {
+    event.preventDefault(); // Evita que el botón envíe un formulario o haga un submit
+
+    $("#hideTimeConfig").slideToggle(300); // Aparece y desaparece con animación
+    // Rotar la flecha según el estado
+    
+    $("#arrowIcon").toggleClass("rotate");
+  });
+
+
+  $('#cancelarConfigPerfil').on('click',function(e){
+    $('.configPartido').hide();
+    e.preventDefault(); // Evita que el formulario se envíe
+        
+    $(".form-config")[0].reset(); // Resetea el formulario
+
+  });
+
+  window.success = function(message){
+    $('#successMessage').text('');
+    $('#successMessage').text(message);
+    $('.successNotif').fadeIn();
+
+    setTimeout(function () {
+      $(".successNotif").fadeOut(500); // Se desvanece en 500ms
+    }, 3000);
+  }
+
+  $('.successNotif').on('click',function(){
+
+    $(".successNotif").fadeOut(500); // Se desvanece en 500ms
+    
+
+  });
+
+
+  function configurarPartido(idEvento) {
+    console.log(`id de evento ${idEvento}`);
+    // Construir objeto con los valores del formulario
+    let formData = {
+        idEvento: idEvento, // Pasar el ID como parámetro
+        estado: $("#estadoConfig").val(),
+        resultado: $("#resultadoConfig").val(),
+        gol_a_favor: $("#configGolE").val(),
+        gol_en_contra: $("#configGolR").val(),
+        fecha: $("#dateConfig").val(),
+        hora_inicio: $("#hourConfig").val(),
+        hora_fin: $("#hourFConfig").val()
+    };
+
+    console.log(formData);
+
+    // Enviar datos con AJAX (método POST)
+    $.ajax({
+        url: "/evento/configurar/perfil", // Tu endpoint
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: function(response) {
+            console.log("Respuesta del servidor:", response);
+            success('Configuración actualizada correctamente.');
+            $('.configPartido').hide();
+            $(".form-config")[0].reset(); // Resetea el formulario
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la solicitud:", error);
+            alert("Hubo un error al actualizar.");
+        }
+    });
+}
+
+$("#actualizarConfig").on("click", function(event) {
+  event.preventDefault(); // Evitar el envío tradicional del formulario
+
+  let idEvento = $(".form-config").data("id"); // Obtener el ID del evento (opción 1)
+  console.log(idEvento);
+  // let idEvento = $("#idEvento").val(); // Opción 2: Si tienes un input oculto
+
+  configurarPartido(idEvento); // Llamar la función con el ID del evento
+});
+
+  
+
 
 
 

@@ -10,6 +10,48 @@ body{
 }
 
 
+.successNotif {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  width: 500px;
+  height: 100px;
+  color: white;
+  background-color: rgb(34, 181, 61);
+  z-index: 100;
+  transform: translate(-50%, -50%); /* Centra el popup */
+  display: flex; /* Opcional: para alinear contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+  text-align: center;
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para mejorar la apariencia */
+  cursor: pointer;
+}
+
+.successNotif-inner{
+  width: 95%;
+  height: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+  position: relative;
+}
+
+.close-success{
+  position: absolute;
+  top: 5%;
+  right: 0;
+  cursor: pointer;
+}
+
+
+.successNotif-inner p{
+  margin: 0;
+}
+
 header{
   background-color: white;
   height: 15vh;

@@ -59,6 +59,16 @@
 </head>
 <body>
   
+
+  <div class="successNotif" style="display: none;">
+    <div class="successNotif-inner">
+      <i class="fa-solid fa-x close-success"></i>
+      <p id="successMessage"></p>
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    
+  </div>
+
   <!-- <header>
 
   </header> -->
@@ -156,6 +166,88 @@
     </section>
 
 
+
+    <!-- seccion importante configurar partido en dashboard -->
+    <div class="configPartido" style="display: none;">
+
+      <div class="configPartido-content">
+
+        <div class="configPartido-inner">
+
+<!-- WARD2 -->
+          <form action="POST" class="form-config">
+
+            <h3>Configurar Partido</h3>
+            <div class="configOption">
+              <label for="estadoConfig">Estado</label>
+              <select name="estadoConfig" id="estadoConfig" class="wide">
+                <option data-display="Custom Text" value="Terminado">Terminado</option>
+                <option data-display="Custom Text" value="Cancelado">Cancelado</option>
+                <option data-display="Custom Text" value="Suspendido">Suspendido</option>
+                <option data-display="Custom Text" value="Pendiente">Pendiente</option> 
+              </select>
+            </div>
+
+            <div class="configOption">
+              <label for="resultadoConfig">Resultado</label>
+              <select name="resultadoConfig" id="resultadoConfig" class="wide">
+                <option data-display="Custom Text" value="">Ninguno</option>
+                <option data-display="Custom Text" value="W">Ganado</option>
+                <option data-display="Custom Text" value="L">Perdido</option>
+                <option data-display="Custom Text" value="D">Empate</option> 
+              </select>
+            </div>
+
+            <div class="configOption">
+              <label for="configGolE">Gol a favor</label>
+              <input type="number" id="configGolE" name="configGolE">
+              <label for="configGolE">Gol en contra</label>
+              <input type="number" id="configGolR" name="configGolR">
+            </div>
+
+            <div class="configOption">
+              <button id="btnConfigDate">Cambiar Fecha <i id="arrowIcon" class="fas fa-chevron-down" ></i></button>
+            </div>
+
+            <div id="hideTimeConfig" style="display: none;">
+              <div class="configOption">
+                <label for="dateConfig">Fecha</label>
+                <input type="Date" name="dateConfig" id="dateConfig"></input>
+              </div>
+  
+              <div class="configOption">
+                <label for="hourConfig">Hora de inicio</label>
+                <input type="Time" name="hourConfig" id="hourConfig"></input>
+              </div>
+              <div class="configOption">
+                <label for="hourFConfig">Hora de Finalizacion</label>
+                <input type="Time" name="hourFConfig" id="hourFConfig"></input>
+              </div>
+
+
+            </div>
+            
+
+
+            <div class="configOption">
+              <button id="actualizarConfig">Actualizar</button>
+              <button id="cancelarConfigPerfil">Cancelar</button>
+            </div>
+
+            
+
+            
+            
+
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+    </div>
 
 
 
@@ -450,6 +542,8 @@
           </div>
 
 
+
+
           <div class="dashboard-bottom">
 
             <div class="upcoming-left">
@@ -481,7 +575,7 @@
                         <div class="task" id="listaPartido">
                           <p>Pasar lista</p>
                         </div>
-                        <div class="task">
+                        <div class="task" id="configurarPartido">
                           <p>Configurar</p>
                         </div>
                         <div class="task">
@@ -520,7 +614,7 @@
                         <div class="task" id="listaPartidoAnterior">
                           <p>Pasar lista</p>
                         </div>
-                        <div class="task">
+                        <div class="task" id="configurarPartidoAnterior">
                           <p>Configurar</p>
                         </div>
                         <div class="task">
@@ -1313,8 +1407,8 @@
                     <div class="configCol">
                       <label for="mySelectGanador">Ganador</label>
                       <select id="mySelectGanador" name="mySelectGanador" class="wide" required>
-                        <option data-display="Custom Text" value="D">Empate</option>
                         <option data-display="Custom Text" value="">Ninguno</option>
+                        <option data-display="Custom Text" value="D">Empate</option>
                         <option data-display="Custom Text" value="W">Aguila-Fc</option>
                        
                       </select>
@@ -2031,111 +2125,115 @@
       <div class="crearUsuario-modal" id="editUserModal" style="display: none;">
           <div class="editUser-content">
            
-            <div class="editUser-top">
-              <i class="fa-solid fa-x cerrarEditUser"></i>
-              <div class="editUser-inner-top">
-                
-                <div class="editPic-div">
-                  <div class="user-profile-pic-create">
-                    <div class="d3-profile-create"></div>
-                  </div>
-                </div>
-
-                <div class="edit-info-1">
+            <div class="editUser-inner-content">
+              <div class="editUser-top">
+                <i class="fa-solid fa-x cerrarEditUser"></i>
+                <div class="editUser-inner-top">
                   
-                  <div class="col-edit">
-
-                    <div class="col-edit-input">
-
-                      <label for="userEdit">Usuario</label>
-                      <input type="text" name="userEdit" id="userEdit">
-
+                  <div class="editPic-div">
+                    <div class="user-profile-pic-create">
+                      <div class="d3-profile-create"></div>
                     </div>
-
-                    <div class="col-edit-input">
-
-                      <label for="nameEdit">Nombre</label>
-                      <input type="text" name="nameEdit" id="nameEdit">
-
-                    </div>
-
-
                   </div>
-
-                  <div class="col-edit-password">
-                    <div class="col-edit-input-password">
-                      <label for="passwordEdit">Contraseña</label>
-                      <input type="text" name="passwordEdit" id="passwordEdit" placeholder="****************">
-                    </div>
+  
+                  <div class="edit-info-1">
                     
+                    <div class="col-edit">
+  
+                      <div class="col-edit-input">
+  
+                        <label for="userEdit">Usuario</label>
+                        <input type="text" name="userEdit" id="userEdit">
+  
+                      </div>
+  
+                      <div class="col-edit-input">
+  
+                        <label for="nameEdit">Nombre</label>
+                        <input type="text" name="nameEdit" id="nameEdit">
+  
+                      </div>
+  
+  
+                    </div>
+  
+                    <div class="col-edit-password">
+                      <div class="col-edit-input-password">
+                        <label for="passwordEdit">Contraseña</label>
+                        <input type="text" name="passwordEdit" id="passwordEdit" placeholder="****************">
+                      </div>
+                      
+                    </div>
+  
+  
                   </div>
-
-
+                 
+    
                 </div>
-               
+  
+                <div class="editUser-inner-bott">
+  
+                  <div class="estadoUsuarioDiv">
+                    <select name="estadoUsuario" id="estadoUsuario">
+                      <option value="0">Activo</option>
+                      <option value="1">Bloqueado</option>
+                    </select>
+                  </div>
+  
+                  <div class="actualizarBtnDiv">
+                    <button id="actualizarDatosUser">Actualizar</button>
+                  </div>
+  
+                </div>
+                
+  
+              </div>
+              
+  
+              <div class="editFunctionUser">
+              
+                <div class="funct-col">
+                  <p>Equipos asignados</p>
+                  <div class="divEquipos">
+  
+                    <div class="divEquipos-inner">
+                       
+                     
+                
+                    </div>
+  
+                  </div>
+  
+  
+                </div>
+  
+                <div class="funct-col-2">
+  
+                  <p>Agregar equipo</p>
+                  <div class="divAgregarEquipo">
+                    <div class="divAgregarEquipo-1">
+                      <label for="myselect4" style="font-size: 10px; margin: 0;">Equipos</label>
+                      <select id="mySelect4" name="myselect4" class="wide" required>
+                      </select>
+                    </div>
+  
+                    <div class="divAgregarEquipo-2">
+                      <button id="agregarEquipobtn">Agregar</button>
+                    </div>
+                  
+  
+  
+                  </div>
+  
+                </div>
+  
   
               </div>
 
-              <div class="editUser-inner-bott">
-
-                <div class="estadoUsuarioDiv">
-                  <select name="estadoUsuario" id="estadoUsuario">
-                    <option value="0">Activo</option>
-                    <option value="1">Bloqueado</option>
-                  </select>
-                </div>
-
-                <div class="actualizarBtnDiv">
-                  <button id="actualizarDatosUser">Actualizar</button>
-                </div>
-
-              </div>
-              
 
             </div>
-            
 
-            <div class="editFunctionUser">
-            
-              <div class="funct-col">
-                <p>Equipos asignados</p>
-                <div class="divEquipos">
-
-                  <div class="divEquipos-inner">
-                     
-                   
-                 
-                    
-
-                  </div>
-
-                </div>
-
-
-              </div>
-
-              <div class="funct-col-2">
-
-                <p>Agregar equipo</p>
-                <div class="divAgregarEquipo">
-                  <div class="divAgregarEquipo-1">
-                    <label for="myselect4" style="font-size: 10px; margin: 0;">Equipos</label>
-                    <select id="mySelect4" name="myselect4" class="wide" required>
-                    </select>
-                  </div>
-
-                  <div class="divAgregarEquipo-2">
-                    <button id="agregarEquipobtn">Agregar</button>
-                  </div>
-                
-
-
-                </div>
-
-              </div>
-
-
-            </div>
+           
 
           </div>
       </div>
@@ -2573,6 +2671,14 @@
     NiceSelect.bind(document.getElementById("estado_salud"), {
     });
    
+
+    
+    // config jugador perfil
+    
+    NiceSelect.bind(document.getElementById("estadoConfig"), {
+    });
+    NiceSelect.bind(document.getElementById("resultadoConfig"), {
+    });
 
     
 

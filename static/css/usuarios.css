@@ -319,8 +319,8 @@
 }
 
 .user-profile-pic-create, .d3-profile-create{
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
 }
 
 
@@ -469,14 +469,25 @@
 /* editar usuario modal */
 .editUser-content{
   width: 40%;
-  height: 70%;
-  border-radius: 20px;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
+  height: 80%;
+  border-radius: 10px;
   margin: auto;
+  margin-top: 2%;
   background-color: white;
   overflow: visible;
   position: relative;
+}
+
+.editUser-inner-content{
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  margin-top: 5%;
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+  /* gap: 10%; */
+  overflow: visible;
+  /* background-color: red; */
 }
 
 .cerrarEditUser{
@@ -487,14 +498,25 @@
   color: grey;
 }
 
+
+.editUser-top{
+  width: 95%;
+  height: 100%;
+  margin: auto;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  border-bottom: 1px solid lightgrey;
+  /* background-color: red; */
+}
+
 .editUser-inner-top{
-  height: 80%;
   width: 100%;
+  /* margin-top: 20px; */
   /* background-color: red; */
   display: grid;
   grid-template-columns: 1fr 2fr;
 }
-
 
 .editPic-div{
   /* background-color: blue; */
@@ -524,6 +546,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  font-size: 12px;
+  
 }
 
 .col-edit-password{
@@ -561,8 +585,6 @@
   outline: none;
 }
 
-
-
 .col-edit-input label{
   width: 80%;
   margin: 0;
@@ -580,23 +602,25 @@
 }
 
 
-
 .editUser-inner-bott{
-  height: 20%;
+  height: 100%;
   width: 90%;
   margin: auto;
   /* background-color: green; */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-bottom: 2px solid lightgrey;
+  justify-content: center;
+  align-items: center;
+
   
 }
 
 .estadoUsuarioDiv{
+  height: 50%;
   /* background-color: blue; */
   display: flex;
   justify-content: start;
-  align-items: start;
+  align-items: center;
 }
 
 .actualizarBtnDiv{
@@ -606,8 +630,8 @@
 }
 
 .actualizarBtnDiv button{
-  width: 80%;
-  padding: 5px;
+  width: 60%;
+  padding: 10px;
   border: none;
   border-radius: 5px;
   font-size: 14px;
@@ -627,47 +651,42 @@
 
 
 .editFunctionUser{
-  /* background-color: red; */
-  width: 90%;
+  width: 100%;
   height: 100%;
-  margin: auto;
-  display: grid;
-  /* margin-top: 2%; */
-  grid-template-rows: 1fr 2fr;
+  overflow: auto;  
+
 }
 
 .divEquipos{
   width: 100%;
-  height: 60%;
-  /* background-color: red; */
+  /* height: 90%; */
   display: flex;
-  align-items: center;
+  align-items: start;
+  overflow: hidden;
 }
 
 .divEquipos-inner{
-  width: 95%;
-  height: 90%;
-  /* background-color: black; */
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1%;
-}
+  flex-wrap: wrap; /* Permite que las etiquetas pasen a la siguiente línea */
+  gap: 10px; /* Espacio entre etiquetas */
+  max-width: 100%; /* Ajusta el ancho según necesites */
+  padding: 10px;
+} 
 
 .container-team{
-  height: 70%;
-  min-width: 60px;
-  padding: 10px;
-  border: 1px solid rgb(183, 183, 183);
-  border-radius: 10px;
-  background-color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 5px 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  min-width: 150px; /* Ancho mínimo */
+  max-width: calc(25% - 10px); /* Para 4 columnas */
 }
 .container-team p{
   margin: 0;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .eliminarEquipoIcon{
@@ -677,20 +696,42 @@
   cursor: pointer;
 }
 
-
-
 .funct-col, funct-col-2{
   /* border: 1px solid;   */
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   /* justify-content: center; */
 }
+
+.funct-col{
+  overflow: hidden;
+  width: 90%;
+  /* height: 100%; */
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+.funct-col:first-child{
+  justify-content: start;
+  align-items: start;
+}
+
 .funct-col-2{
-  /* border: solid; */
+  overflow: visible;
+  /* height: 100%; */
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
 }
 
 .divAgregarEquipo{
   /* background-color: red; */
+  width: 100%;
   display: flex;
 }
 
@@ -725,11 +766,6 @@
 .funct-col p, .funct-col-2 p{
   margin: 0;
 }
-
-
-
-
-
 
 
 

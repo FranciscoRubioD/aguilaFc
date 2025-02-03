@@ -13,11 +13,11 @@ const dbConexion = mysql.createPool({
 
 
 
-// const dbConexion = mysql.createConnection({
+// const dbConexion = mysql.createPool({
 //   host:'localhost',
 //   user:'root',
 //   password:'',
-//   database:'aguilafc',
+//   database:'aguiladev',
 //   port: 3306,  // Asegúrate de que el puerto sea el correcto
 // });
 

@@ -78,6 +78,66 @@ router.post('/evento/configurar', (req, res) => {
 });
 
 
+router.post('/evento/configurar/perfil', (req, res) => {
+  const { idEvento, estado, resultado, gol_a_favor, gol_en_contra, fecha, hora_inicio, hora_fin } = req.body;
+
+  // Convertir otros valores vacíos a NULL si no se ingresan
+  const resultadoFinal = resultado === "" ? null : resultado;
+  const golAFavorFinal = gol_a_favor === "" ? null : gol_a_favor;
+  const golEnContraFinal = gol_en_contra === "" ? null : gol_en_contra;
+
+  console.log(resultadoFinal);
+
+  // Inicializamos la actualización con los campos obligatorios
+  let query = `
+      UPDATE evento 
+      SET 
+          estado = ?,
+          resultado = ?  
+  `;
+  const values = [estado,resultadoFinal];
+
+  // Si resultado no es null, agregar los goles
+  if (resultado !== null) {
+    query += ", gol_local = ?, gol_visita = ?";
+    values.push(golAFavorFinal, golEnContraFinal);
+  }
+
+  // Agregar la fecha si se proporcionó
+  if (fecha !== "") {
+    query += ", fecha = ?";
+    values.push(fecha);
+  }
+
+  // Agregar la hora_inicio si se proporcionó
+  if (hora_inicio !== "") {
+    query += ", hora = ?";
+    values.push(hora_inicio);
+  }
+
+  // Agregar la hora_fin si se proporcionó
+  if (hora_fin !== "") {
+    query += ", hora_final = ?";
+    values.push(hora_fin);
+  }
+
+  // Completar la consulta con la condición de WHERE
+  query += " WHERE id = ?";
+  values.push(idEvento);
+
+  // Ejecutar la consulta
+  dbConexion.query(query, values, (err, results) => {
+    if (err) {
+      console.error('❌ Error al actualizar el evento:', err);
+      return res.status(500).json({ message: 'Error al actualizar el evento' });
+    }
+    res.status(200).json({ message: '✅ Evento actualizado correctamente' });
+  });
+});
+
+
+
+
 // Ruta para obtener las estadísticas de victorias, derrotas y empates
 router.post('/obtener-estadisticas', (req, res) => {
   const { id_equipo } = req.body;
