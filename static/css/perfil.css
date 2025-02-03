@@ -723,6 +723,14 @@ p{
 
 @media screen and (max-width: 768px){
 
+
+  /* pop up configurar */
+  .configPartido-content{
+    width: 80%;
+    height: 70%;
+  }
+
+
   .popUp-profile{
     top: 75px;
   }
